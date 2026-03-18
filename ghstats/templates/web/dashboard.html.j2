@@ -40,6 +40,7 @@
         min-height: 100vh;
         font-family: "IBM Plex Sans", sans-serif;
         color: var(--ink);
+        color-scheme: dark;
         background:
           radial-gradient(circle at top left, rgba(90, 216, 255, 0.14), transparent 24%),
           radial-gradient(circle at top right, rgba(159, 245, 164, 0.08), transparent 20%),
@@ -194,13 +195,52 @@
 
       input,
       select {
+        appearance: none;
+        -webkit-appearance: none;
         width: 100%;
-        border: 1px solid var(--line);
-        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(142, 194, 255, 0.22);
+        background: #101826;
         color: var(--ink);
         border-radius: 14px;
         padding: 13px 14px;
         font: inherit;
+        box-shadow: none;
+      }
+
+      input::placeholder {
+        color: #a7b7cb;
+        opacity: 1;
+      }
+
+      input:hover,
+      select:hover {
+        background: #142031;
+      }
+
+      input:focus,
+      select:focus {
+        outline: none;
+        border-color: rgba(90, 216, 255, 0.82);
+        box-shadow: 0 0 0 4px rgba(90, 216, 255, 0.16);
+      }
+
+      select,
+      option,
+      optgroup {
+        color: var(--ink);
+        background: #101826;
+      }
+
+      select {
+        padding-right: 42px;
+        background-image:
+          linear-gradient(45deg, transparent 50%, #a7b7cb 50%),
+          linear-gradient(135deg, #a7b7cb 50%, transparent 50%);
+        background-position:
+          calc(100% - 18px) calc(50% - 3px),
+          calc(100% - 12px) calc(50% - 3px);
+        background-size: 6px 6px, 6px 6px;
+        background-repeat: no-repeat;
       }
 
       input[type="checkbox"] {
@@ -216,6 +256,229 @@
         border-radius: 14px;
         border: 1px solid var(--line);
         background: rgba(255, 255, 255, 0.03);
+      }
+
+      .template-picker {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+        margin-top: 8px;
+      }
+
+      .template-option {
+        position: relative;
+      }
+
+      .template-option input {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .template-card {
+        display: grid;
+        gap: 10px;
+        min-height: 156px;
+        padding: 14px;
+        border-radius: 18px;
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.03);
+        cursor: pointer;
+        transition: transform 140ms ease, border-color 140ms ease, background 140ms ease, box-shadow 140ms ease;
+      }
+
+      .template-preview {
+        position: relative;
+        min-height: 92px;
+        border-radius: 14px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        overflow: hidden;
+        background: var(--preview-bg, #152033);
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+      }
+
+      .template-preview::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: var(--preview-overlay, none);
+        opacity: var(--preview-overlay-opacity, 1);
+        pointer-events: none;
+      }
+
+      .template-preview::after {
+        content: "";
+        position: absolute;
+        inset: auto 0 0 0;
+        height: 24px;
+        background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.18));
+        pointer-events: none;
+      }
+
+      .preview-layout {
+        position: relative;
+        z-index: 1;
+        height: 100%;
+        padding: 10px;
+        display: grid;
+        grid-template-columns: 1.15fr 0.85fr;
+        gap: 8px;
+      }
+
+      .preview-stack {
+        display: grid;
+        gap: 6px;
+      }
+
+      .preview-pill,
+      .preview-line,
+      .preview-panel,
+      .preview-bar,
+      .preview-dot {
+        border-radius: 999px;
+      }
+
+      .preview-pill {
+        width: 46px;
+        height: 10px;
+        background: color-mix(in srgb, var(--preview-accent, #5ad8ff) 72%, white 10%);
+        opacity: 0.9;
+      }
+
+      .preview-line {
+        height: 8px;
+        background: color-mix(in srgb, var(--preview-ink, #eff6ff) 86%, transparent);
+      }
+
+      .preview-line.short {
+        width: 58%;
+        opacity: 0.75;
+      }
+
+      .preview-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 6px;
+      }
+
+      .preview-panel {
+        min-height: 22px;
+        border-radius: 10px;
+        border: 1px solid color-mix(in srgb, var(--preview-line, rgba(255,255,255,0.14)) 85%, transparent);
+        background: color-mix(in srgb, var(--preview-panel, rgba(255,255,255,0.12)) 88%, transparent);
+      }
+
+      .preview-panel.accent {
+        background: color-mix(in srgb, var(--preview-accent-2, #9ff5a4) 60%, var(--preview-panel, rgba(255,255,255,0.12)) 40%);
+      }
+
+      .preview-side {
+        display: grid;
+        gap: 6px;
+        align-content: start;
+      }
+
+      .preview-chart {
+        display: flex;
+        align-items: end;
+        gap: 4px;
+        min-height: 54px;
+        padding: 8px;
+        border-radius: 12px;
+        border: 1px solid color-mix(in srgb, var(--preview-line, rgba(255,255,255,0.14)) 85%, transparent);
+        background: color-mix(in srgb, var(--preview-panel, rgba(255,255,255,0.12)) 92%, transparent);
+      }
+
+      .preview-bar {
+        flex: 1 1 0;
+        background: var(--preview-accent, #5ad8ff);
+        min-height: 16px;
+        opacity: 0.92;
+      }
+
+      .preview-bar:nth-child(2) {
+        height: 26px;
+        background: var(--preview-accent-2, #9ff5a4);
+      }
+
+      .preview-bar:nth-child(3) {
+        height: 36px;
+        background: var(--preview-accent-3, #f2b15d);
+      }
+
+      .preview-bar:nth-child(4) {
+        height: 22px;
+      }
+
+      .preview-dots {
+        display: flex;
+        gap: 5px;
+        flex-wrap: wrap;
+      }
+
+      .preview-dot {
+        width: 10px;
+        height: 10px;
+        background: color-mix(in srgb, var(--preview-accent, #5ad8ff) 70%, white 8%);
+        border: 1px solid rgba(255,255,255,0.14);
+      }
+
+      .template-card:hover {
+        transform: translateY(-1px);
+        border-color: rgba(90, 216, 255, 0.34);
+        background: rgba(255, 255, 255, 0.05);
+      }
+
+      .template-option input:focus + .template-card {
+        border-color: rgba(90, 216, 255, 0.82);
+        box-shadow: 0 0 0 4px rgba(90, 216, 255, 0.14);
+      }
+
+      .template-option input:checked + .template-card {
+        border-color: rgba(90, 216, 255, 0.82);
+        background: rgba(90, 216, 255, 0.08);
+        box-shadow: 0 0 0 4px rgba(90, 216, 255, 0.12);
+      }
+
+      .template-top,
+      .template-badges,
+      .swatches {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      .template-top {
+        justify-content: space-between;
+        align-items: flex-start;
+      }
+
+      .template-family {
+        font-family: "IBM Plex Mono", monospace;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        font-size: 10px;
+        color: var(--muted);
+      }
+
+      .swatch {
+        width: 18px;
+        height: 18px;
+        border-radius: 999px;
+        border: 1px solid rgba(255,255,255,0.16);
+      }
+
+      .template-badge {
+        display: inline-flex;
+        padding: 4px 7px;
+        border-radius: 999px;
+        border: 1px solid rgba(255,255,255,0.08);
+        background: rgba(255,255,255,0.04);
+        color: var(--muted);
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 10px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
       }
 
       .form-actions {
@@ -404,6 +667,10 @@
           flex-direction: column;
           align-items: stretch;
         }
+
+        .template-picker {
+          grid-template-columns: 1fr;
+        }
       }
     </style>
   </head>
@@ -453,12 +720,64 @@
               </select>
             </div>
             <div class="field">
-              <label for="template_key">Report template</label>
-              <select id="template_key" name="template_key">
+              <label>Report template</label>
+              <div class="template-picker" role="radiogroup" aria-label="Report template picker">
                 {% for template in report_templates %}
-                <option value="{{ template.key }}">{{ template.label }} - {{ template.description }}</option>
+                {% set theme = get_report_theme(template.key) %}
+                <label class="template-option">
+                  <input type="radio" name="template_key" value="{{ template.key }}" {% if loop.first %}checked{% endif %} />
+                  <span class="template-card">
+                    <span class="template-preview"
+                      style="--preview-bg: {{ theme.background_css }}; --preview-overlay: {{ theme.overlay_css }}; --preview-overlay-opacity: {{ theme.overlay_opacity }}; --preview-ink: {{ theme.ink }}; --preview-line: {{ theme.line }}; --preview-panel: {{ theme.panel_strong }}; --preview-accent: {{ theme.accent }}; --preview-accent-2: {{ theme.accent_2 }}; --preview-accent-3: {{ theme.accent_3 }};">
+                      <span class="preview-layout">
+                        <span class="preview-stack">
+                          <span class="preview-pill"></span>
+                          <span class="preview-line"></span>
+                          <span class="preview-line short"></span>
+                          <span class="preview-grid">
+                            <span class="preview-panel accent"></span>
+                            <span class="preview-panel"></span>
+                            <span class="preview-panel"></span>
+                            <span class="preview-panel accent"></span>
+                          </span>
+                        </span>
+                        <span class="preview-side">
+                          <span class="preview-chart">
+                            <span class="preview-bar" style="height: 18px;"></span>
+                            <span class="preview-bar" style="height: 28px;"></span>
+                            <span class="preview-bar" style="height: 40px;"></span>
+                            <span class="preview-bar" style="height: 24px;"></span>
+                          </span>
+                          <span class="preview-dots">
+                            <span class="preview-dot"></span>
+                            <span class="preview-dot"></span>
+                            <span class="preview-dot"></span>
+                          </span>
+                        </span>
+                      </span>
+                    </span>
+                    <span class="template-top">
+                      <span>
+                        <strong>{{ template.label }}</strong>
+                        <span class="template-family">{{ template.family }}</span>
+                      </span>
+                      <span class="template-family">{{ template.tone }}</span>
+                    </span>
+                    <span class="muted">{{ template.description }}</span>
+                    <span class="swatches">
+                      {% for swatch in template.swatches %}
+                      <span class="swatch" style="background: {{ swatch }};"></span>
+                      {% endfor %}
+                    </span>
+                    <span class="template-badges">
+                      {% for badge in template.badges %}
+                      <span class="template-badge">{{ badge }}</span>
+                      {% endfor %}
+                    </span>
+                  </span>
+                </label>
                 {% endfor %}
-              </select>
+              </div>
             </div>
             <div class="field">
               <label>Include private activity</label>

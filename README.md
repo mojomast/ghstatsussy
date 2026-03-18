@@ -167,7 +167,8 @@ Replace the host with your production URL when you deploy it.
 
 ### Input hardening
 
-- hosted report creation now uses fixed dropdowns for time window, template, visibility, and expiry wherever practical
+- hosted report creation now uses fixed dropdowns for time window, visibility, and expiry wherever practical
+- the dashboard template chooser is now a visual picker with palette chips, style badges, and stronger dark-mode form contrast
 - title input is length-limited and normalized server-side
 - server validation rejects invalid template keys, invalid windows, overlong public expiry, and unsafe private/public combinations
 - report, job, and detail routes now use stricter typed identifiers on the server side

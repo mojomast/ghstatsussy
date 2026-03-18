@@ -26,6 +26,7 @@ from ghstats.web.models import Report, User
 from ghstats.web.schemas import ReportCreatePayload, ReportTemplateKey, ReportVisibility
 from ghstats.web.service import HostedReportService, serialize_report
 from ghstats.render.templates import REPORT_TEMPLATES
+from ghstats.render.themes import get_theme
 
 
 TEMPLATE_DIR = Path(__file__).resolve().parent.parent / "templates"
@@ -138,6 +139,7 @@ def create_app(settings: WebAppSettings | None = None) -> FastAPI:
                 "reports": reports,
                 "allow_sample_reports": web_settings.allow_sample_reports,
                 "report_templates": REPORT_TEMPLATES,
+                "get_report_theme": get_theme,
             },
         )
 

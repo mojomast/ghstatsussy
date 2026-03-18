@@ -362,6 +362,23 @@
         margin-bottom: 8px;
       }
 
+      .footer-links {
+        margin-top: 18px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        padding: 18px 6px 0;
+        color: var(--muted);
+      }
+
+      .footer-links a {
+        color: var(--ink);
+        text-decoration: none;
+        border-bottom: 1px solid rgba(24, 34, 47, 0.18);
+      }
+
       @keyframes rise {
         from {
           transform: translateY(14px);
@@ -501,7 +518,7 @@
 <div class="muted">issues</div>            </article>
             <article class="stat-card accent-violet">
               <div class="label">Repos contributed to</div>
-              <div class="value">74</div>
+              <div class="value">75</div>
 <div class="muted">repos</div>            </article>
             <article class="stat-card accent-orange">
               <div class="label">Current / longest streak</div>
@@ -540,7 +557,7 @@
                   <div class="section-kicker">Calendar</div>
                   <h2>Contribution Calendar</h2>
                 </div>
-                <div class="muted">116 total contributions</div>
+                <div class="muted">117 total contributions</div>
               </div>
               <div class="calendar-grid">
                   <div class="cell level-0" title="2026-02-17: 0 contributions"></div>
@@ -572,7 +589,7 @@
                   <div class="cell level-0" title="2026-03-15: 2 contributions"></div>
                   <div class="cell level-0" title="2026-03-16: 1 contributions"></div>
                   <div class="cell level-0" title="2026-03-17: 0 contributions"></div>
-                  <div class="cell level-0" title="2026-03-18: 1 contributions"></div>
+                  <div class="cell level-0" title="2026-03-18: 2 contributions"></div>
                   <div class="cell level-0" title="No data"></div>
                   <div class="cell level-0" title="No data"></div>
                   <div class="cell level-0" title="No data"></div>
@@ -808,22 +825,22 @@
             </div>
             <div class="warning-list">
               <div class="chip" style="border: 1px solid #3178c644;">
-                TypeScript - 32.45%
+                TypeScript - 32.38%
               </div>
               <div class="chip" style="border: 1px solid #3572A544;">
-                Python - 30.38%
+                Python - 30.46%
               </div>
               <div class="chip" style="border: 1px solid #4F5D9544;">
-                PHP - 8.86%
+                PHP - 8.84%
               </div>
               <div class="chip" style="border: 1px solid #fcb32c44;">
-                MDX - 8.81%
+                MDX - 8.79%
               </div>
               <div class="chip" style="border: 1px solid #f1e05a44;">
-                JavaScript - 6.21%
+                JavaScript - 6.2%
               </div>
               <div class="chip" style="border: 1px solid #00ADD844;">
-                Go - 5.87%
+                Go - 5.86%
               </div>
               <div class="chip" style="border: 1px solid #e34c2644;">
                 HTML - 2.33%
@@ -948,7 +965,7 @@
                   <p>Roo Code gives you a whole dev team of AI agents in your code editor.</p>
                 </div>
                 <div class="warning-list">
-                  <span class="chip">22725 stars</span>
+                  <span class="chip">22726 stars</span>
                   <span class="chip">2914 forks</span>
                 </div>
               </div>
@@ -1086,11 +1103,22 @@
 <p>GitHub reported 3 restricted contributions in the selected window.</p>            </article>
           </div>
         </section>
+
+        <footer class="footer-links">
+          <div>Built with ghstats 0.1.0</div>
+          <div>
+            <a href="https://github.com/mojomast/ghstatsussy">mojomast/ghstatsussy</a>
+            &middot;
+            <a href="https://ghstats.ussyco.de">ghstats.ussyco.de</a>
+            &middot;
+            <a href="https://ussy.host">ussyverse</a>
+          </div>
+        </footer>
       </div>
     </main>
 
     <script>
-      const payload = {"commits": {"title": "Commits per Day", "labels": ["2026-02-17", "2026-02-18", "2026-02-19", "2026-02-20", "2026-02-21", "2026-02-22", "2026-02-23", "2026-02-24", "2026-02-25", "2026-02-26", "2026-02-27", "2026-02-28", "2026-03-01", "2026-03-02", "2026-03-03", "2026-03-04", "2026-03-05", "2026-03-06", "2026-03-07", "2026-03-08", "2026-03-09", "2026-03-10", "2026-03-11", "2026-03-12", "2026-03-13", "2026-03-14", "2026-03-15", "2026-03-16", "2026-03-17", "2026-03-18"], "series": [{"id": "commits", "label": "Commits", "values": [0, 22, 6, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0], "color": "#0f766e"}]}, "loc": {"title": "Lines Added vs Deleted", "labels": ["2026-02-17", "2026-02-18", "2026-02-19", "2026-02-20", "2026-02-21", "2026-02-22", "2026-02-23", "2026-02-24", "2026-02-25", "2026-02-26", "2026-02-27", "2026-02-28", "2026-03-01", "2026-03-02", "2026-03-03", "2026-03-04", "2026-03-05", "2026-03-06", "2026-03-07", "2026-03-08", "2026-03-09", "2026-03-10", "2026-03-11", "2026-03-12", "2026-03-13", "2026-03-14", "2026-03-15", "2026-03-16", "2026-03-17", "2026-03-18"], "series": [{"id": "additions", "label": "Added", "values": [0, 2693, 2482, 0, 0, 0, 0, 1684, 0, 0, 0, 0, 0, 0, 0, 0, 11501, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53266, 0, 0, 0], "color": "#16a34a"}, {"id": "deletions", "label": "Deleted", "values": [0, 1033, 237, 0, 0, 0, 0, 532, 0, 0, 0, 0, 0, 0, 0, 0, 21736, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18769, 0, 0, 0], "color": "#dc2626"}]}, "languages": {"title": "Top Languages", "labels": ["TypeScript", "Python", "PHP", "MDX", "JavaScript", "Go", "HTML", "Shell"], "values": [24995363, 23403657, 6824137, 6787707, 4785637, 4525589, 1796748, 1319448], "colors": ["#3178c6", "#3572A5", "#4F5D95", "#fcb32c", "#f1e05a", "#00ADD8", "#e34c26", "#89e051"]}, "weekdayHours": {"title": "Activity by Weekday and Hour", "x_labels": ["00:00", "01:00", "02:00", "03:00", "04:00", "05:00", "06:00", "07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00", "23:00"], "y_labels": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"], "matrix": [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 6, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]], "min": 0, "max": 22}};
+      const payload = {"commits": {"title": "Commits per Day", "labels": ["2026-02-17", "2026-02-18", "2026-02-19", "2026-02-20", "2026-02-21", "2026-02-22", "2026-02-23", "2026-02-24", "2026-02-25", "2026-02-26", "2026-02-27", "2026-02-28", "2026-03-01", "2026-03-02", "2026-03-03", "2026-03-04", "2026-03-05", "2026-03-06", "2026-03-07", "2026-03-08", "2026-03-09", "2026-03-10", "2026-03-11", "2026-03-12", "2026-03-13", "2026-03-14", "2026-03-15", "2026-03-16", "2026-03-17", "2026-03-18"], "series": [{"id": "commits", "label": "Commits", "values": [0, 22, 6, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0], "color": "#0f766e"}]}, "loc": {"title": "Lines Added vs Deleted", "labels": ["2026-02-17", "2026-02-18", "2026-02-19", "2026-02-20", "2026-02-21", "2026-02-22", "2026-02-23", "2026-02-24", "2026-02-25", "2026-02-26", "2026-02-27", "2026-02-28", "2026-03-01", "2026-03-02", "2026-03-03", "2026-03-04", "2026-03-05", "2026-03-06", "2026-03-07", "2026-03-08", "2026-03-09", "2026-03-10", "2026-03-11", "2026-03-12", "2026-03-13", "2026-03-14", "2026-03-15", "2026-03-16", "2026-03-17", "2026-03-18"], "series": [{"id": "additions", "label": "Added", "values": [0, 2693, 2482, 0, 0, 0, 0, 1684, 0, 0, 0, 0, 0, 0, 0, 0, 11501, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53266, 0, 0, 0], "color": "#16a34a"}, {"id": "deletions", "label": "Deleted", "values": [0, 1033, 237, 0, 0, 0, 0, 532, 0, 0, 0, 0, 0, 0, 0, 0, 21736, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18769, 0, 0, 0], "color": "#dc2626"}]}, "languages": {"title": "Top Languages", "labels": ["TypeScript", "Python", "PHP", "MDX", "JavaScript", "Go", "HTML", "Shell"], "values": [24995363, 23513597, 6824137, 6787707, 4785637, 4525589, 1796748, 1319448], "colors": ["#3178c6", "#3572A5", "#4F5D95", "#fcb32c", "#f1e05a", "#00ADD8", "#e34c26", "#89e051"]}, "weekdayHours": {"title": "Activity by Weekday and Hour", "x_labels": ["00:00", "01:00", "02:00", "03:00", "04:00", "05:00", "06:00", "07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00", "23:00"], "y_labels": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"], "matrix": [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 6, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]], "min": 0, "max": 22}};
 
       const sharedOptions = {
         responsive: true,
