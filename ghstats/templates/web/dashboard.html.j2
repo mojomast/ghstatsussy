@@ -891,9 +891,6 @@
         form.addEventListener('submit', () => {
           document.body.classList.add('is-submitting');
           overlay.hidden = false;
-          for (const element of form.elements) {
-            element.disabled = true;
-          }
           submitButton.disabled = true;
           submitButton.textContent = 'Starting report...';
         });
