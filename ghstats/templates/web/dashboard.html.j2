@@ -148,13 +148,14 @@
 
       .layout {
         display: grid;
-        grid-template-columns: 390px 1fr;
-        gap: 18px;
-        margin-top: 18px;
+        grid-template-columns: 420px 1fr;
+        gap: 24px;
+        margin-top: 24px;
+        align-items: start;
       }
 
       .panel {
-        padding: 22px;
+        padding: 24px;
         position: relative;
         overflow: hidden;
       }
@@ -488,11 +489,25 @@
       }
 
       .status-strip {
-        padding: 16px 18px;
+        padding: 12px 16px;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        gap: 14px;
+        gap: 12px;
+        border-radius: 14px;
+      }
+
+      .status-strip .eyebrow {
+        margin: 0;
+        padding: 4px 8px;
+        font-size: 10px;
+        border-color: rgba(90, 216, 255, 0.4);
+      }
+
+      .status-strip-text {
+        display: flex;
+        align-items: center;
+        gap: 12px;
       }
 
       .report-list {
@@ -812,14 +827,14 @@
 
         <div class="stack">
           <section class="status-strip">
-            <div>
-              <div class="eyebrow">Current policy</div>
-              <h2 style="margin-top: 10px;">Host the page, not the guts</h2>
+            <div class="status-strip-text">
+              <span class="eyebrow">Policy</span>
+              <h3 style="font-size: 14px; font-weight: 500; margin: 0;">Host the page, not the guts</h3>
             </div>
-            <div class="chip-row">
-              <span class="chip">HTML retained by default</span>
-              <span class="chip">metadata opt-in</span>
-              <span class="chip">private activity stays private</span>
+            <div class="chip-row" style="gap: 6px;">
+              <span class="chip" style="font-size: 10px; padding: 4px 8px;">HTML retained</span>
+              <span class="chip" style="font-size: 10px; padding: 4px 8px;">Metadata opt-in</span>
+              <span class="chip" style="font-size: 10px; padding: 4px 8px;">Private activity stays private</span>
             </div>
           </section>
 
