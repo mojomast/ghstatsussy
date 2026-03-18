@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ghstatsussy hosted</title>
+    <style>
+      :root {
+        --bg: #f5ecdc;
+        --panel: rgba(255, 251, 244, 0.84);
+        --ink: #1c2430;
+        --muted: #556172;
+        --accent: #0f766e;
+        --accent2: #d97706;
+        --shadow: 0 30px 80px rgba(16, 24, 40, 0.18);
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: "Space Grotesk", "Trebuchet MS", sans-serif;
+        color: var(--ink);
+        background:
+          radial-gradient(circle at top left, rgba(15,118,110,0.22), transparent 30%),
+          radial-gradient(circle at right, rgba(217,119,6,0.2), transparent 28%),
+          linear-gradient(165deg, #faf3e5 0%, #f2e7d1 100%);
+        display: grid;
+        place-items: center;
+        padding: 28px;
+      }
+      .hero {
+        width: min(1040px, 100%);
+        display: grid;
+        grid-template-columns: 1.2fr 0.9fr;
+        gap: 18px;
+      }
+      .panel {
+        background: var(--panel);
+        border: 1px solid rgba(255,255,255,0.55);
+        border-radius: 28px;
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(18px);
+        padding: 28px;
+      }
+      h1,h2,p { margin: 0; }
+      h1 {
+        font-family: "IBM Plex Sans", sans-serif;
+        font-size: clamp(2.4rem, 5vw, 4.8rem);
+        line-height: 0.94;
+        max-width: 9ch;
+        margin-top: 12px;
+      }
+      .eyebrow, .pill {
+        display: inline-flex;
+        padding: 8px 12px;
+        border-radius: 999px;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        font-size: 12px;
+      }
+      .eyebrow { background: rgba(15,118,110,0.12); color: var(--accent); }
+      .lede, .muted { color: var(--muted); }
+      .lede { margin-top: 14px; font-size: 1.08rem; max-width: 56ch; line-height: 1.6; }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+        margin-top: 22px;
+      }
+      .stat {
+        background: rgba(255,255,255,0.6);
+        border-radius: 20px;
+        padding: 16px;
+      }
+      .stat strong { display: block; font-size: 1.8rem; }
+      .login {
+        display: grid;
+        gap: 14px;
+        align-content: start;
+      }
+      .cta {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        text-decoration: none;
+        padding: 14px 18px;
+        border-radius: 18px;
+        background: linear-gradient(135deg, var(--accent), var(--accent2));
+        color: white;
+        font-weight: 700;
+      }
+      .note {
+        border-radius: 18px;
+        background: rgba(28,36,48,0.05);
+        padding: 16px;
+        line-height: 1.55;
+      }
+      a { color: inherit; }
+      @media (max-width: 860px) {
+        .hero { grid-template-columns: 1fr; }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="hero">
+      <section class="panel">
+        <span class="eyebrow">Hosted GitHub infographics</span>
+        <h1>Sign in, churn repos, share the glow-up.</h1>
+        <p class="lede">`ghstatsussy` turns a GitHub account into a polished HTML activity report with a stable share link. The hosted app keeps OAuth server-side and serves stored report snapshots.</p>
+        <div class="grid">
+          <div class="stat"><span class="muted">OAuth</span><strong>GitHub</strong></div>
+          <div class="stat"><span class="muted">Output</span><strong>HTML</strong></div>
+          <div class="stat"><span class="muted">Share</span><strong>Slug link</strong></div>
+          <div class="stat"><span class="muted">Engine</span><strong>CLI core</strong></div>
+        </div>
+      </section>
+
+      <section class="panel login">
+        <span class="pill" style="background: rgba(217,119,6,0.12); color: #b45309;">FastAPI hosted MVP</span>
+        <h2>Bring your GitHub account</h2>
+        <p class="muted">After login, you can generate reports for windows like `30d`, `12w`, or `6m`, then share them with a public or unlisted slug. Private reports stay owner-only.</p>
+        <a class="cta" href="/auth/github/login">Sign in with GitHub</a>
+        <div class="note">
+          <strong>How it works</strong>
+          <p class="muted">Sign in with GitHub, choose a time window, and generate a polished stats page you can share. By default, ghstatsussy keeps only the hosted HTML report; metadata retention is optional, and reports with private activity stay private.</p>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

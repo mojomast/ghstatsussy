@@ -81,6 +81,92 @@ GH_ACCESS_TOKEN="$(gh auth token)" python -m ghstats --since 90d --output report
 - Commit line additions/deletions come from repository commit detail endpoints and are best-effort for the selected window.
 - If GitHub returns partial data or permissions are limited, the report includes warnings instead of failing hard.
 
+## Hosted App
+
+`ghstatsussy` now includes a FastAPI hosted-app scaffold so users can sign in with GitHub OAuth, generate a report on the server, and get a shareable report URL.
+
+Hosted app pieces live in `ghstats/web/` and reuse the same fetch/analytics/render core as the CLI.
+
+### Hosted app environment
+
+```bash
+export APP_SECRET_KEY="change-me"
+export GITHUB_CLIENT_ID="your_github_oauth_app_client_id"
+export GITHUB_CLIENT_SECRET="your_github_oauth_app_client_secret"
+export APP_BASE_URL="http://127.0.0.1:8001"
+```
+
+Optional:
+
+```bash
+export DATABASE_URL="sqlite:///./web_artifacts/ghstatsussy.db"
+export REPORT_STORAGE_DIR="./web_artifacts"
+export ALLOW_SAMPLE_REPORTS=1
+```
+
+### Run the hosted app
+
+```bash
+ghstats-web
+```
+
+Or without installing the console script:
+
+```bash
+python -m uvicorn ghstats.web.app:app --host 127.0.0.1 --port 8001 --reload
+```
+
+### GitHub OAuth callback URL
+
+Create a GitHub OAuth App and set its callback URL to:
+
+```text
+http://127.0.0.1:8001/auth/github/callback
+```
+
+Replace the host with your production URL when you deploy it.
+
+### Hosted app behavior
+
+- signs users in with GitHub OAuth
+- stores the GitHub token server-side only
+- queues report generation jobs instead of doing long work in the browser
+- lets the user generate reports for windows like `30d`, `12w`, and `6m`
+- persists HTML artifacts by default and stores JSON metadata only when the user opts in
+- serves public or unlisted report links at `/r/{slug}`
+- supports per-user subdomain-style URLs like `username.ghstats.ussyco.de`
+- keeps `include_private` reports private in this MVP
+
+### Privacy-first hosted posture
+
+- default retention is the final hosted HTML page only
+- raw GitHub API responses are not stored
+- report JSON/metadata retention is opt-in
+- background workers fetch GitHub data, render the page, then keep only the configured artifacts
+- reports have an expiry window so hosted pages can age out automatically
+- if you want true no-retention refreshes, disable metadata storage and require the user to regenerate from a live OAuth session
+
+### Production hostnames
+
+- dashboard/app host: `ghstats.ussyco.de`
+- public share host pattern: `username.ghstats.ussyco.de`
+
+Important TLS note:
+
+- the existing `*.ussyco.de` certificate can cover `ghstats.ussyco.de`
+- it cannot cover nested hosts like `username.ghstats.ussyco.de`
+- for per-user subdomains you need a dedicated certificate for:
+  - `ghstats.ussyco.de`
+  - `*.ghstats.ussyco.de`
+
+Deployment templates are included in `examples/`:
+
+- `examples/ghstats.ussyco.de.nginx.conf`
+- `examples/wildcard-ghstats.ussyco.de.nginx.conf`
+- `examples/ghstatsussy-web.service`
+- `examples/ghstatsussy-worker.service`
+- `examples/certbot-ghstats-command.txt`
+
 ## Project Layout
 
 - `ghstats/cli.py` - CLI entrypoint
@@ -91,7 +177,9 @@ GH_ACCESS_TOKEN="$(gh auth token)" python -m ghstats --since 90d --output report
 - `ghstats/analytics/` - aggregation and metric calculation
 - `ghstats/render/` - HTML rendering
 - `ghstats/templates/report.html.j2` - report template
+- `ghstats/web/` - FastAPI hosted app, OAuth, persistence, share links
 - `SPEC.md` - implementation spec and future direction
+- `HOSTED_SPEC.md` - hosted app architecture and roadmap
 
 ## Hosting Notes
 

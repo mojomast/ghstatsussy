@@ -1,0 +1,6 @@
+sudo certbot certonly \
+  --dns-rfc2136 \
+  --dns-rfc2136-credentials /etc/letsencrypt/rfc2136.ini \
+  --cert-name ghstats.ussyco.de \
+  -d ghstats.ussyco.de \
+  -d '*.ghstats.ussyco.de'

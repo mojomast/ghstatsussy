@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard - ghstatsussy hosted</title>
+    <style>
+      :root {
+        --bg: #f4efe6;
+        --panel: rgba(255, 251, 244, 0.86);
+        --ink: #18222f;
+        --muted: #576576;
+        --accent: #0f766e;
+        --warn: #d97706;
+        --shadow: 0 28px 70px rgba(17,24,39,0.16);
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background:
+          radial-gradient(circle at top left, rgba(15,118,110,0.18), transparent 30%),
+          radial-gradient(circle at top right, rgba(217,119,6,0.16), transparent 28%),
+          linear-gradient(165deg, #f7f0e4 0%, #efe3cf 100%);
+        font-family: "Space Grotesk", "Trebuchet MS", sans-serif;
+        color: var(--ink);
+      }
+      .shell { width: min(1180px, calc(100% - 28px)); margin: 24px auto 40px; }
+      .top, .panel {
+        background: var(--panel);
+        border: 1px solid rgba(255,255,255,0.55);
+        backdrop-filter: blur(18px);
+        border-radius: 28px;
+        box-shadow: var(--shadow);
+      }
+      .top {
+        padding: 22px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+      }
+      .profile { display: flex; align-items: center; gap: 14px; }
+      .profile img { width: 64px; height: 64px; border-radius: 20px; }
+      .muted { color: var(--muted); }
+      h1,h2,h3,p { margin: 0; }
+      .grid { display: grid; grid-template-columns: 360px 1fr; gap: 18px; margin-top: 18px; }
+      .panel { padding: 20px; }
+      .field { display: grid; gap: 8px; margin-top: 12px; }
+      .checkbox-row { display: flex; align-items: center; gap: 10px; }
+      label { font-size: 0.9rem; color: var(--muted); }
+      input, select {
+        width: 100%; border: 1px solid rgba(24,34,47,0.12); background: rgba(255,255,255,0.8);
+        border-radius: 16px; padding: 12px 14px; font: inherit;
+      }
+      input[type="checkbox"] { width: auto; }
+      .actions { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+      button {
+        border: 0; border-radius: 16px; padding: 12px 16px; font: inherit; font-weight: 700; cursor: pointer;
+      }
+      .primary { background: linear-gradient(135deg, var(--accent), var(--warn)); color: white; }
+      .secondary { background: rgba(24,34,47,0.08); color: var(--ink); }
+      .reports { display: grid; gap: 14px; }
+      .report-card {
+        background: rgba(255,255,255,0.72); border-radius: 22px; padding: 18px; border: 1px solid rgba(24,34,47,0.08);
+      }
+      .meta { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+      .chip {
+        border-radius: 999px; padding: 7px 10px; background: rgba(24,34,47,0.07); font-size: 0.86rem;
+      }
+      .report-links { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 14px; }
+      .report-links a { color: var(--accent); text-decoration: none; }
+      form.inline { margin: 0; }
+      @media (max-width: 940px) {
+        .grid { grid-template-columns: 1fr; }
+        .top { align-items: flex-start; flex-direction: column; }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="shell">
+      <section class="top">
+        <div class="profile">
+          {% if user.avatar_url %}<img src="{{ user.avatar_url }}" alt="{{ user.login }} avatar" />{% endif %}
+          <div>
+            <div class="muted">Signed in with GitHub</div>
+            <h1>{{ user.name or user.login }}</h1>
+            <div class="muted">@{{ user.login }}</div>
+          </div>
+        </div>
+        <form class="inline" method="post" action="/auth/logout">
+          <button class="secondary" type="submit">Log out</button>
+        </form>
+      </section>
+
+      <section class="grid">
+        <article class="panel">
+          <h2>Generate a report</h2>
+          <p class="muted" style="margin-top: 8px;">Create a fresh HTML snapshot from the hosted app. Unlisted and public reports get a shareable slug.</p>
+          <form method="post" action="/dashboard/reports">
+            <div class="field">
+              <label for="since_spec">Time window</label>
+              <input id="since_spec" name="since_spec" value="30d" placeholder="30d" />
+            </div>
+            <div class="field">
+              <label for="title">Title</label>
+              <input id="title" name="title" placeholder="GitHub Activity - Last 30d" />
+            </div>
+            <div class="field">
+              <label for="visibility">Visibility</label>
+              <select id="visibility" name="visibility">
+                <option value="unlisted">unlisted</option>
+                <option value="public">public</option>
+                <option value="private">private</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Include private activity</label>
+              <label class="checkbox-row"><input id="include_private" name="include_private" type="checkbox" value="true" /> <span>keep report private if enabled</span></label>
+            </div>
+            <div class="field">
+              <label for="expires_in_days">Expiry in days</label>
+              <input id="expires_in_days" name="expires_in_days" type="number" min="1" max="90" value="14" />
+            </div>
+            <div class="field">
+              <label>Store metadata</label>
+              <label class="checkbox-row"><input id="store_metadata" name="store_metadata" type="checkbox" value="true" /> <span>opt in to keep JSON/metadata for reruns and history</span></label>
+            </div>
+            {% if allow_sample_reports %}
+            <div class="field">
+              <label>Use sample data</label>
+              <label class="checkbox-row"><input id="sample_data" name="sample_data" type="checkbox" value="true" /> <span>demo mode without live GitHub access</span></label>
+            </div>
+            {% endif %}
+            <div class="actions">
+              <button class="primary" type="submit">Generate report</button>
+            </div>
+          </form>
+        </article>
+
+        <article class="panel">
+          <h2>Your reports</h2>
+          <p class="muted" style="margin-top: 8px;">Each report stores a rendered snapshot. Refreshing generates a new version without breaking the share slug.</p>
+          <div class="reports" style="margin-top: 16px;">
+            {% if reports %}
+              {% for report in reports %}
+              <section class="report-card">
+                <h3>{{ report.title }}</h3>
+                <div class="meta">
+                  <span class="chip">{{ report.since_spec }}</span>
+                  <span class="chip">{{ report.visibility }}</span>
+                  <span class="chip">{{ report.status }}</span>
+                  {% if report.include_private %}<span class="chip">private activity</span>{% endif %}
+                </div>
+                <div class="report-links">
+                  <a href="/dashboard/reports/{{ report.id }}">Manage</a>
+                  <a href="{{ report.share_url }}">Share link</a>
+                </div>
+              </section>
+              {% endfor %}
+            {% else %}
+              <p class="muted" style="margin-top: 14px;">No reports yet. Make the first one and give it a shareable slug.</p>
+            {% endif %}
+          </div>
+        </article>
+      </section>
+    </main>
+  </body>
+</html>

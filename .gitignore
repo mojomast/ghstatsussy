@@ -2,3 +2,6 @@
 __pycache__/
 *.pyc
 .DS_Store
+web_artifacts/
+examples/live_report*.html
+examples/live_report*.json
