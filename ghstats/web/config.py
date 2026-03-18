@@ -4,7 +4,6 @@ import os
 from dataclasses import dataclass
 from pathlib import Path
 
-
 def _truthy(value: str | None) -> bool:
     return (value or "").strip().lower() in {"1", "true", "yes", "on"}
 
@@ -50,6 +49,13 @@ def load_web_settings() -> WebAppSettings:
         if scope.strip()
     )
 
+    default_visibility = os.getenv("DEFAULT_REPORT_VISIBILITY", "unlisted").strip().lower()
+    if default_visibility not in {"private", "unlisted", "public"}:
+        default_visibility = "unlisted"
+
+    expiry_days = int(os.getenv("DEFAULT_REPORT_EXPIRY_DAYS", "14"))
+    expiry_days = max(1, min(expiry_days, 90))
+
     return WebAppSettings(
         app_name=os.getenv("APP_NAME", "ghstatsussy hosted"),
         app_base_url=os.getenv("APP_BASE_URL", "http://127.0.0.1:8001").rstrip("/"),
@@ -77,8 +83,8 @@ def load_web_settings() -> WebAppSettings:
         ),
         session_cookie_name=os.getenv("SESSION_COOKIE_NAME", "ghstatsussy_session"),
         allow_sample_reports=_truthy(os.getenv("ALLOW_SAMPLE_REPORTS", "0")),
-        default_visibility=os.getenv("DEFAULT_REPORT_VISIBILITY", "unlisted"),
-        default_report_expiry_days=int(os.getenv("DEFAULT_REPORT_EXPIRY_DAYS", "14")),
+        default_visibility=default_visibility,
+        default_report_expiry_days=expiry_days,
         default_store_metadata=_truthy(os.getenv("DEFAULT_STORE_METADATA", "0")),
         ghstats_subdomain_base=os.getenv("GHSTATS_SUBDOMAIN_BASE", "ghstats.ussyco.de"),
         reserved_report_usernames=tuple(

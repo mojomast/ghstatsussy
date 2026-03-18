@@ -88,6 +88,7 @@ class HostedReportService:
         visibility: str,
         store_metadata: bool,
         expires_in_days: int,
+        template_key: str,
         sample_data: bool = False,
     ) -> Report:
         if visibility not in {"private", "unlisted", "public"}:
@@ -96,6 +97,10 @@ class HostedReportService:
             raise ValueError("Reports with private activity must remain private in hosted mode.")
         if sample_data and not self.settings.allow_sample_reports:
             raise ValueError("Sample reports are disabled for this deployment.")
+        if not (1 <= expires_in_days <= 90):
+            raise ValueError("Expiry must be between 1 and 90 days.")
+        if visibility == "public" and expires_in_days > 30:
+            raise ValueError("Public reports must expire within 30 days.")
 
         use_metadata = store_metadata or self.settings.default_store_metadata or user.store_metadata_opt_in
         username_slug = self._normalize_username(user.login)
@@ -109,6 +114,7 @@ class HostedReportService:
             visibility=visibility,
             status="queued",
             store_metadata=use_metadata,
+            template_key=template_key,
             expires_at=_safe_expiry(days=expires_in_days),
             username_slug=username_slug,
         )
@@ -182,6 +188,7 @@ def serialize_report(report: Report, settings: WebAppSettings) -> dict[str, obje
         "store_metadata": report.store_metadata,
         "expires_at": report.expires_at.isoformat() if report.expires_at else None,
         "latest_job_id": report.latest_job_id,
+        "template_key": report.template_key,
     }
 
 

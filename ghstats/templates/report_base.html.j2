@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ context.meta.title }} - @{{ context.meta.subject.login }}</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+      :root {
+        --bg: {{ theme.bg }};
+        --bg-alt: {{ theme.bg_alt }};
+        --panel: {{ theme.panel }};
+        --panel-strong: {{ theme.panel_strong }};
+        --ink: {{ theme.ink }};
+        --muted: {{ theme.muted }};
+        --line: {{ theme.line }};
+        --accent: {{ theme.accent }};
+        --accent-2: {{ theme.accent_2 }};
+        --accent-3: {{ theme.accent_3 }};
+        --accent-4: {{ theme.accent_4 }};
+        --shadow: {{ theme.shadow }};
+        --hero-font: {{ theme.hero_font }};
+        --body-font: {{ theme.body_font }};
+        --mono-font: {{ theme.mono_font }};
+        --radius-shell: {{ theme.radius_shell }};
+        --radius-card: {{ theme.radius_card }};
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        font-family: var(--body-font);
+        color: var(--ink);
+        background: {{ theme.background_css }};
+        min-height: 100vh;
+        position: relative;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        background: {{ theme.overlay_css }};
+        opacity: {{ theme.overlay_opacity }};
+      }
+
+      a { color: inherit; }
+
+      .shell {
+        width: min(1180px, calc(100% - 28px));
+        margin: 24px auto 36px;
+        position: relative;
+        z-index: 1;
+      }
+
+      .hero,
+      .panel {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        box-shadow: var(--shadow);
+        border-radius: var(--radius-shell);
+        overflow: hidden;
+      }
+
+      .hero {
+        padding: 28px;
+        display: grid;
+        grid-template-columns: 1.2fr 0.88fr;
+        gap: 18px;
+      }
+
+      .hero-copy,
+      .hero-side,
+      .stack {
+        display: grid;
+        gap: 16px;
+      }
+
+      .eyebrow,
+      .chip,
+      .label,
+      .section-kicker,
+      .footer-links,
+      .repo-kpi {
+        font-family: var(--mono-font);
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+
+      .eyebrow,
+      .chip {
+        display: inline-flex;
+        width: fit-content;
+        border-radius: 999px;
+        padding: 8px 10px;
+      }
+
+      .eyebrow {
+        border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
+        color: var(--accent);
+        background: color-mix(in srgb, var(--accent) 10%, transparent);
+      }
+
+      .chip {
+        border: 1px solid var(--line);
+        background: color-mix(in srgb, var(--panel-strong) 92%, transparent);
+        color: var(--muted);
+      }
+
+      h1, h2, h3, h4, p { margin: 0; }
+
+      h1, h2, h3 {
+        font-family: var(--hero-font);
+      }
+
+      h1 {
+        font-size: clamp(2.4rem, 6vw, 4.8rem);
+        line-height: 0.94;
+        max-width: 11ch;
+      }
+
+      .subtitle,
+      .muted,
+      .meta-chip,
+      .fact-text,
+      .repo-copy p,
+      .warning p {
+        color: var(--muted);
+      }
+
+      .hero-grid,
+      .stats-grid,
+      .charts-grid,
+      .facts-grid,
+      .repo-grid,
+      .bottom-grid,
+      .language-list {
+        display: grid;
+        gap: 16px;
+      }
+
+      .hero-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .stats-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+      .charts-grid { grid-template-columns: 1.25fr 0.95fr; }
+      .facts-grid,
+      .repo-grid,
+      .bottom-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+      .hero-stat,
+      .profile-card,
+      .warning,
+      .fact,
+      .repo-card,
+      .stat-card,
+      .chart-card,
+      .mini-panel,
+      .language-item {
+        border-radius: var(--radius-card);
+        border: 1px solid var(--line);
+        background: var(--panel-strong);
+      }
+
+      .hero-stat,
+      .profile-card,
+      .warning,
+      .fact,
+      .repo-card,
+      .stat-card,
+      .chart-card,
+      .mini-panel,
+      .language-item,
+      .panel {
+        padding: 18px;
+      }
+
+      .hero-stat .value,
+      .stat-card .value,
+      .fact-value {
+        font-size: 1.9rem;
+        font-weight: 700;
+        margin-top: 8px;
+      }
+
+      .meta-row,
+      .warning-list,
+      .repo-chips,
+      .link-row,
+      .footer-links,
+      .section-head,
+      .repo-head {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+      }
+
+      .section-head,
+      .repo-head {
+        justify-content: space-between;
+      }
+
+      .layout {
+        display: grid;
+        gap: 18px;
+        margin-top: 18px;
+      }
+
+      .chart-card canvas {
+        width: 100% !important;
+        height: 280px !important;
+      }
+
+      .calendar-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(14px, 1fr));
+        gap: 6px;
+        margin-top: 16px;
+      }
+
+      .cell {
+        aspect-ratio: 1;
+        border-radius: 6px;
+      }
+
+      .level-0 { background: color-mix(in srgb, var(--ink) 8%, transparent); }
+      .level-1 { background: color-mix(in srgb, var(--accent) 26%, transparent); }
+      .level-2 { background: color-mix(in srgb, var(--accent) 42%, transparent); }
+      .level-3 { background: color-mix(in srgb, var(--accent-2) 58%, transparent); }
+      .level-4 { background: color-mix(in srgb, var(--accent-3) 70%, transparent); }
+
+      .weekday-heatmap {
+        margin-top: 14px;
+        display: grid;
+        gap: 8px;
+      }
+
+      .heat-row {
+        display: grid;
+        grid-template-columns: 46px repeat(24, minmax(0, 1fr));
+        gap: 6px;
+        align-items: center;
+      }
+
+      .heat-hour {
+        height: 14px;
+        border-radius: 999px;
+        background: color-mix(in srgb, var(--ink) 10%, transparent);
+      }
+
+      .language-list {
+        margin-top: 14px;
+      }
+
+      .language-item {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+      }
+
+      .footer-links {
+        justify-content: space-between;
+        color: var(--muted);
+        padding: 8px 4px 0;
+      }
+
+      .accent-1 { border-top: 4px solid var(--accent); }
+      .accent-2 { border-top: 4px solid var(--accent-2); }
+      .accent-3 { border-top: 4px solid var(--accent-3); }
+      .accent-4 { border-top: 4px solid var(--accent-4); }
+
+      @media (max-width: 980px) {
+        .hero,
+        .stats-grid,
+        .charts-grid,
+        .facts-grid,
+        .repo-grid,
+        .bottom-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .shell { width: min(100% - 18px, 1180px); }
+        .hero-grid { grid-template-columns: 1fr; }
+        .chart-card canvas { height: 240px !important; }
+      }
+
+      {{ theme.extra_css | safe }}
+    </style>
+  </head>
+  <body>
+    <main class="shell template-{{ context.meta.theme.key }}">
+      <section class="hero">
+        <div class="hero-copy">
+          <span class="eyebrow">{{ theme.eyebrow }}</span>
+          <h1>{{ theme.hero_title }}</h1>
+          <p class="subtitle">{{ context.meta.subtitle }}</p>
+          <p class="muted">{{ theme.hero_copy }}</p>
+          <div class="meta-row">
+            <span class="chip">{{ context.meta.period.start }} - {{ context.meta.period.end }}</span>
+            <span class="chip">{{ context.meta.period.days }} days</span>
+            <span class="chip">{{ report_template.label }}</span>
+          </div>
+          <div class="hero-grid">
+            {% for card in context.stats_cards[:4] %}
+            <div class="hero-stat accent-{{ ((loop.index0 % 4) + 1) }}">
+              <div class="label">{{ card.label }}</div>
+              <div class="value">{{ card.value }}</div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+        <div class="hero-side">
+          <div class="profile-card">
+            {% if context.meta.subject.avatar_url %}
+            <img src="{{ context.meta.subject.avatar_url }}" alt="avatar for {{ context.meta.subject.login }}" style="width:68px;height:68px;border-radius:20px;object-fit:cover;" />
+            {% endif %}
+            <div>
+              <div class="section-kicker">{{ theme.profile_kicker }}</div>
+              <h3>@{{ context.meta.subject.login }}</h3>
+              <p class="muted">{{ context.meta.period.label }}</p>
+            </div>
+          </div>
+          <div class="mini-panel">
+            <div class="section-kicker">{{ theme.side_kicker }}</div>
+            <h3 style="margin-top: 8px;">{{ theme.side_title }}</h3>
+            <p class="muted" style="margin-top: 8px;">{{ theme.side_copy }}</p>
+          </div>
+          <div class="mini-panel">
+            <div class="section-kicker">Links</div>
+            <div class="link-row" style="margin-top: 10px;">
+              <a href="{{ context.meta.links.repository_url }}">{{ context.meta.links.repository_label }}</a>
+              <a href="{{ context.meta.links.app_url }}">{{ context.meta.links.app_label }}</a>
+              <a href="{{ context.meta.links.ussyverse_url }}">{{ context.meta.links.ussyverse_label }}</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="layout">
+        <section class="panel">
+          <div class="section-head">
+            <div>
+              <div class="section-kicker">{{ theme.stats_kicker }}</div>
+              <h2>{{ theme.stats_title }}</h2>
+            </div>
+          </div>
+          <div class="stats-grid">
+            {% for card in context.stats_cards %}
+            <article class="stat-card accent-{{ ((loop.index0 % 4) + 1) }}">
+              <div class="label">{{ card.label }}</div>
+              <div class="value">{{ card.value }}</div>
+              {% if card.unit %}<div class="muted">{{ card.unit }}</div>{% endif %}
+            </article>
+            {% endfor %}
+          </div>
+        </section>
+
+        <section class="charts-grid">
+          <div class="stack">
+            <article class="chart-card">
+              <div class="section-head">
+                <div>
+                  <div class="section-kicker">{{ theme.charts_kicker }}</div>
+                  <h2>{{ context.chart_datasets.commits_timeline.title }}</h2>
+                </div>
+              </div>
+              <canvas id="commitsChart"></canvas>
+            </article>
+            <article class="chart-card">
+              <div class="section-head">
+                <div>
+                  <div class="section-kicker">{{ theme.charts_kicker_2 }}</div>
+                  <h2>{{ context.chart_datasets.loc_timeline.title }}</h2>
+                </div>
+              </div>
+              <canvas id="locChart"></canvas>
+            </article>
+          </div>
+          <div class="stack">
+            <article class="chart-card">
+              <div class="section-head">
+                <div>
+                  <div class="section-kicker">{{ theme.calendar_kicker }}</div>
+                  <h2>{{ context.heatmap.title }}</h2>
+                </div>
+                <div class="muted">{{ context.heatmap.total }} contributions</div>
+              </div>
+              <div class="calendar-grid">
+                {% for week in context.heatmap.weeks %}
+                  {% for day in week.days %}
+                  <div class="cell level-{{ day.level }}" title="{{ day.tooltip }}"></div>
+                  {% endfor %}
+                {% endfor %}
+              </div>
+            </article>
+            <article class="chart-card">
+              <div class="section-head">
+                <div>
+                  <div class="section-kicker">{{ theme.language_kicker }}</div>
+                  <h2>{{ context.chart_datasets.languages.title }}</h2>
+                </div>
+              </div>
+              <canvas id="languageChart"></canvas>
+            </article>
+          </div>
+        </section>
+
+        <section class="bottom-grid">
+          <article class="panel">
+            <div class="section-head">
+              <div>
+                <div class="section-kicker">{{ theme.heatmap_kicker }}</div>
+                <h2>{{ context.chart_datasets.weekday_hours.title }}</h2>
+              </div>
+            </div>
+            <div class="weekday-heatmap">
+              {% for row in context.chart_datasets.weekday_hours.matrix %}
+              <div class="heat-row">
+                {% set row_label = context.chart_datasets.weekday_hours.y_labels[loop.index0] %}
+                <div class="muted">{{ row_label }}</div>
+                {% for cell in row %}
+                {% set max_val = context.chart_datasets.weekday_hours.max or 1 %}
+                {% set opacity = 0.08 + (cell / max_val) * 0.92 %}
+                <div class="heat-hour" title="{{ row_label }} {{ context.chart_datasets.weekday_hours.x_labels[loop.index0] }}: {{ cell }} commits" style="background: color-mix(in srgb, var(--accent) {{ (opacity * 100)|round|int }}%, transparent);"></div>
+                {% endfor %}
+              </div>
+              {% endfor %}
+            </div>
+          </article>
+          <article class="panel">
+            <div class="section-head">
+              <div>
+                <div class="section-kicker">{{ theme.language_breakdown_kicker }}</div>
+                <h2>{{ theme.language_breakdown_title }}</h2>
+              </div>
+            </div>
+            <div class="language-list">
+              {% for language in context.language_slices %}
+              <div class="language-item">
+                <div>{{ language.name }}</div>
+                <div class="muted">{{ language.percent }}%</div>
+              </div>
+              {% endfor %}
+            </div>
+          </article>
+        </section>
+
+        <section class="panel">
+          <div class="section-head">
+            <div>
+              <div class="section-kicker">{{ theme.highlights_kicker }}</div>
+              <h2>{{ theme.highlights_title }}</h2>
+            </div>
+          </div>
+          <div class="facts-grid">
+            {% for item in context.highlights %}
+            <article class="fact">
+              <div class="section-kicker">{{ item.kind }}</div>
+              <h3 style="margin-top: 8px;">{{ item.title }}</h3>
+              {% if item.value %}<div class="fact-value">{{ item.value }}</div>{% endif %}
+              <p class="fact-text" style="margin-top: 8px;">{{ item.text }}</p>
+            </article>
+            {% endfor %}
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="section-head">
+            <div>
+              <div class="section-kicker">{{ theme.repo_kicker }}</div>
+              <h2>{{ theme.repo_title }}</h2>
+            </div>
+          </div>
+          <div class="repo-grid">
+            {% for repo in context.repo_insights %}
+            <article class="repo-card">
+              <div class="repo-head">
+                <div class="repo-copy">
+                  <div class="repo-kpi">{{ repo.primary_language or 'Mixed stack' }}</div>
+                  <h3 style="margin-top: 8px;"><a href="{{ repo.url }}">{{ repo.full_name }}</a></h3>
+                  <p style="margin-top: 8px;">{{ repo.description or 'No repository description provided.' }}</p>
+                </div>
+                <div class="warning-list">
+                  <span class="chip">{{ repo.stars }} stars</span>
+                  <span class="chip">{{ repo.forks }} forks</span>
+                </div>
+              </div>
+              <div class="warning-list" style="margin-top: 12px;">
+                <span class="chip">{{ repo.activity.commits }} commits</span>
+                <span class="chip">{{ repo.activity.pull_requests }} PRs</span>
+                <span class="chip">{{ repo.activity.issues }} issues</span>
+                <span class="chip">{{ repo.activity.reviews }} reviews</span>
+              </div>
+            </article>
+            {% endfor %}
+          </div>
+        </section>
+
+        {% if context.warnings %}
+        <section class="panel">
+          <div class="section-head">
+            <div>
+              <div class="section-kicker">{{ theme.notes_kicker }}</div>
+              <h2>{{ theme.notes_title }}</h2>
+            </div>
+          </div>
+          <div class="stack">
+            {% for warning in context.warnings %}
+            <article class="warning">
+              <strong>{{ warning.message }}</strong>
+              {% if warning.details %}<p style="margin-top: 8px;">{{ warning.details }}</p>{% endif %}
+            </article>
+            {% endfor %}
+          </div>
+        </section>
+        {% endif %}
+
+        <footer class="footer-links">
+          <div>Built with {{ context.meta.generator.name }} {{ context.meta.generator.version }}</div>
+          <div>
+            <a href="{{ context.meta.links.repository_url }}">{{ context.meta.links.repository_label }}</a>
+            &middot;
+            <a href="{{ context.meta.links.app_url }}">{{ context.meta.links.app_label }}</a>
+            &middot;
+            <a href="{{ context.meta.links.ussyverse_url }}">{{ context.meta.links.ussyverse_label }}</a>
+          </div>
+        </footer>
+      </div>
+    </main>
+
+    <script>
+      const payload = {{ chart_payload_json|safe }};
+      const chartText = getComputedStyle(document.documentElement).getPropertyValue('--muted').trim() || '#7a8798';
+      const chartGrid = getComputedStyle(document.documentElement).getPropertyValue('--line').trim() || 'rgba(255,255,255,0.08)';
+
+      const sharedOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            labels: {
+              color: chartText,
+              font: { family: getComputedStyle(document.documentElement).getPropertyValue('--body-font').trim() || 'sans-serif' }
+            }
+          }
+        },
+        scales: {
+          x: { ticks: { color: chartText, maxTicksLimit: 8 }, grid: { color: chartGrid } },
+          y: { ticks: { color: chartText }, grid: { color: chartGrid } }
+        }
+      };
+
+      new Chart(document.getElementById('commitsChart'), {
+        type: 'line',
+        data: {
+          labels: payload.commits.labels,
+          datasets: payload.commits.series.map((series) => ({
+            label: series.label,
+            data: series.values,
+            borderColor: series.color,
+            backgroundColor: `${series.color}22`,
+            fill: true,
+            tension: 0.35,
+            pointRadius: 0,
+            borderWidth: 3,
+          }))
+        },
+        options: sharedOptions,
+      });
+
+      new Chart(document.getElementById('locChart'), {
+        type: 'bar',
+        data: {
+          labels: payload.loc.labels,
+          datasets: payload.loc.series.map((series) => ({
+            label: series.label,
+            data: series.values,
+            backgroundColor: series.color,
+            borderRadius: 10,
+          }))
+        },
+        options: sharedOptions,
+      });
+
+      new Chart(document.getElementById('languageChart'), {
+        type: 'pie',
+        data: {
+          labels: payload.languages.labels,
+          datasets: [{ data: payload.languages.values, backgroundColor: payload.languages.colors, borderWidth: 0 }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: {
+                color: chartText,
+                usePointStyle: true,
+                padding: 16,
+                font: { family: getComputedStyle(document.documentElement).getPropertyValue('--body-font').trim() || 'sans-serif' }
+              }
+            }
+          }
+        }
+      });
+    </script>
+  </body>
+</html>

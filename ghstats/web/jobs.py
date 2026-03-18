@@ -63,6 +63,7 @@ def process_next_job(settings: WebAppSettings, session: Session) -> ReportJob | 
         artifacts = service.build_artifacts(
             window=build_time_window(report.since_spec),
             sample_data=job.sample_data,
+            template_key=report.template_key,
         )
 
         next_version = 1 + max((snapshot.version for snapshot in report.snapshots), default=0)

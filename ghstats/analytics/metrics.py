@@ -13,6 +13,7 @@ from ghstats.analytics.aggregations import (
     top_repositories,
 )
 from ghstats.models.activity import ActivityDataset
+from ghstats.render.templates import DEFAULT_TEMPLATE_KEY
 
 
 WEEKDAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
@@ -47,6 +48,9 @@ def build_report_context(dataset: ActivityDataset) -> dict[str, Any]:
             "generator": {
                 "name": "ghstats",
                 "version": "0.1.0",
+            },
+            "theme": {
+                "key": dataset.template_key or DEFAULT_TEMPLATE_KEY,
             },
             "links": {
                 "repository_url": "https://github.com/mojomast/ghstatsussy",

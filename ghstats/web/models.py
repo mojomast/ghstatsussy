@@ -49,6 +49,7 @@ class Report(Base):
     latest_snapshot_id: Mapped[str | None] = mapped_column(String(36), ForeignKey("report_snapshots.id"), nullable=True)
     latest_job_id: Mapped[str | None] = mapped_column(String(36), ForeignKey("report_jobs.id"), nullable=True)
     store_metadata: Mapped[bool] = mapped_column(Boolean, default=False)
+    template_key: Mapped[str] = mapped_column(String(32), default="default")
     expires_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     username_slug: Mapped[str | None] = mapped_column(String(255), nullable=True, index=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)

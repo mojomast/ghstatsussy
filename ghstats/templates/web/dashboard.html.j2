@@ -432,11 +432,17 @@
           <form id="reportForm" method="post" action="/dashboard/reports">
             <div class="field">
               <label for="since_spec">Time window</label>
-              <input id="since_spec" name="since_spec" value="30d" placeholder="30d" />
+              <select id="since_spec" name="since_spec">
+                <option value="7d">7 days</option>
+                <option value="30d" selected>30 days</option>
+                <option value="90d">90 days</option>
+                <option value="180d">180 days</option>
+                <option value="365d">365 days</option>
+              </select>
             </div>
             <div class="field">
               <label for="title">Report title</label>
-              <input id="title" name="title" placeholder="GitHub Activity / Last 30d" />
+              <input id="title" name="title" maxlength="120" placeholder="GitHub Activity / Last 30d" />
             </div>
             <div class="field">
               <label for="visibility">Visibility</label>
@@ -447,12 +453,26 @@
               </select>
             </div>
             <div class="field">
+              <label for="template_key">Report template</label>
+              <select id="template_key" name="template_key">
+                {% for template in report_templates %}
+                <option value="{{ template.key }}">{{ template.label }} - {{ template.description }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="field">
               <label>Include private activity</label>
               <label class="checkbox-row"><input id="include_private" name="include_private" type="checkbox" value="true" /> <span>allowed, but the report must remain private if this is enabled</span></label>
             </div>
             <div class="field">
               <label for="expires_in_days">Expiry in days</label>
-              <input id="expires_in_days" name="expires_in_days" type="number" min="1" max="90" value="14" />
+              <select id="expires_in_days" name="expires_in_days">
+                <option value="7">7 days</option>
+                <option value="14" selected>14 days</option>
+                <option value="30">30 days</option>
+                <option value="60">60 days</option>
+                <option value="90">90 days</option>
+              </select>
             </div>
             <div class="field">
               <label>Store metadata</label>
@@ -516,6 +536,7 @@
                     <span class="chip">{{ report.visibility }}</span>
                     {% if report.include_private %}<span class="chip">private activity</span>{% endif %}
                     {% if report.store_metadata %}<span class="chip">metadata retained</span>{% endif %}
+                    <span class="chip">template {{ report.template_key }}</span>
                   </div>
                   <div class="report-links">
                     <a class="text-link" href="/dashboard/reports/{{ report.id }}">Manage</a>

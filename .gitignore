@@ -5,3 +5,4 @@ __pycache__/
 web_artifacts/
 examples/live_report*.html
 examples/live_report*.json
+examples/*_preview.html

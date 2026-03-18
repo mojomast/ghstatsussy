@@ -25,7 +25,13 @@ class GhStatsService:
     def __init__(self, config: RuntimeConfig) -> None:
         self.config = config
 
-    def build_artifacts(self, *, window: TimeWindow, sample_data: bool = False) -> ReportArtifacts:
+    def build_artifacts(
+        self,
+        *,
+        window: TimeWindow,
+        sample_data: bool = False,
+        template_key: str | None = None,
+    ) -> ReportArtifacts:
         if sample_data:
             dataset = build_sample_dataset(
                 window.since_spec,
@@ -42,8 +48,9 @@ class GhStatsService:
             finally:
                 client.close()
 
+        dataset.template_key = template_key
         context = build_report_context(dataset)
-        html = render_report_html(context)
+        html = render_report_html(context, template_key=template_key)
         return ReportArtifacts(dataset=dataset, context=context, html=html)
 
 

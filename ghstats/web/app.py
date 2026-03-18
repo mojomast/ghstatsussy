@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+from uuid import UUID
 
 import uvicorn
 from fastapi import Depends, FastAPI, Form, HTTPException, Request
@@ -8,6 +9,7 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session, sessionmaker
+from starlette.middleware.trustedhost import TrustedHostMiddleware
 from starlette.middleware.sessions import SessionMiddleware
 
 from ghstats.web.config import WebAppSettings, load_web_settings
@@ -21,8 +23,9 @@ from ghstats.web.github_oauth import (
 )
 from ghstats.web.jobs import process_next_job
 from ghstats.web.models import Report, User
-from ghstats.web.schemas import ReportCreatePayload
+from ghstats.web.schemas import ReportCreatePayload, ReportTemplateKey, ReportVisibility
 from ghstats.web.service import HostedReportService, serialize_report
+from ghstats.render.templates import REPORT_TEMPLATES
 
 
 TEMPLATE_DIR = Path(__file__).resolve().parent.parent / "templates"
@@ -36,6 +39,15 @@ def create_app(settings: WebAppSettings | None = None) -> FastAPI:
     Base.metadata.create_all(bind=engine)
 
     app = FastAPI(title=web_settings.app_name)
+    app.add_middleware(
+        TrustedHostMiddleware,
+        allowed_hosts=[
+            "ghstats.ussyco.de",
+            f"*.{web_settings.ghstats_subdomain_base}",
+            "127.0.0.1",
+            "localhost",
+        ],
+    )
     app.add_middleware(
         SessionMiddleware,
         secret_key=web_settings.secret_key,
@@ -125,6 +137,7 @@ def create_app(settings: WebAppSettings | None = None) -> FastAPI:
                 "user": db_user,
                 "reports": reports,
                 "allow_sample_reports": web_settings.allow_sample_reports,
+                "report_templates": REPORT_TEMPLATES,
             },
         )
 
@@ -137,6 +150,7 @@ def create_app(settings: WebAppSettings | None = None) -> FastAPI:
         visibility: str = Form("unlisted"),
         expires_in_days: int = Form(14),
         store_metadata: str | None = Form(None),
+        template_key: str = Form("default"),
         sample_data: str | None = Form(None),
         user: User = Depends(require_user),
     ) -> RedirectResponse:
@@ -144,10 +158,11 @@ def create_app(settings: WebAppSettings | None = None) -> FastAPI:
             since_spec=since_spec,
             title=title or None,
             include_private=include_private == "true",
-            visibility=visibility,
+            visibility=ReportVisibility(visibility),
             sample_data=sample_data == "true",
             store_metadata=store_metadata == "true",
             expires_in_days=expires_in_days,
+            template_key=ReportTemplateKey(template_key),
         )
         with session_factory() as session:
             db_user = session.get(User, user.id)
@@ -162,6 +177,7 @@ def create_app(settings: WebAppSettings | None = None) -> FastAPI:
                 visibility=payload.visibility,
                 store_metadata=payload.store_metadata,
                 expires_in_days=payload.expires_in_days,
+                template_key=payload.template_key,
                 sample_data=payload.sample_data,
             )
             if web_settings.process_jobs_inline:
@@ -169,13 +185,13 @@ def create_app(settings: WebAppSettings | None = None) -> FastAPI:
         return RedirectResponse(url=f"/dashboard/reports/{report.id}", status_code=302)
 
     @app.get("/dashboard/reports/{report_id}", response_class=HTMLResponse)
-    def dashboard_report_detail(request: Request, report_id: str, user: User = Depends(require_user)) -> HTMLResponse:
+    def dashboard_report_detail(request: Request, report_id: UUID, user: User = Depends(require_user)) -> HTMLResponse:
         with session_factory() as session:
             db_user = session.get(User, user.id)
             if db_user is None:
                 raise HTTPException(status_code=404, detail="User not found")
             service = HostedReportService(web_settings, session)
-            report = service.get_report_for_user(db_user, report_id)
+            report = service.get_report_for_user(db_user, str(report_id))
             if report is None:
                 raise HTTPException(status_code=404, detail="Report not found")
             snapshot = report.latest_snapshot
@@ -225,6 +241,7 @@ def create_app(settings: WebAppSettings | None = None) -> FastAPI:
                 visibility=payload.visibility,
                 store_metadata=payload.store_metadata,
                 expires_in_days=payload.expires_in_days,
+                template_key=payload.template_key,
                 sample_data=payload.sample_data,
             )
             if web_settings.process_jobs_inline:
@@ -232,13 +249,13 @@ def create_app(settings: WebAppSettings | None = None) -> FastAPI:
             return serialize_report(report, web_settings)
 
     @app.get("/api/reports/{report_id}")
-    def api_report_detail(report_id: str, user: User = Depends(require_user)) -> dict[str, object]:
+    def api_report_detail(report_id: UUID, user: User = Depends(require_user)) -> dict[str, object]:
         with session_factory() as session:
             db_user = session.get(User, user.id)
             if db_user is None:
                 raise HTTPException(status_code=404, detail="User not found")
             service = HostedReportService(web_settings, session)
-            report = service.get_report_for_user(db_user, report_id)
+            report = service.get_report_for_user(db_user, str(report_id))
             if report is None:
                 raise HTTPException(status_code=404, detail="Report not found")
             payload = serialize_report(report, web_settings)
@@ -248,7 +265,7 @@ def create_app(settings: WebAppSettings | None = None) -> FastAPI:
 
     @app.post("/dashboard/reports/{report_id}/refresh")
     def dashboard_refresh_report(
-        report_id: str,
+        report_id: UUID,
         user: User = Depends(require_user),
     ) -> RedirectResponse:
         with session_factory() as session:
@@ -256,7 +273,7 @@ def create_app(settings: WebAppSettings | None = None) -> FastAPI:
             if db_user is None:
                 raise HTTPException(status_code=404, detail="User not found")
             service = HostedReportService(web_settings, session)
-            report = service.get_report_for_user(db_user, report_id)
+            report = service.get_report_for_user(db_user, str(report_id))
             if report is None:
                 raise HTTPException(status_code=404, detail="Report not found")
             service.queue_refresh(report=report, sample_data=False)
@@ -266,7 +283,7 @@ def create_app(settings: WebAppSettings | None = None) -> FastAPI:
 
     @app.post("/api/reports/{report_id}/refresh")
     def api_refresh_report(
-        report_id: str,
+        report_id: UUID,
         payload: ReportCreatePayload | None = None,
         user: User = Depends(require_user),
     ) -> dict[str, object]:
@@ -275,7 +292,7 @@ def create_app(settings: WebAppSettings | None = None) -> FastAPI:
             if db_user is None:
                 raise HTTPException(status_code=404, detail="User not found")
             service = HostedReportService(web_settings, session)
-            report = service.get_report_for_user(db_user, report_id)
+            report = service.get_report_for_user(db_user, str(report_id))
             if report is None:
                 raise HTTPException(status_code=404, detail="Report not found")
             report = service.queue_refresh(
@@ -287,14 +304,14 @@ def create_app(settings: WebAppSettings | None = None) -> FastAPI:
             return serialize_report(report, web_settings)
 
     @app.get("/api/jobs/{job_id}")
-    def api_job_detail(job_id: str, user: User = Depends(require_user)) -> dict[str, object]:
+    def api_job_detail(job_id: UUID, user: User = Depends(require_user)) -> dict[str, object]:
         with session_factory() as session:
             db_user = session.get(User, user.id)
             if db_user is None:
                 raise HTTPException(status_code=404, detail="User not found")
             report = (
                 session.query(Report)
-                .filter(Report.user_id == db_user.id, Report.latest_job_id == job_id)
+                .filter(Report.user_id == db_user.id, Report.latest_job_id == str(job_id))
                 .one_or_none()
             )
             if report is None or report.latest_job is None:
@@ -316,13 +333,13 @@ def create_app(settings: WebAppSettings | None = None) -> FastAPI:
             }
 
     @app.get("/dashboard/reports/{report_id}/progress", response_class=HTMLResponse)
-    def dashboard_report_progress_partial(report_id: str, request: Request, user: User = Depends(require_user)) -> HTMLResponse:
+    def dashboard_report_progress_partial(report_id: UUID, request: Request, user: User = Depends(require_user)) -> HTMLResponse:
         with session_factory() as session:
             db_user = session.get(User, user.id)
             if db_user is None:
                 raise HTTPException(status_code=404, detail="User not found")
             service = HostedReportService(web_settings, session)
-            report = service.get_report_for_user(db_user, report_id)
+            report = service.get_report_for_user(db_user, str(report_id))
             if report is None:
                 raise HTTPException(status_code=404, detail="Report not found")
             job = report.latest_job

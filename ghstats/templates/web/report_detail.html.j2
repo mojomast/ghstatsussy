@@ -390,6 +390,7 @@
           <span class="chip {{ report.status }}" id="statusBadge">{{ report.status }}</span>
           <span class="chip">{{ report.since_spec }}</span>
           <span class="chip">{{ report.visibility }}</span>
+          <span class="chip">template {{ report.template_key }}</span>
           {% if report.include_private %}<span class="chip">private activity</span>{% endif %}
           {% if report.store_metadata %}<span class="chip">metadata retained</span>{% endif %}
         </div>

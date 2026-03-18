@@ -116,6 +116,7 @@ class ActivityDataset:
     start_at: datetime
     end_at: datetime
     include_private: bool
+    template_key: str | None = None
     repos: list[RepoActivity] = field(default_factory=list)
     commits: list[CommitActivity] = field(default_factory=list)
     pull_requests: list[PullRequestActivity] = field(default_factory=list)

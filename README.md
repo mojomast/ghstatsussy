@@ -47,6 +47,12 @@ export GH_ACCESS_TOKEN="$(gh auth token)"
 ghstats --since 30d --output report.html
 ```
 
+Pick a visual report template:
+
+```bash
+ghstats --since 90d --template orbital --output report.html
+```
+
 If installed as a package:
 
 ```bash
@@ -74,6 +80,19 @@ Generate a live report using your authenticated `gh` session:
 ```bash
 GH_ACCESS_TOKEN="$(gh auth token)" python -m ghstats --since 90d --output report.html
 ```
+
+Available templates:
+
+- `default` - Signal Glass
+- `ledger` - Maintainer's Ledger
+- `transit` - Merge Line Transit Map
+- `archive` - Archive Exhibit
+- `scrapbook` - Indie Dev Scrapbook
+- `orbital` - Orbital Telemetry Brief
+- `fieldnotes` - Field Notes
+- `signalroom` - Signal Room
+- `gallery` - Gallery Wall
+- `tapearchive` - Tape Archive
 
 ## Notes
 
@@ -145,6 +164,13 @@ Replace the host with your production URL when you deploy it.
 - background workers fetch GitHub data, render the page, then keep only the configured artifacts
 - reports have an expiry window so hosted pages can age out automatically
 - if you want true no-retention refreshes, disable metadata storage and require the user to regenerate from a live OAuth session
+
+### Input hardening
+
+- hosted report creation now uses fixed dropdowns for time window, template, visibility, and expiry wherever practical
+- title input is length-limited and normalized server-side
+- server validation rejects invalid template keys, invalid windows, overlong public expiry, and unsafe private/public combinations
+- report, job, and detail routes now use stricter typed identifiers on the server side
 
 ### Production hostnames
 

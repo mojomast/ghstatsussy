@@ -7,6 +7,7 @@ import typer
 
 from ghstats.config import ConfigError, build_runtime_config
 from ghstats.github.client import GitHubApiError
+from ghstats.render.templates import template_choices
 from ghstats.service import GhStatsService, write_json, write_text
 from ghstats.utils.timeparse import build_time_window
 
@@ -20,6 +21,7 @@ def main(
     open_browser: bool = typer.Option(False, "--open", help="Open the generated report in a browser."),
     json_output: Path | None = typer.Option(None, help="Optional JSON export path."),
     sample_data: bool = typer.Option(False, "--sample-data", help="Generate a demo report without live GitHub API calls."),
+    template: str = typer.Option("default", help=f"Report template. Options: {', '.join(template_choices())}."),
 ) -> None:
     """Generate a GitHub activity infographic for the authenticated user."""
 
@@ -31,7 +33,7 @@ def main(
             api_base_url=api_base_url,
         )
         service = GhStatsService(config)
-        artifacts = service.build_artifacts(window=window, sample_data=sample_data)
+        artifacts = service.build_artifacts(window=window, sample_data=sample_data, template_key=template)
         report_path = write_text(output.expanduser().resolve(), artifacts.html)
         typer.echo(f"HTML report written to {report_path}")
 
