@@ -172,6 +172,75 @@ Replace the host with your production URL when you deploy it.
 - title input is length-limited and normalized server-side
 - server validation rejects invalid template keys, invalid windows, overlong public expiry, and unsafe private/public combinations
 - report, job, and detail routes now use stricter typed identifiers on the server side
+- **Robust Error Handling**: The background worker now gracefully skips completely empty git repositories instead of throwing an API conflict error and failing the job.
+- **Comprehensive API Coverage**: Increased artificial API fetch bounds (e.g. scanning up to 1,000 repositories and pulling 5,000 detailed commits) to provide near-exhaustive GitHub statistics without rate-limiting penalties, thanks to background job processing.
+
+### Behavioral Insights & Fun Facts
+
+Added dynamic pattern recognition to user activity, surfacing highlights such as:
+- **Night Owl** / **Morning Person** (based on UTC commit hours)
+- **Weekend Warrior** (if weekend output surpasses weekdays)
+- **Language Polyglot** (contributing to 5+ programming languages)
+- **Fastest Sprint** (max commits in a single day)
+- **Consistent Contributor** (streak tracking of 14+ days)
+
+### Public Gallery & Themed Templates
+
+Added a **Public Gallery** route (`/gallery`) allowing visitors to browse reports generated with `public` visibility.
+
+Users can choose from 10 incredibly unique, structurally diverse report themes. The templating engine overrides layout structures at the block level (`hero` and `content`), enabling totally different HTML/CSS DOM trees for each theme:
+- `orbital`: Telemetry-heavy, dark-ops mission control terminal HUD.
+- `gallery`: Asymmetric, color-blocked poster/art exhibit.
+- `ledger`: Editorial, classic multi-column newspaper layout.
+- `transit`: Neon subway map aesthetic with overlapping routes.
+- `archive`: Curated, classical museum-artifact wall.
+- `scrapbook`: Chaotic, rotated elements with punk zine energy.
+- `fieldnotes`: Rugged, grid-ruled handwritten notebook design.
+- `signalroom`: Glowing green phosphorescent hacker terminal with scanlines.
+- `tapearchive`: Industrial, modular tape reel and index card interface.
+- `default`: Polished, frosted-glass modern dashboard.
+
+## Docker Deployment (Production)
+
+To gracefully deploy `ghstatsussy` in a containerized environment (which encapsulates both the FastAPI web server and the background worker):
+
+1. **Clone and Prepare**
+   ```bash
+   git clone https://github.com/mojomast/ghstatsussy.git
+   cd ghstatsussy
+   ```
+
+2. **Configure Environment**
+   Create a `.env` file in the root of the project with your secrets:
+   ```env
+   APP_SECRET_KEY=your_secure_random_string
+   APP_BASE_URL=https://ghstats.yourdomain.com
+   GITHUB_CLIENT_ID=your_oauth_client_id
+   GITHUB_CLIENT_SECRET=your_oauth_client_secret
+   GHSTATS_SUBDOMAIN_BASE=ghstats.yourdomain.com
+   ALLOW_SAMPLE_REPORTS=0
+   ```
+
+3. **Run with Docker Compose**
+   ```bash
+   docker compose up -d --build
+   ```
+   This will spin up two containers (`web` and `worker`) that share a mounted `./web_artifacts` volume for the SQLite database and generated HTML files. The web app exposes port `8001` to `127.0.0.1`, ready to be reverse-proxied by Nginx or Caddy.
+
+4. **Migrating from Systemd**
+   If you are moving an existing bare-metal systemd deployment to Docker:
+   ```bash
+   # 1. Stop existing services
+   sudo systemctl stop ghstatsussy-web ghstatsussy-worker
+   sudo systemctl disable ghstatsussy-web ghstatsussy-worker
+   
+   # 2. Copy your existing environment variables
+   sudo cp /etc/ghstatsussy.env .env
+   sudo chown $USER:$USER .env
+   
+   # 3. Start docker-compose
+   docker compose up -d --build
+   ```
 
 ### Production hostnames
 
