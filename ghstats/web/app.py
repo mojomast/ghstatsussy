@@ -67,6 +67,22 @@ def create_app(settings: WebAppSettings | None = None) -> FastAPI:
     def healthz() -> dict[str, str]:
         return {"status": "ok", "service": "ghstatsussy-hosted"}
 
+
+    @app.get("/gallery", response_class=HTMLResponse)
+    def gallery(request: Request, user: User | None = Depends(optional_user)) -> HTMLResponse:
+        with session_factory() as session:
+            service = HostedReportService(web_settings, session)
+            reports = [serialize_report(report, web_settings) for report in service.list_public_reports()]
+        return templates.TemplateResponse(
+            request,
+            "web/gallery.html.j2",
+            {
+                "settings": web_settings,
+                "user": user,
+                "reports": reports,
+            },
+        )
+
     @app.get("/", response_class=HTMLResponse, response_model=None)
     def home(request: Request, user: User | None = Depends(optional_user)) -> HTMLResponse | RedirectResponse:
         if _is_report_host(request, web_settings):

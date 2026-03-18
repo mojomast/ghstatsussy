@@ -700,9 +700,12 @@
             <p class="muted">@{{ user.login }} / queue reports / publish clean share links</p>
           </div>
         </div>
-        <form method="post" action="/auth/logout">
+        <div style="display: flex; gap: 16px; align-items: center;">
+          <a href="/gallery" style="color: var(--cyan); text-decoration: none; font-family: 'IBM Plex Mono', monospace; font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em;">Public Gallery</a>
+          <form method="post" action="/auth/logout">
           <button class="logout" type="submit">Log out</button>
-        </form>
+          </form>
+        </div>
       </section>
 
       <section class="layout">
@@ -729,9 +732,9 @@
             <div class="field">
               <label for="visibility">Visibility</label>
               <select id="visibility" name="visibility">
-                <option value="unlisted">unlisted</option>
-                <option value="public">public</option>
-                <option value="private">private</option>
+                <option value="unlisted">unlisted - Link sharing only</option>
+                <option value="public">public - Appears on your subdomain & public gallery</option>
+                <option value="private">private - Only you can view while logged in</option>
               </select>
             </div>
             <div class="field">

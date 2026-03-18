@@ -58,6 +58,15 @@ class HostedReportService:
             .all()
         )
 
+    def list_public_reports(self) -> list[Report]:
+        return (
+            self.session.query(Report)
+            .filter(Report.visibility == "public", Report.status == "ready")
+            .order_by(Report.generated_at.desc())
+            .limit(100)
+            .all()
+        )
+
     def get_report_for_user(self, user: User, report_id: str) -> Report | None:
         return (
             self.session.query(Report)
@@ -186,9 +195,13 @@ def serialize_report(report: Report, settings: WebAppSettings) -> dict[str, obje
         "share_url": f"{settings.app_base_url}/r/{report.slug}",
         "host_url": host_url,
         "store_metadata": report.store_metadata,
-        "expires_at": report.expires_at.isoformat() if report.expires_at else None,
-        "latest_job_id": report.latest_job_id,
         "template_key": report.template_key,
+        "latest_job_id": report.latest_job_id,
+        "expires_at": report.expires_at.isoformat() if report.expires_at else None,
+        "user": {
+            "login": report.user.login,
+            "avatar_url": report.user.avatar_url,
+        } if report.user else None,
     }
 
 
