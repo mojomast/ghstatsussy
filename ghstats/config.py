@@ -48,11 +48,11 @@ class RuntimeConfig:
     user_agent: str = f"ghstats/{__version__}"
     include_private: bool = False
     repo_page_size: int = 100
-    max_repos_for_commit_scan: int = 40
-    max_commit_pages_per_repo: int = 5
-    max_commit_details: int = 200
-    search_page_size: int = 50
-    max_search_items: int = 200
+    max_repos_for_commit_scan: int = 1000
+    max_commit_pages_per_repo: int = 50
+    max_commit_details: int = 5000
+    search_page_size: int = 100
+    max_search_items: int = 1000
     retry_attempts: int = 3
 
 

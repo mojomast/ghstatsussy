@@ -270,6 +270,57 @@ def build_highlights(
         },
     ]
 
+    # New fun facts
+    if hour_counter:
+        top_hour = hour_counter.most_common(1)[0][0]
+        if top_hour >= 22 or top_hour <= 3:
+            highlights.append({
+                "kind": "trend",
+                "title": "Night Owl",
+                "text": "You do your best work late at night.",
+                "value": "night-owl",
+            })
+        elif 5 <= top_hour <= 9:
+            highlights.append({
+                "kind": "trend",
+                "title": "Morning Person",
+                "text": "You are an early riser, crushing commits in the morning.",
+                "value": "morning-person",
+            })
+
+    if weekend_commits > weekday_commits:
+        highlights.append({
+            "kind": "trend",
+            "title": "Weekend Warrior",
+            "text": "You actually commit more on weekends than weekdays!",
+            "value": "weekend-warrior",
+        })
+
+    unique_languages = {lang.name for repo in dataset.repos for lang in repo.languages}
+    if len(unique_languages) >= 5:
+        highlights.append({
+            "kind": "milestone",
+            "title": "Language Polyglot",
+            "text": f"You explored {len(unique_languages)} different languages.",
+            "value": str(len(unique_languages)),
+        })
+
+    if streaks["longest"] >= 14:
+        highlights.append({
+            "kind": "streak",
+            "title": "Consistent Contributor",
+            "text": f"Impressive dedication with a {streaks['longest']}-day continuous streak!",
+            "value": str(streaks['longest']),
+        })
+
+    if int(most_productive_day.get("count", 0)) >= 15:
+        highlights.append({
+            "kind": "milestone",
+            "title": "Fastest Sprint",
+            "text": f"You had a massive sprint on {most_productive_day['date']} with {most_productive_day['count']} commits.",
+            "value": str(most_productive_day['count']),
+        })
+
     if largest_commit is not None:
         highlights.append(
             {
