@@ -1,0 +1,58 @@
+{% set status = job.status if job else report.status %}
+{% set status_title = 'Your report is queued.' if status == 'queued' else 'Your report is being generated.' if status == 'running' else 'Your report is ready.' if status in ['ready', 'succeeded'] else 'Your report hit a problem.' %}
+{% set status_copy = 'The worker has your job in line and should pick it up shortly.' if status == 'queued' else 'GitHub data is being fetched and packed into the final HTML snapshot.' if status == 'running' else 'Links and exports are live. You can share the snapshot now.' if status in ['ready', 'succeeded'] else 'The worker reported a failure. Try refreshing the page or rerunning the report.' %}
+{% set beacon_class = 'queued' if status == 'queued' else 'running' if status == 'running' else 'ready' if status in ['ready', 'succeeded'] else 'failed' %}
+<section class="status-panel" id="statusPanel" data-status="{{ status }}">
+  <div class="eyebrow">Worker state</div>
+  <div class="beacon-card beacon-{{ beacon_class }}">
+    <div class="beacon-stack">
+      <div class="beacon-ring"><div class="beacon-core"></div></div>
+      <div>
+        <div class="micro muted">status / {{ current_step }} of {{ total_steps }}</div>
+        <h2 id="statusTitle">{{ status_title }}</h2>
+        <p class="muted" id="statusCopy" style="margin-top: 8px;">{{ status_copy }}</p>
+      </div>
+    </div>
+    <div class="progress-rail {% if status in ['queued', 'running'] %}indeterminate{% endif %}">
+      <span class="progress-fill" style="width: {{ progress_percent }}%;"></span>
+      <span class="progress-scan"></span>
+    </div>
+    <div class="progress-meta">
+      <span class="chip {{ status }}" id="statusBadge">{{ status }}</span>
+      {% if job and job.started_at %}<span class="muted">Started {{ job.started_at }}</span>{% elif job %}<span class="muted">Queued {{ job.created_at }}</span>{% endif %}
+      {% if job and job.finished_at %}<span class="muted">Finished {{ job.finished_at }}</span>{% endif %}
+      {% if job %}<span class="muted">Job {{ job.id[:8] }}</span>{% endif %}
+    </div>
+  </div>
+
+  <div class="steps">
+    <div class="step done">
+      <div class="step-dot"></div>
+      <div>
+        <div class="step-label muted">Request received</div>
+        <strong>Parameters locked in</strong>
+      </div>
+    </div>
+    <div class="step {% if status == 'queued' %}active{% elif status in ['running', 'ready', 'succeeded'] %}done{% endif %}">
+      <div class="step-dot"></div>
+      <div>
+        <div class="step-label muted">Queue</div>
+        <strong>Waiting for the worker slot</strong>
+      </div>
+    </div>
+    <div class="step {% if status == 'running' %}active{% elif status in ['ready', 'succeeded'] %}done{% endif %}">
+      <div class="step-dot"></div>
+      <div>
+        <div class="step-label muted">Generation</div>
+        <strong>Churning GitHub and rendering HTML</strong>
+      </div>
+    </div>
+    <div class="step {% if status in ['ready', 'succeeded'] %}active done{% elif status == 'failed' %}active{% endif %}">
+      <div class="step-dot"></div>
+      <div>
+        <div class="step-label muted">Finalizing</div>
+        <strong>{% if status == 'failed' %}Pipeline stopped before publish{% else %}Publishing the latest snapshot{% endif %}</strong>
+      </div>
+    </div>
+  </div>
+</section>

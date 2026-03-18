@@ -300,6 +300,7 @@ def create_app(settings: WebAppSettings | None = None) -> FastAPI:
             if report is None or report.latest_job is None:
                 raise HTTPException(status_code=404, detail="Job not found")
             job = report.latest_job
+            progress_percent, current_step, total_steps = _job_progress(job.status)
             return {
                 "id": job.id,
                 "report_id": report.id,
@@ -309,7 +310,31 @@ def create_app(settings: WebAppSettings | None = None) -> FastAPI:
                 "created_at": job.created_at.isoformat(),
                 "started_at": job.started_at.isoformat() if job.started_at else None,
                 "finished_at": job.finished_at.isoformat() if job.finished_at else None,
+                "progress_percent": progress_percent,
+                "current_step": current_step,
+                "total_steps": total_steps,
             }
+
+    @app.get("/dashboard/reports/{report_id}/progress", response_class=HTMLResponse)
+    def dashboard_report_progress_partial(report_id: str, request: Request, user: User = Depends(require_user)) -> HTMLResponse:
+        with session_factory() as session:
+            db_user = session.get(User, user.id)
+            if db_user is None:
+                raise HTTPException(status_code=404, detail="User not found")
+            service = HostedReportService(web_settings, session)
+            report = service.get_report_for_user(db_user, report_id)
+            if report is None:
+                raise HTTPException(status_code=404, detail="Report not found")
+            job = report.latest_job
+            progress_percent, current_step, total_steps = _job_progress(job.status if job else report.status)
+            context = {
+                "report": serialize_report(report, web_settings),
+                "job": job,
+                "progress_percent": progress_percent,
+                "current_step": current_step,
+                "total_steps": total_steps,
+            }
+        return templates.TemplateResponse(request, "web/_report_progress.html.j2", context)
 
     @app.get("/r/{slug}")
     def public_report(slug: str, request: Request, user: User | None = Depends(optional_user)) -> HTMLResponse:
@@ -359,6 +384,17 @@ def _none_or_str(value: object | None) -> str | None:
     if value is None:
         return None
     return str(value)
+
+
+def _job_progress(status: str) -> tuple[int, int, int]:
+    mapping = {
+        "queued": (28, 2, 4),
+        "running": (68, 3, 4),
+        "succeeded": (100, 4, 4),
+        "ready": (100, 4, 4),
+        "failed": (100, 4, 4),
+    }
+    return mapping.get(status, (14, 1, 4))
 
 
 def _is_report_host(request: Request, settings: WebAppSettings) -> bool:

@@ -4,74 +4,466 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{{ report.title }} - ghstatsussy hosted</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <style>
       :root {
-        --bg: #f4efe6;
-        --panel: rgba(255,251,244,0.86);
-        --ink: #18222f;
-        --muted: #576576;
-        --accent: #0f766e;
-        --warn: #d97706;
-        --shadow: 0 28px 70px rgba(17,24,39,0.16);
+        --bg-0: #09111d;
+        --bg-1: #0d1727;
+        --panel: rgba(10, 17, 30, 0.82);
+        --panel-strong: rgba(9, 15, 26, 0.94);
+        --line: rgba(142, 194, 255, 0.13);
+        --line-strong: rgba(142, 194, 255, 0.28);
+        --ink: #ebf4ff;
+        --muted: #8fa4bb;
+        --cyan: #5ad8ff;
+        --lime: #9ff5a4;
+        --amber: #f2b15d;
+        --coral: #ff8573;
+        --shadow: 0 28px 90px rgba(0, 0, 0, 0.42);
       }
+
       * { box-sizing: border-box; }
+
       body {
         margin: 0;
         min-height: 100vh;
-        font-family: "Space Grotesk", "Trebuchet MS", sans-serif;
+        font-family: "IBM Plex Sans", sans-serif;
         color: var(--ink);
-        background: linear-gradient(165deg, #f8f2e8 0%, #f0e4cf 100%);
-        padding: 24px;
+        background:
+          radial-gradient(circle at top left, rgba(90, 216, 255, 0.14), transparent 24%),
+          linear-gradient(160deg, #07101a 0%, #0b1420 52%, #0f1728 100%);
       }
-      .shell { width: min(980px, 100%); margin: 0 auto; }
-      .panel {
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background-image:
+          linear-gradient(var(--line) 1px, transparent 1px),
+          linear-gradient(90deg, var(--line) 1px, transparent 1px);
+        background-size: 34px 34px;
+        pointer-events: none;
+      }
+
+      .shell {
+        width: min(1080px, calc(100% - 28px));
+        margin: 24px auto 36px;
+        position: relative;
+        z-index: 1;
+      }
+
+      .panel,
+      .status-panel,
+      .mini-panel {
         background: var(--panel);
+        border: 1px solid var(--line);
         border-radius: 28px;
-        padding: 22px;
-        border: 1px solid rgba(255,255,255,0.56);
         box-shadow: var(--shadow);
+        backdrop-filter: blur(18px);
       }
-      h1,h2,p { margin: 0; }
-      .muted { color: var(--muted); }
-      .row { display: flex; justify-content: space-between; align-items: center; gap: 14px; flex-wrap: wrap; }
-      .meta { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
-      .chip { padding: 8px 12px; border-radius: 999px; background: rgba(24,34,47,0.07); }
-      .links { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 18px; }
-      .links a { color: var(--accent); text-decoration: none; font-weight: 700; }
-      .actions { display: flex; gap: 10px; margin-top: 18px; }
+
+      .panel,
+      .status-panel,
+      .mini-panel {
+        padding: 22px;
+      }
+
+      .eyebrow,
+      .chip,
+      .step-label,
+      .meta-label,
+      .button-text {
+        font-family: "IBM Plex Mono", monospace;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+      }
+
+      .top,
+      .actions,
+      .link-row,
+      .steps,
+      .grid {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+
+      .top {
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin: 0;
+      }
+
+      .muted {
+        color: var(--muted);
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        width: fit-content;
+        padding: 8px 10px;
+        border-radius: 999px;
+        border: 1px solid rgba(90, 216, 255, 0.22);
+        color: var(--cyan);
+        font-size: 11px;
+      }
+
+      .chip {
+        display: inline-flex;
+        gap: 8px;
+        align-items: center;
+        padding: 7px 10px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.06);
+        color: var(--muted);
+        font-size: 11px;
+      }
+
+      .chip.running,
+      .chip.queued {
+        color: var(--cyan);
+        border: 1px solid rgba(90, 216, 255, 0.2);
+      }
+
+      .chip.ready {
+        color: var(--lime);
+        border: 1px solid rgba(159, 245, 164, 0.18);
+      }
+
+      .chip.failed {
+        color: var(--coral);
+        border: 1px solid rgba(255, 133, 115, 0.18);
+      }
+
+      .grid {
+        margin-top: 18px;
+        align-items: stretch;
+      }
+
+      .status-panel {
+        flex: 1 1 420px;
+      }
+
+      .mini-panel {
+        flex: 1 1 260px;
+      }
+
+      .spinner-wrap {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin-top: 18px;
+      }
+
+      .spinner {
+        width: 56px;
+        height: 56px;
+        border-radius: 999px;
+        border: 3px solid rgba(90, 216, 255, 0.14);
+        border-top-color: var(--cyan);
+        border-right-color: var(--lime);
+        animation: spin 1s linear infinite;
+      }
+
+      .beacon-card {
+        margin-top: 18px;
+        padding: 18px;
+        border-radius: 20px;
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.03);
+        display: grid;
+        gap: 14px;
+      }
+
+      .beacon-stack,
+      .progress-meta {
+        display: flex;
+        gap: 14px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+
+      .progress-meta {
+        align-items: flex-start;
+      }
+
+      .micro {
+        font-family: "IBM Plex Mono", monospace;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        font-size: 11px;
+      }
+
+      .beacon-ring {
+        width: 58px;
+        height: 58px;
+        border-radius: 999px;
+        border: 1px solid var(--line-strong);
+        display: grid;
+        place-items: center;
+        position: relative;
+        flex: 0 0 auto;
+      }
+
+      .beacon-ring::after {
+        content: "";
+        position: absolute;
+        inset: -6px;
+        border-radius: inherit;
+        border: 1px solid rgba(90, 216, 255, 0.12);
+        animation: beaconPulse 2.4s ease-in-out infinite;
+      }
+
+      .beacon-core {
+        width: 12px;
+        height: 12px;
+        border-radius: 999px;
+        background: var(--cyan);
+        box-shadow: 0 0 0 10px rgba(90, 216, 255, 0.1);
+      }
+
+      .beacon-queued .beacon-core {
+        background: var(--amber);
+        box-shadow: 0 0 0 10px rgba(242, 177, 93, 0.08);
+      }
+
+      .beacon-ready .beacon-core {
+        background: var(--lime);
+        box-shadow: 0 0 0 10px rgba(159, 245, 164, 0.08);
+      }
+
+      .beacon-failed .beacon-core {
+        background: var(--coral);
+        box-shadow: 0 0 0 10px rgba(255, 133, 115, 0.08);
+      }
+
+      .progress-rail {
+        position: relative;
+        height: 8px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.06);
+        overflow: hidden;
+      }
+
+      .progress-fill {
+        position: absolute;
+        inset: 0 auto 0 0;
+        border-radius: inherit;
+        background: linear-gradient(90deg, var(--cyan), var(--lime));
+      }
+
+      .progress-scan {
+        position: absolute;
+        top: 0;
+        left: -30%;
+        width: 30%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.45), transparent);
+        opacity: 0;
+      }
+
+      .progress-rail.indeterminate .progress-scan {
+        opacity: 1;
+        animation: scan 1.9s linear infinite;
+      }
+
+      .steps {
+        margin-top: 18px;
+        display: grid;
+        gap: 12px;
+      }
+
+      .step {
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+        padding: 12px 14px;
+        border-radius: 16px;
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.03);
+      }
+
+      .step-dot {
+        width: 11px;
+        height: 11px;
+        border-radius: 999px;
+        background: rgba(143, 164, 187, 0.4);
+        margin-top: 4px;
+      }
+
+      .step.done .step-dot,
+      .step.active .step-dot {
+        background: var(--cyan);
+        box-shadow: 0 0 0 8px rgba(90, 216, 255, 0.08);
+      }
+
+      .step.done {
+        border-color: rgba(159, 245, 164, 0.18);
+      }
+
+      .step.active {
+        border-color: rgba(90, 216, 255, 0.22);
+      }
+
+      .link-row {
+        margin-top: 18px;
+      }
+
+      .link-row a,
+      .back-link {
+        color: var(--cyan);
+        text-decoration: none;
+      }
+
+      .disabled-link {
+        color: var(--muted);
+        cursor: not-allowed;
+      }
+
       button {
-        border: 0; border-radius: 16px; padding: 12px 16px; font: inherit; font-weight: 700; cursor: pointer;
-        background: linear-gradient(135deg, var(--accent), var(--warn)); color: white;
+        appearance: none;
+        border: 0;
+        border-radius: 16px;
+        padding: 13px 16px;
+        background: linear-gradient(135deg, var(--cyan), var(--lime));
+        color: #06111c;
+        font: inherit;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      .refreshing button {
+        opacity: 0.7;
+      }
+
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
+
+      @keyframes scan {
+        from { left: -30%; }
+        to { left: 100%; }
+      }
+
+      @keyframes beaconPulse {
+        0%, 100% { transform: scale(0.92); opacity: 0.4; }
+        50% { transform: scale(1.06); opacity: 0.9; }
+      }
+
+      @media (max-width: 720px) {
+        .top {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+
+        .spinner-wrap {
+          align-items: flex-start;
+          flex-direction: column;
+        }
       }
     </style>
+    {% if report.status in ['queued', 'running'] %}
+    <meta http-equiv="refresh" content="8" />
+    {% endif %}
   </head>
   <body>
     <main class="shell">
       <section class="panel">
-        <div class="row">
+        <div class="top">
           <div>
-            <div class="muted">Report detail</div>
-            <h1>{{ report.title }}</h1>
+            <span class="eyebrow">Report detail</span>
+            <h1 style="margin-top: 12px;">{{ report.title }}</h1>
+            <p class="muted" style="margin-top: 10px;">Track the queue, watch the worker churn, and open the hosted result when it lands.</p>
           </div>
-          <a href="/dashboard">Back to dashboard</a>
+          <a class="back-link" href="/dashboard">Back to dashboard</a>
         </div>
-        <div class="meta">
+
+        <div class="actions" style="margin-top: 18px;">
+          <span class="chip {{ report.status }}" id="statusBadge">{{ report.status }}</span>
           <span class="chip">{{ report.since_spec }}</span>
           <span class="chip">{{ report.visibility }}</span>
-          <span class="chip">{{ report.status }}</span>
           {% if report.include_private %}<span class="chip">private activity</span>{% endif %}
           {% if report.store_metadata %}<span class="chip">metadata retained</span>{% endif %}
         </div>
-        <div class="links">
-          <a href="{{ report.share_url }}">Open share link</a>
-          {% if report.host_url %}<a href="{{ report.host_url }}">Open subdomain link</a>{% endif %}
-          {% if snapshot %}<span class="muted">Snapshot v{{ snapshot.version }}</span>{% endif %}
-          {% if report.expires_at %}<span class="muted">Expires {{ report.expires_at }}</span>{% endif %}
+
+        <div class="grid">
+          <div id="progressShell" style="flex: 1 1 420px;">
+            {% include 'web/_report_progress.html.j2' %}
+          </div>
+
+          <section class="mini-panel">
+            {% set ready = report.status == 'ready' %}
+            <div class="eyebrow">Access</div>
+            <h3 style="margin-top: 12px;">Share surfaces</h3>
+            <div class="link-row">
+              {% if ready and snapshot %}
+              <a href="{{ report.share_url }}">Open share link</a>
+              {% else %}
+              <span class="disabled-link">Share link available when ready</span>
+              {% endif %}
+            </div>
+            <div class="link-row">
+              {% if ready and report.host_url %}
+              <a href="{{ report.host_url }}">Open subdomain link</a>
+              {% else %}
+              <span class="disabled-link">Subdomain will light up after publish</span>
+              {% endif %}
+            </div>
+            <div class="link-row">
+              {% if snapshot %}<span class="muted">Snapshot v{{ snapshot.version }}</span>{% endif %}
+              {% if report.expires_at %}<span class="muted">Expires {{ report.expires_at }}</span>{% endif %}
+            </div>
+          </section>
         </div>
-        <form method="post" action="/dashboard/reports/{{ report.id }}/refresh" class="actions">
+
+        <form id="refreshForm" method="post" action="/dashboard/reports/{{ report.id }}/refresh" class="actions" style="margin-top: 18px;">
           <button type="submit">Refresh report</button>
+          <span class="muted">Refreshing creates a new snapshot version without changing the share identity.</span>
         </form>
       </section>
     </main>
+
+    <script>
+      const latestJobId = {{ report.latest_job_id|tojson if report.latest_job_id else 'null' }};
+      const refreshForm = document.getElementById('refreshForm');
+      const progressShell = document.getElementById('progressShell');
+
+      if (refreshForm) {
+        refreshForm.addEventListener('submit', () => {
+          document.body.classList.add('refreshing');
+        });
+      }
+
+      if (latestJobId && {{ 'true' if report.status in ['queued', 'running'] else 'false' }}) {
+        const poll = async () => {
+          try {
+            const response = await fetch(`/dashboard/reports/{{ report.id }}/progress`, { headers: { 'Accept': 'text/html' } });
+            if (!response.ok) {
+              return;
+            }
+            const html = await response.text();
+            if (progressShell) {
+              progressShell.innerHTML = html;
+            }
+            const nextState = progressShell?.querySelector('[data-status]')?.getAttribute('data-status');
+            if (nextState === 'ready' || nextState === 'succeeded' || nextState === 'failed') {
+              window.location.reload();
+            }
+          } catch (error) {
+            console.warn('status poll failed', error);
+          }
+        };
+
+        window.setInterval(poll, 4000);
+      }
+    </script>
   </body>
 </html>

@@ -51,6 +51,8 @@ def build_report_context(dataset: ActivityDataset) -> dict[str, Any]:
             "links": {
                 "repository_url": "https://github.com/mojomast/ghstatsussy",
                 "repository_label": "mojomast/ghstatsussy",
+                "app_url": "https://ghstats.ussyco.de",
+                "app_label": "ghstats.ussyco.de",
                 "ussyverse_url": "https://ussy.host",
                 "ussyverse_label": "ussyverse",
             },

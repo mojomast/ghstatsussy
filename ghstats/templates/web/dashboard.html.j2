@@ -4,107 +4,439 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dashboard - ghstatsussy hosted</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <style>
       :root {
-        --bg: #f4efe6;
-        --panel: rgba(255, 251, 244, 0.86);
-        --ink: #18222f;
-        --muted: #576576;
-        --accent: #0f766e;
-        --warn: #d97706;
-        --shadow: 0 28px 70px rgba(17,24,39,0.16);
+        --bg-0: #09111d;
+        --bg-1: #0d1727;
+        --panel: rgba(10, 17, 30, 0.82);
+        --panel-strong: rgba(9, 15, 26, 0.94);
+        --line: rgba(142, 194, 255, 0.13);
+        --line-strong: rgba(142, 194, 255, 0.28);
+        --ink: #ebf4ff;
+        --muted: #8fa4bb;
+        --cyan: #5ad8ff;
+        --lime: #9ff5a4;
+        --amber: #f2b15d;
+        --coral: #ff8573;
+        --shadow: 0 28px 90px rgba(0, 0, 0, 0.42);
+        --radius-xl: 28px;
+        --radius-lg: 20px;
+        --radius-md: 14px;
       }
-      * { box-sizing: border-box; }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      [hidden] {
+        display: none !important;
+      }
+
       body {
         margin: 0;
         min-height: 100vh;
-        background:
-          radial-gradient(circle at top left, rgba(15,118,110,0.18), transparent 30%),
-          radial-gradient(circle at top right, rgba(217,119,6,0.16), transparent 28%),
-          linear-gradient(165deg, #f7f0e4 0%, #efe3cf 100%);
-        font-family: "Space Grotesk", "Trebuchet MS", sans-serif;
+        font-family: "IBM Plex Sans", sans-serif;
         color: var(--ink);
+        background:
+          radial-gradient(circle at top left, rgba(90, 216, 255, 0.14), transparent 24%),
+          radial-gradient(circle at top right, rgba(159, 245, 164, 0.08), transparent 20%),
+          linear-gradient(160deg, #07101a 0%, #0b1420 50%, #0f1728 100%);
+        position: relative;
       }
-      .shell { width: min(1180px, calc(100% - 28px)); margin: 24px auto 40px; }
-      .top, .panel {
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background-image:
+          linear-gradient(var(--line) 1px, transparent 1px),
+          linear-gradient(90deg, var(--line) 1px, transparent 1px);
+        background-size: 34px 34px;
+        pointer-events: none;
+      }
+
+      .shell {
+        width: min(1240px, calc(100% - 28px));
+        margin: 24px auto 38px;
+        position: relative;
+        z-index: 1;
+      }
+
+      .topbar,
+      .panel,
+      .status-strip {
         background: var(--panel);
-        border: 1px solid rgba(255,255,255,0.55);
-        backdrop-filter: blur(18px);
-        border-radius: 28px;
+        border: 1px solid var(--line);
+        border-radius: var(--radius-xl);
         box-shadow: var(--shadow);
+        backdrop-filter: blur(18px);
       }
-      .top {
-        padding: 22px;
+
+      .topbar {
+        padding: 20px 24px;
         display: flex;
         justify-content: space-between;
         align-items: center;
         gap: 16px;
       }
-      .profile { display: flex; align-items: center; gap: 14px; }
-      .profile img { width: 64px; height: 64px; border-radius: 20px; }
-      .muted { color: var(--muted); }
-      h1,h2,h3,p { margin: 0; }
-      .grid { display: grid; grid-template-columns: 360px 1fr; gap: 18px; margin-top: 18px; }
-      .panel { padding: 20px; }
-      .field { display: grid; gap: 8px; margin-top: 12px; }
-      .checkbox-row { display: flex; align-items: center; gap: 10px; }
-      label { font-size: 0.9rem; color: var(--muted); }
-      input, select {
-        width: 100%; border: 1px solid rgba(24,34,47,0.12); background: rgba(255,255,255,0.8);
-        border-radius: 16px; padding: 12px 14px; font: inherit;
+
+      .profile {
+        display: flex;
+        align-items: center;
+        gap: 14px;
       }
-      input[type="checkbox"] { width: auto; }
-      .actions { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
-      button {
-        border: 0; border-radius: 16px; padding: 12px 16px; font: inherit; font-weight: 700; cursor: pointer;
+
+      .profile img {
+        width: 66px;
+        height: 66px;
+        border-radius: 18px;
+        border: 1px solid var(--line);
       }
-      .primary { background: linear-gradient(135deg, var(--accent), var(--warn)); color: white; }
-      .secondary { background: rgba(24,34,47,0.08); color: var(--ink); }
-      .reports { display: grid; gap: 14px; }
+
+      .eyebrow,
+      .micro,
+      .chip,
+      label,
+      .button-text,
+      .step-label {
+        font-family: "IBM Plex Mono", monospace;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin: 0;
+      }
+
+      .muted {
+        color: var(--muted);
+      }
+
+      .logout,
+      .primary,
+      .secondary,
+      .text-link {
+        appearance: none;
+        border: 0;
+        text-decoration: none;
+        cursor: pointer;
+        font: inherit;
+      }
+
+      .logout,
+      .secondary {
+        padding: 12px 16px;
+        border-radius: 14px;
+        background: rgba(255, 255, 255, 0.06);
+        color: var(--ink);
+      }
+
+      .primary {
+        padding: 14px 18px;
+        border-radius: 16px;
+        background: linear-gradient(135deg, var(--cyan), var(--lime));
+        color: #06111c;
+        font-weight: 700;
+      }
+
+      .layout {
+        display: grid;
+        grid-template-columns: 390px 1fr;
+        gap: 18px;
+        margin-top: 18px;
+      }
+
+      .panel {
+        padding: 22px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .panel::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(135deg, rgba(90, 216, 255, 0.06), transparent 42%);
+        pointer-events: none;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        width: fit-content;
+        padding: 8px 10px;
+        border-radius: 999px;
+        border: 1px solid rgba(90, 216, 255, 0.24);
+        color: var(--cyan);
+        font-size: 11px;
+      }
+
+      .stack {
+        display: grid;
+        gap: 18px;
+      }
+
+      .field {
+        display: grid;
+        gap: 8px;
+        margin-top: 14px;
+      }
+
+      label {
+        font-size: 11px;
+        color: var(--muted);
+      }
+
+      input,
+      select {
+        width: 100%;
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.04);
+        color: var(--ink);
+        border-radius: 14px;
+        padding: 13px 14px;
+        font: inherit;
+      }
+
+      input[type="checkbox"] {
+        width: auto;
+        accent-color: var(--cyan);
+      }
+
+      .checkbox-row {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        padding: 12px 14px;
+        border-radius: 14px;
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.03);
+      }
+
+      .form-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 18px;
+      }
+
+      .status-strip {
+        padding: 16px 18px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 14px;
+      }
+
+      .report-list {
+        display: grid;
+        gap: 14px;
+        margin-top: 16px;
+      }
+
       .report-card {
-        background: rgba(255,255,255,0.72); border-radius: 22px; padding: 18px; border: 1px solid rgba(24,34,47,0.08);
+        position: relative;
+        padding: 18px;
+        border-radius: 20px;
+        border: 1px solid var(--line);
+        background: var(--panel-strong);
+        overflow: hidden;
       }
-      .meta { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+
+      .report-card::before {
+        content: "";
+        position: absolute;
+        inset: auto 0 0 0;
+        height: 2px;
+        background: linear-gradient(90deg, var(--cyan), transparent 70%);
+      }
+
+      .report-head,
+      .report-links,
+      .chip-row,
+      .insight-grid {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .report-head {
+        justify-content: space-between;
+        align-items: flex-start;
+      }
+
       .chip {
-        border-radius: 999px; padding: 7px 10px; background: rgba(24,34,47,0.07); font-size: 0.86rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 7px 10px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.06);
+        color: var(--muted);
+        font-size: 11px;
       }
-      .report-links { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 14px; }
-      .report-links a { color: var(--accent); text-decoration: none; }
-      form.inline { margin: 0; }
-      @media (max-width: 940px) {
-        .grid { grid-template-columns: 1fr; }
-        .top { align-items: flex-start; flex-direction: column; }
+
+      .chip.status-running,
+      .chip.status-queued {
+        color: var(--cyan);
+        border: 1px solid rgba(90, 216, 255, 0.2);
+      }
+
+      .chip.status-ready {
+        color: var(--lime);
+        border: 1px solid rgba(159, 245, 164, 0.18);
+      }
+
+      .chip.status-failed {
+        color: var(--coral);
+        border: 1px solid rgba(255, 133, 115, 0.18);
+      }
+
+      .pulse {
+        width: 8px;
+        height: 8px;
+        border-radius: 999px;
+        background: currentColor;
+        box-shadow: 0 0 0 0 currentColor;
+        animation: ping 1.8s infinite;
+      }
+
+      .report-links {
+        margin-top: 14px;
+      }
+
+      .text-link {
+        color: var(--cyan);
+        background: none;
+        padding: 0;
+      }
+
+      .insight-grid {
+        margin-top: 18px;
+      }
+
+      .insight {
+        flex: 1 1 180px;
+        min-height: 110px;
+        padding: 16px;
+        border-radius: 18px;
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.04);
+      }
+
+      .insight strong {
+        display: block;
+        margin-top: 8px;
+        font-size: 1.4rem;
+      }
+
+      .submit-overlay {
+        position: fixed;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        background: rgba(4, 10, 18, 0.74);
+        backdrop-filter: blur(10px);
+        z-index: 20;
+      }
+
+      .submit-card {
+        width: min(460px, calc(100% - 28px));
+        padding: 24px;
+        border-radius: 24px;
+        border: 1px solid var(--line-strong);
+        background: var(--panel-strong);
+        box-shadow: var(--shadow);
+        display: grid;
+        gap: 12px;
+        text-align: center;
+      }
+
+      .spinner {
+        width: 54px;
+        height: 54px;
+        margin: 0 auto;
+        border-radius: 999px;
+        border: 3px solid rgba(90, 216, 255, 0.16);
+        border-top-color: var(--cyan);
+        border-right-color: var(--lime);
+        animation: spin 1s linear infinite;
+      }
+
+      .is-submitting .topbar,
+      .is-submitting .layout {
+        pointer-events: none;
+        filter: blur(1px);
+      }
+
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
+
+      @keyframes ping {
+        0% { box-shadow: 0 0 0 0 rgba(90, 216, 255, 0.5); }
+        70% { box-shadow: 0 0 0 10px rgba(90, 216, 255, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(90, 216, 255, 0); }
+      }
+
+      @media (max-width: 980px) {
+        .layout {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 680px) {
+        .shell {
+          width: min(100% - 18px, 1240px);
+        }
+
+        .topbar {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .form-actions,
+        .status-strip {
+          flex-direction: column;
+          align-items: stretch;
+        }
       }
     </style>
   </head>
   <body>
     <main class="shell">
-      <section class="top">
+      <section class="topbar">
         <div class="profile">
           {% if user.avatar_url %}<img src="{{ user.avatar_url }}" alt="{{ user.login }} avatar" />{% endif %}
           <div>
-            <div class="muted">Signed in with GitHub</div>
+            <div class="eyebrow">Mission Control</div>
             <h1>{{ user.name or user.login }}</h1>
-            <div class="muted">@{{ user.login }}</div>
+            <p class="muted">@{{ user.login }} / queue reports / publish clean share links</p>
           </div>
         </div>
-        <form class="inline" method="post" action="/auth/logout">
-          <button class="secondary" type="submit">Log out</button>
+        <form method="post" action="/auth/logout">
+          <button class="logout" type="submit">Log out</button>
         </form>
       </section>
 
-      <section class="grid">
+      <section class="layout">
         <article class="panel">
-          <h2>Generate a report</h2>
-          <p class="muted" style="margin-top: 8px;">Create a fresh HTML snapshot from the hosted app. Unlisted and public reports get a shareable slug.</p>
-          <form method="post" action="/dashboard/reports">
+          <span class="eyebrow">Generate</span>
+          <h2 style="margin-top: 12px;">Launch a new snapshot</h2>
+          <p class="muted" style="margin-top: 10px;">Pick your time window, decide how public it should be, and choose whether you want metadata retained for future reruns.</p>
+
+          <form id="reportForm" method="post" action="/dashboard/reports">
             <div class="field">
               <label for="since_spec">Time window</label>
               <input id="since_spec" name="since_spec" value="30d" placeholder="30d" />
             </div>
             <div class="field">
-              <label for="title">Title</label>
-              <input id="title" name="title" placeholder="GitHub Activity - Last 30d" />
+              <label for="title">Report title</label>
+              <input id="title" name="title" placeholder="GitHub Activity / Last 30d" />
             </div>
             <div class="field">
               <label for="visibility">Visibility</label>
@@ -116,7 +448,7 @@
             </div>
             <div class="field">
               <label>Include private activity</label>
-              <label class="checkbox-row"><input id="include_private" name="include_private" type="checkbox" value="true" /> <span>keep report private if enabled</span></label>
+              <label class="checkbox-row"><input id="include_private" name="include_private" type="checkbox" value="true" /> <span>allowed, but the report must remain private if this is enabled</span></label>
             </div>
             <div class="field">
               <label for="expires_in_days">Expiry in days</label>
@@ -124,46 +456,108 @@
             </div>
             <div class="field">
               <label>Store metadata</label>
-              <label class="checkbox-row"><input id="store_metadata" name="store_metadata" type="checkbox" value="true" /> <span>opt in to keep JSON/metadata for reruns and history</span></label>
+              <label class="checkbox-row"><input id="store_metadata" name="store_metadata" type="checkbox" value="true" /> <span>opt in if you want JSON/context retained for history and easier reruns</span></label>
             </div>
             {% if allow_sample_reports %}
             <div class="field">
               <label>Use sample data</label>
-              <label class="checkbox-row"><input id="sample_data" name="sample_data" type="checkbox" value="true" /> <span>demo mode without live GitHub access</span></label>
+              <label class="checkbox-row"><input id="sample_data" name="sample_data" type="checkbox" value="true" /> <span>demo mode without touching your real GitHub activity</span></label>
             </div>
             {% endif %}
-            <div class="actions">
-              <button class="primary" type="submit">Generate report</button>
+            <div class="form-actions">
+              <button id="submitButton" class="primary" type="submit"><span class="button-text">Generate report</span></button>
+              <span class="muted">You will be redirected to a live status page while it generates.</span>
             </div>
           </form>
         </article>
 
-        <article class="panel">
-          <h2>Your reports</h2>
-          <p class="muted" style="margin-top: 8px;">Each report stores a rendered snapshot. Refreshing generates a new version without breaking the share slug.</p>
-          <div class="reports" style="margin-top: 16px;">
-            {% if reports %}
-              {% for report in reports %}
-              <section class="report-card">
-                <h3>{{ report.title }}</h3>
-                <div class="meta">
-                  <span class="chip">{{ report.since_spec }}</span>
-                  <span class="chip">{{ report.visibility }}</span>
-                  <span class="chip">{{ report.status }}</span>
-                  {% if report.include_private %}<span class="chip">private activity</span>{% endif %}
-                </div>
-                <div class="report-links">
-                  <a href="/dashboard/reports/{{ report.id }}">Manage</a>
-                  <a href="{{ report.share_url }}">Share link</a>
-                </div>
-              </section>
-              {% endfor %}
-            {% else %}
-              <p class="muted" style="margin-top: 14px;">No reports yet. Make the first one and give it a shareable slug.</p>
-            {% endif %}
-          </div>
-        </article>
+        <div class="stack">
+          <section class="status-strip">
+            <div>
+              <div class="eyebrow">Current policy</div>
+              <h2 style="margin-top: 10px;">Host the page, not the guts</h2>
+            </div>
+            <div class="chip-row">
+              <span class="chip">HTML retained by default</span>
+              <span class="chip">metadata opt-in</span>
+              <span class="chip">private activity stays private</span>
+            </div>
+          </section>
+
+          <section class="panel">
+            <span class="eyebrow">Your queue</span>
+            <h2 style="margin-top: 12px;">Reports and share surfaces</h2>
+            <div class="insight-grid">
+              <div class="insight">
+                <div class="muted">Per-user host</div>
+                <strong>{{ user.login|lower }}.ghstats.ussyco.de</strong>
+                <div class="muted">Serves the latest public snapshot once one exists.</div>
+              </div>
+              <div class="insight">
+                <div class="muted">Direct share links</div>
+                <strong>/r/&lt;slug&gt;</strong>
+                <div class="muted">Stable links for specific report identities.</div>
+              </div>
+            </div>
+
+            <div class="report-list">
+              {% if reports %}
+                {% for report in reports %}
+                <article class="report-card">
+                  <div class="report-head">
+                    <div>
+                      <div class="eyebrow">Report node</div>
+                      <h3 style="margin-top: 10px;">{{ report.title }}</h3>
+                    </div>
+                    <span class="chip status-{{ report.status }}">{% if report.status in ['queued', 'running'] %}<span class="pulse"></span>{% endif %}{{ report.status }}</span>
+                  </div>
+                  <div class="chip-row" style="margin-top: 14px;">
+                    <span class="chip">{{ report.since_spec }}</span>
+                    <span class="chip">{{ report.visibility }}</span>
+                    {% if report.include_private %}<span class="chip">private activity</span>{% endif %}
+                    {% if report.store_metadata %}<span class="chip">metadata retained</span>{% endif %}
+                  </div>
+                  <div class="report-links">
+                    <a class="text-link" href="/dashboard/reports/{{ report.id }}">Manage</a>
+                    <a class="text-link" href="{{ report.share_url }}">Share link</a>
+                    {% if report.host_url %}<a class="text-link" href="{{ report.host_url }}">Subdomain</a>{% endif %}
+                  </div>
+                </article>
+                {% endfor %}
+              {% else %}
+                <p class="muted" style="margin-top: 10px;">No reports yet. Make the first one and the dashboard starts looking alive.</p>
+              {% endif %}
+            </div>
+          </section>
+        </div>
       </section>
     </main>
+
+    <div id="submitOverlay" class="submit-overlay" hidden>
+      <div class="submit-card">
+        <div class="spinner" aria-hidden="true"></div>
+        <h3>Creating your report</h3>
+        <p class="muted">We are queueing the job and opening its status page. This can take a bit if GitHub has a lot to churn.</p>
+        <p class="muted">Please keep this tab open until the redirect happens.</p>
+      </div>
+    </div>
+
+    <script>
+      const form = document.getElementById('reportForm');
+      const overlay = document.getElementById('submitOverlay');
+      const submitButton = document.getElementById('submitButton');
+
+      if (form && overlay && submitButton) {
+        form.addEventListener('submit', () => {
+          document.body.classList.add('is-submitting');
+          overlay.hidden = false;
+          for (const element of form.elements) {
+            element.disabled = true;
+          }
+          submitButton.disabled = true;
+          submitButton.textContent = 'Starting report...';
+        });
+      }
+    </script>
   </body>
 </html>

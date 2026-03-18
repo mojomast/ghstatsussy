@@ -4,127 +4,461 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ghstatsussy hosted</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <style>
       :root {
-        --bg: #f5ecdc;
-        --panel: rgba(255, 251, 244, 0.84);
-        --ink: #1c2430;
-        --muted: #556172;
-        --accent: #0f766e;
-        --accent2: #d97706;
-        --shadow: 0 30px 80px rgba(16, 24, 40, 0.18);
+        --bg-0: #08111d;
+        --bg-1: #0d1727;
+        --panel: rgba(10, 17, 30, 0.82);
+        --panel-strong: rgba(9, 15, 26, 0.94);
+        --line: rgba(142, 194, 255, 0.13);
+        --line-strong: rgba(142, 194, 255, 0.28);
+        --ink: #e9f3ff;
+        --muted: #8ea4bc;
+        --cyan: #5ad8ff;
+        --lime: #9ff5a4;
+        --amber: #f2b15d;
+        --coral: #ff8573;
+        --shadow: 0 30px 90px rgba(0, 0, 0, 0.42);
+        --radius-xl: 30px;
+        --radius-lg: 22px;
+        --radius-md: 16px;
       }
-      * { box-sizing: border-box; }
+
+      * {
+        box-sizing: border-box;
+      }
+
       body {
         margin: 0;
         min-height: 100vh;
-        font-family: "Space Grotesk", "Trebuchet MS", sans-serif;
         color: var(--ink);
-        background:
-          radial-gradient(circle at top left, rgba(15,118,110,0.22), transparent 30%),
-          radial-gradient(circle at right, rgba(217,119,6,0.2), transparent 28%),
-          linear-gradient(165deg, #faf3e5 0%, #f2e7d1 100%);
-        display: grid;
-        place-items: center;
-        padding: 28px;
-      }
-      .hero {
-        width: min(1040px, 100%);
-        display: grid;
-        grid-template-columns: 1.2fr 0.9fr;
-        gap: 18px;
-      }
-      .panel {
-        background: var(--panel);
-        border: 1px solid rgba(255,255,255,0.55);
-        border-radius: 28px;
-        box-shadow: var(--shadow);
-        backdrop-filter: blur(18px);
-        padding: 28px;
-      }
-      h1,h2,p { margin: 0; }
-      h1 {
         font-family: "IBM Plex Sans", sans-serif;
-        font-size: clamp(2.4rem, 5vw, 4.8rem);
-        line-height: 0.94;
-        max-width: 9ch;
-        margin-top: 12px;
+        background:
+          radial-gradient(circle at top left, rgba(90, 216, 255, 0.18), transparent 26%),
+          radial-gradient(circle at right, rgba(159, 245, 164, 0.08), transparent 20%),
+          linear-gradient(160deg, #07101a 0%, #0a1320 48%, #0d1727 100%);
+        position: relative;
+        overflow-x: hidden;
       }
-      .eyebrow, .pill {
-        display: inline-flex;
-        padding: 8px 12px;
-        border-radius: 999px;
+
+      body::before,
+      body::after {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+      }
+
+      body::before {
+        background-image:
+          linear-gradient(var(--line) 1px, transparent 1px),
+          linear-gradient(90deg, var(--line) 1px, transparent 1px);
+        background-size: 36px 36px;
+        opacity: 0.7;
+      }
+
+      body::after {
+        background:
+          linear-gradient(90deg, transparent 0%, rgba(90, 216, 255, 0.06) 50%, transparent 100%);
+        transform: translateX(-35%);
+        animation: drift 12s linear infinite;
+        opacity: 0.4;
+      }
+
+      .shell {
+        width: min(1220px, calc(100% - 28px));
+        margin: 28px auto 36px;
+        position: relative;
+        z-index: 1;
+      }
+
+      .eyebrow,
+      .kicker,
+      .pill,
+      .micro,
+      .stat-label {
+        font-family: "IBM Plex Mono", monospace;
         text-transform: uppercase;
         letter-spacing: 0.12em;
+      }
+
+      .hero {
+        display: grid;
+        grid-template-columns: 1.2fr 0.88fr;
+        gap: 18px;
+      }
+
+      .panel {
+        position: relative;
+        overflow: hidden;
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: var(--radius-xl);
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(18px);
+      }
+
+      .panel::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          linear-gradient(135deg, rgba(90, 216, 255, 0.08), transparent 42%),
+          linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent 38%);
+        pointer-events: none;
+      }
+
+      .hero-copy {
+        padding: 32px;
+        display: grid;
+        gap: 22px;
+        min-height: 640px;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        width: fit-content;
+        padding: 9px 12px;
+        border: 1px solid rgba(90, 216, 255, 0.25);
+        border-radius: 999px;
+        color: var(--cyan);
         font-size: 12px;
       }
-      .eyebrow { background: rgba(15,118,110,0.12); color: var(--accent); }
-      .lede, .muted { color: var(--muted); }
-      .lede { margin-top: 14px; font-size: 1.08rem; max-width: 56ch; line-height: 1.6; }
-      .grid {
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin: 0;
+      }
+
+      h1 {
+        font-size: clamp(2.8rem, 6vw, 5.8rem);
+        line-height: 0.92;
+        max-width: 10ch;
+      }
+
+      .lede {
+        max-width: 56ch;
+        color: var(--muted);
+        font-size: 1.08rem;
+        line-height: 1.7;
+      }
+
+      .hero-grid {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 12px;
-        margin-top: 22px;
+        gap: 14px;
+        margin-top: auto;
       }
-      .stat {
-        background: rgba(255,255,255,0.6);
-        border-radius: 20px;
+
+      .metric-card,
+      .signal-card,
+      .note,
+      .callout,
+      .timeline {
+        background: var(--panel-strong);
+        border: 1px solid var(--line);
+        border-radius: var(--radius-lg);
+      }
+
+      .metric-card {
         padding: 16px;
       }
-      .stat strong { display: block; font-size: 1.8rem; }
-      .login {
-        display: grid;
-        gap: 14px;
-        align-content: start;
+
+      .stat-label {
+        font-size: 11px;
+        color: var(--muted);
       }
+
+      .metric-card strong {
+        display: block;
+        margin-top: 10px;
+        font-size: 2rem;
+      }
+
+      .hero-side {
+        display: grid;
+        gap: 18px;
+      }
+
+      .signal-card {
+        padding: 24px;
+        min-height: 400px;
+        display: grid;
+        gap: 18px;
+      }
+
+      .signal-header,
+      .note-header,
+      .timeline-row,
+      .callout-grid {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .chart-frame {
+        position: relative;
+        height: 220px;
+        border-radius: 18px;
+        border: 1px solid var(--line);
+        background:
+          linear-gradient(var(--line) 1px, transparent 1px),
+          linear-gradient(90deg, var(--line) 1px, transparent 1px),
+          linear-gradient(180deg, rgba(90, 216, 255, 0.12), rgba(90, 216, 255, 0.02));
+        background-size: 28px 28px, 28px 28px, 100% 100%;
+        overflow: hidden;
+      }
+
+      .chart-line,
+      .chart-line-2 {
+        position: absolute;
+        inset: 0;
+      }
+
+      .chart-line svg,
+      .chart-line-2 svg {
+        width: 100%;
+        height: 100%;
+      }
+
+      .chart-line path {
+        stroke: var(--cyan);
+        stroke-width: 3;
+        fill: rgba(90, 216, 255, 0.12);
+      }
+
+      .chart-line-2 path {
+        stroke: var(--lime);
+        stroke-width: 2;
+        fill: none;
+        stroke-dasharray: 8 8;
+      }
+
+      .radar {
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(circle at 18% 70%, rgba(159, 245, 164, 0.14), transparent 18%);
+        animation: pulse 4s ease-in-out infinite;
+      }
+
+      .note,
+      .callout,
+      .timeline {
+        padding: 18px;
+      }
+
+      .note p,
+      .callout p,
+      .timeline p,
+      .muted {
+        color: var(--muted);
+      }
+
       .cta {
         display: inline-flex;
-        align-items: center;
         justify-content: center;
-        gap: 10px;
-        text-decoration: none;
+        align-items: center;
         padding: 14px 18px;
-        border-radius: 18px;
-        background: linear-gradient(135deg, var(--accent), var(--accent2));
-        color: white;
+        border-radius: 16px;
+        text-decoration: none;
         font-weight: 700;
+        color: #07101a;
+        background: linear-gradient(135deg, var(--cyan), var(--lime));
+        box-shadow: 0 12px 32px rgba(90, 216, 255, 0.2);
       }
-      .note {
-        border-radius: 18px;
-        background: rgba(28,36,48,0.05);
-        padding: 16px;
-        line-height: 1.55;
+
+      .cta:hover {
+        transform: translateY(-1px);
       }
-      a { color: inherit; }
-      @media (max-width: 860px) {
-        .hero { grid-template-columns: 1fr; }
+
+      .timeline {
+        display: grid;
+        gap: 12px;
+      }
+
+      .timeline-row {
+        align-items: flex-start;
+      }
+
+      .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 999px;
+        background: var(--cyan);
+        margin-top: 5px;
+        box-shadow: 0 0 0 8px rgba(90, 216, 255, 0.08);
+      }
+
+      .dot.lime {
+        background: var(--lime);
+        box-shadow: 0 0 0 8px rgba(159, 245, 164, 0.08);
+      }
+
+      .dot.amber {
+        background: var(--amber);
+        box-shadow: 0 0 0 8px rgba(242, 177, 93, 0.08);
+      }
+
+      .pill {
+        display: inline-flex;
+        width: fit-content;
+        padding: 8px 10px;
+        font-size: 11px;
+        color: var(--amber);
+        border: 1px solid rgba(242, 177, 93, 0.25);
+        border-radius: 999px;
+      }
+
+      code {
+        font-family: "IBM Plex Mono", monospace;
+        background: rgba(255, 255, 255, 0.06);
+        padding: 2px 6px;
+        border-radius: 8px;
+      }
+
+      @keyframes drift {
+        from { transform: translateX(-35%); }
+        to { transform: translateX(35%); }
+      }
+
+      @keyframes pulse {
+        0%, 100% { opacity: 0.35; transform: scale(0.98); }
+        50% { opacity: 0.8; transform: scale(1.03); }
+      }
+
+      @media (max-width: 980px) {
+        .hero {
+          grid-template-columns: 1fr;
+        }
+
+        .hero-copy {
+          min-height: auto;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .shell {
+          width: min(100% - 18px, 1220px);
+          margin: 18px auto 24px;
+        }
+
+        .hero-copy,
+        .signal-card,
+        .note,
+        .callout,
+        .timeline {
+          padding: 18px;
+        }
+
+        .hero-grid {
+          grid-template-columns: 1fr;
+        }
       }
     </style>
   </head>
   <body>
-    <main class="hero">
-      <section class="panel">
-        <span class="eyebrow">Hosted GitHub infographics</span>
-        <h1>Sign in, churn repos, share the glow-up.</h1>
-        <p class="lede">`ghstatsussy` turns a GitHub account into a polished HTML activity report with a stable share link. The hosted app keeps OAuth server-side and serves stored report snapshots.</p>
-        <div class="grid">
-          <div class="stat"><span class="muted">OAuth</span><strong>GitHub</strong></div>
-          <div class="stat"><span class="muted">Output</span><strong>HTML</strong></div>
-          <div class="stat"><span class="muted">Share</span><strong>Slug link</strong></div>
-          <div class="stat"><span class="muted">Engine</span><strong>CLI core</strong></div>
-        </div>
-      </section>
+    <main class="shell">
+      <section class="hero">
+        <article class="panel hero-copy">
+          <span class="eyebrow">Blueprint Atlas / hosted GitHub infographics</span>
+          <div>
+            <h1>Plot your GitHub signal, then give it a clean little URL.</h1>
+            <p class="lede">`ghstatsussy` turns your contribution history into a shareable HTML report with a calmer privacy posture: GitHub OAuth stays server-side, private-activity reports stay private, and metadata retention is optional instead of assumed.</p>
+          </div>
 
-      <section class="panel login">
-        <span class="pill" style="background: rgba(217,119,6,0.12); color: #b45309;">FastAPI hosted MVP</span>
-        <h2>Bring your GitHub account</h2>
-        <p class="muted">After login, you can generate reports for windows like `30d`, `12w`, or `6m`, then share them with a public or unlisted slug. Private reports stay owner-only.</p>
-        <a class="cta" href="/auth/github/login">Sign in with GitHub</a>
-        <div class="note">
-          <strong>How it works</strong>
-          <p class="muted">Sign in with GitHub, choose a time window, and generate a polished stats page you can share. By default, ghstatsussy keeps only the hosted HTML report; metadata retention is optional, and reports with private activity stay private.</p>
-        </div>
+          <div class="hero-grid">
+            <section class="metric-card">
+              <div class="stat-label">Identity</div>
+              <strong>GitHub OAuth</strong>
+              <div class="muted">Sign in once, generate on demand.</div>
+            </section>
+            <section class="metric-card">
+              <div class="stat-label">Artifact</div>
+              <strong>Hosted HTML</strong>
+              <div class="muted">Self-contained report snapshots, not a live dashboard leak.</div>
+            </section>
+            <section class="metric-card">
+              <div class="stat-label">Share shape</div>
+              <strong>/r/slug</strong>
+              <div class="muted">Or `username.ghstats.ussyco.de` when a public report exists.</div>
+            </section>
+            <section class="metric-card">
+              <div class="stat-label">Retention</div>
+              <strong>Opt-in metadata</strong>
+              <div class="muted">HTML by default. Extra metadata only if you ask for it.</div>
+            </section>
+          </div>
+        </article>
+
+        <aside class="hero-side">
+          <section class="signal-card">
+            <div class="signal-header">
+              <div>
+                <div class="micro muted">Activity map</div>
+                <h2>From repos to report</h2>
+              </div>
+              <span class="pill">privacy-first hosted mode</span>
+            </div>
+
+            <div class="chart-frame" aria-hidden="true">
+              <div class="radar"></div>
+              <div class="chart-line">
+                <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+                  <path d="M0,82 L12,74 L22,68 L34,52 L46,60 L59,40 L72,46 L86,18 L100,28 L100,100 L0,100 Z"></path>
+                </svg>
+              </div>
+              <div class="chart-line-2">
+                <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+                  <path d="M0,68 L16,66 L28,58 L41,62 L54,34 L70,37 L83,30 L100,12"></path>
+                </svg>
+              </div>
+            </div>
+
+            <section class="timeline">
+              <div class="timeline-row">
+                <div class="dot"></div>
+                <div>
+                  <div class="micro muted">Step 01</div>
+                  <strong>Sign in with GitHub</strong>
+                  <p>Use your normal GitHub account to authorize the hosted app.</p>
+                </div>
+              </div>
+              <div class="timeline-row">
+                <div class="dot lime"></div>
+                <div>
+                  <div class="micro muted">Step 02</div>
+                  <strong>Choose your window</strong>
+                  <p>Generate a `30d`, `12w`, or `6m` snapshot and decide whether metadata is retained.</p>
+                </div>
+              </div>
+              <div class="timeline-row">
+                <div class="dot amber"></div>
+                <div>
+                  <div class="micro muted">Step 03</div>
+                  <strong>Share the result</strong>
+                  <p>Publish with a slug link or let your user host serve the latest public report.</p>
+                </div>
+              </div>
+            </section>
+          </section>
+
+          <section class="callout panel" style="padding: 22px;">
+            <div class="callout-grid">
+              <div>
+                <div class="micro muted">Ready when you are</div>
+                <h3>Bring your GitHub account</h3>
+              </div>
+              <a class="cta" href="/auth/github/login">Sign in with GitHub</a>
+            </div>
+            <p class="lede" style="font-size: 1rem; margin-top: 14px; max-width: none;">Sign in with GitHub, choose a time window, and generate a polished stats page you can share. By default, ghstatsussy keeps only the hosted HTML report; metadata retention is optional, and reports with private activity stay private.</p>
+          </section>
+        </aside>
       </section>
     </main>
   </body>
