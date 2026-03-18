@@ -1,1 +1,183 @@
 {% extends "report_base.html.j2" %}
+
+{% block hero %}
+<style>
+.modern-hero {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 24px;
+    padding: 60px;
+    color: white;
+    box-shadow: 0 20px 40px rgba(118, 75, 162, 0.3);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+.modern-hero::after {
+    content: '';
+    position: absolute;
+    top: -50%; left: -50%; right: -50%; bottom: -50%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
+    transform: rotate(30deg);
+}
+.modern-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 4px solid rgba(255,255,255,0.3);
+    margin: 0 auto 20px;
+    display: block;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+.modern-title {
+    font-size: 3.5rem;
+    font-weight: 800;
+    letter-spacing: -1px;
+    margin: 0 0 10px;
+    position: relative;
+    z-index: 1;
+}
+.modern-subtitle {
+    font-size: 1.2rem;
+    opacity: 0.9;
+    margin-bottom: 40px;
+    position: relative;
+    z-index: 1;
+}
+.modern-stats {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    position: relative;
+    z-index: 1;
+}
+.modern-stat-card {
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    padding: 20px 30px;
+    border: 1px solid rgba(255,255,255,0.2);
+    min-width: 150px;
+}
+.modern-stat-val {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+.modern-stat-label {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    opacity: 0.8;
+}
+</style>
+
+<div class="modern-hero">
+    {% if context.meta.subject.avatar_url %}
+    <img src="{{ context.meta.subject.avatar_url }}" alt="avatar" class="modern-avatar" />
+    {% endif %}
+    <h1 class="modern-title">{{ context.meta.subject.login }}</h1>
+    <div class="modern-subtitle">Developer Analytics • {{ context.meta.period.start }} to {{ context.meta.period.end }}</div>
+    <div class="modern-stats">
+        {% for card in context.stats_cards[:4] %}
+        <div class="modern-stat-card">
+            <div class="modern-stat-val">{{ card.value }}</div>
+            <div class="modern-stat-label">{{ card.label }}</div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<style>
+.modern-content {
+    margin-top: 40px;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 30px;
+}
+.modern-card {
+    background: white;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    border: 1px solid rgba(0,0,0,0.02);
+}
+.modern-card h2 {
+    font-size: 1.5rem;
+    color: #2d3748;
+    margin: 0 0 25px 0;
+    font-weight: 700;
+}
+.modern-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+.modern-list-item {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    background: #f7fafc;
+    border-radius: 12px;
+    transition: transform 0.2s;
+}
+.modern-list-item:hover {
+    transform: translateY(-2px);
+    background: #edf2f7;
+}
+.modern-list-icon {
+    width: 40px;
+    height: 40px;
+    background: #ebf4ff;
+    color: #4299e1;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+    font-weight: bold;
+}
+.modern-list-text h4 {
+    margin: 0 0 4px;
+    color: #2d3748;
+    font-size: 1.05rem;
+}
+.modern-list-text p {
+    margin: 0;
+    color: #718096;
+    font-size: 0.9rem;
+}
+@media (max-width: 900px) {
+    .modern-content { grid-template-columns: 1fr; }
+}
+</style>
+
+<div class="modern-content">
+    <div class="modern-card">
+        <h2>Activity Overview</h2>
+        <div style="height: 300px;">
+            <canvas id="commitsChart"></canvas>
+        </div>
+        <div style="margin-top: 30px; height: 200px;">
+            <canvas id="locChart"></canvas>
+        </div>
+    </div>
+    
+    <div class="modern-card">
+        <h2>Key Insights</h2>
+        <div class="modern-list">
+            {% for item in context.highlights %}
+            <div class="modern-list-item">
+                <div class="modern-list-icon">{{ loop.index }}</div>
+                <div class="modern-list-text">
+                    <h4>{{ item.title }}</h4>
+                    <p>{{ item.text }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -44,11 +44,11 @@
     <div style="background: var(--accent-3); color: white; padding: 32px; border-radius: 8px; display: flex; flex-direction: column; justify-content: space-between;">
       <div>
         <div style="font-family: var(--mono-font); font-size: 0.85rem; opacity: 0.8; letter-spacing: 0.05em; margin-bottom: 8px;">TOTAL LOC ADDED</div>
-        <div style="font-family: var(--hero-font); font-size: 4rem; line-height: 1;">+{{ context.chart_datasets.loc_timeline.series[0].values|sum }}</div>
+        <div style="font-family: var(--hero-font); font-size: 4rem; line-height: 1;">+{{ context.chart_datasets.loc_timeline.series[0]['values']|sum }}</div>
       </div>
       <div>
         <div style="font-family: var(--mono-font); font-size: 0.85rem; opacity: 0.8; letter-spacing: 0.05em; margin-bottom: 8px;">TOTAL LOC DELETED</div>
-        <div style="font-family: var(--hero-font); font-size: 4rem; line-height: 1;">-{{ context.chart_datasets.loc_timeline.series[1].values|sum }}</div>
+        <div style="font-family: var(--hero-font); font-size: 4rem; line-height: 1;">-{{ context.chart_datasets.loc_timeline.series[1]['values']|sum }}</div>
       </div>
     </div>
   </section>

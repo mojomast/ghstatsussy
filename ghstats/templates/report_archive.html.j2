@@ -1,1 +1,184 @@
 {% extends "report_base.html.j2" %}
+
+{% block hero %}
+<style>
+/* Museum Archive Theme */
+.archive-hero {
+  background: #fdfbf7;
+  color: #2c2c2c;
+  padding: 80px 40px;
+  text-align: center;
+  border: 20px solid #e8e4d9;
+  box-shadow: inset 0 0 50px rgba(0,0,0,0.05);
+  font-family: 'Garamond', 'Georgia', serif;
+}
+.archive-plaque {
+  background: #d4af37; /* Gold */
+  color: #1a1a1a;
+  display: inline-block;
+  padding: 10px 30px;
+  font-family: 'Trajan Pro', 'Cinzel', serif;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  border: 2px solid #b5952f;
+  box-shadow: 2px 2px 10px rgba(0,0,0,0.2);
+  margin-bottom: 40px;
+}
+.archive-title {
+  font-size: 4rem;
+  font-weight: normal;
+  text-transform: uppercase;
+  letter-spacing: 8px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 20px;
+  display: inline-block;
+}
+.archive-dates {
+  font-style: italic;
+  font-size: 1.2rem;
+  color: #666;
+  margin-bottom: 40px;
+}
+.archive-portrait-frame {
+  width: 150px;
+  height: 150px;
+  border: 8px solid #333;
+  padding: 10px;
+  background: #fff;
+  margin: 0 auto;
+  box-shadow: 5px 5px 15px rgba(0,0,0,0.1);
+}
+.archive-portrait-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: sepia(0.3) contrast(1.1);
+}
+</style>
+
+<div class="archive-hero">
+  <div class="archive-plaque">Exhibit 01</div>
+  <br>
+  <h1 class="archive-title">The Works of @{{ context.meta.subject.login }}</h1>
+  <div class="archive-dates">{{ context.meta.period.start }} &mdash; {{ context.meta.period.end }}</div>
+  
+  <div class="archive-portrait-frame">
+    {% if context.meta.subject.avatar_url %}
+    <img src="{{ context.meta.subject.avatar_url }}" alt="Portrait" />
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<style>
+.archive-content {
+  background: #fdfbf7;
+  padding: 60px;
+  font-family: 'Garamond', 'Georgia', serif;
+  color: #333;
+}
+.archive-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 60px;
+}
+.archive-exhibit {
+  background: #fff;
+  border: 1px solid #e8e4d9;
+  padding: 30px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+  position: relative;
+}
+.archive-exhibit-label {
+  position: absolute;
+  bottom: -20px;
+  right: 20px;
+  background: #f0f0f0;
+  border: 1px solid #ccc;
+  padding: 10px 20px;
+  font-family: sans-serif;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+}
+.archive-exhibit h2 {
+  font-weight: normal;
+  text-align: center;
+  font-style: italic;
+  margin-bottom: 30px;
+  color: #555;
+  border-bottom: 1px dotted #ccc;
+  padding-bottom: 10px;
+}
+.archive-stats-row {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 40px;
+  border-top: 1px solid #eee;
+  padding-top: 20px;
+}
+.archive-stat {
+  text-align: center;
+}
+.archive-stat .val {
+  font-size: 2rem;
+  color: #222;
+}
+.archive-stat .lbl {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  color: #888;
+  letter-spacing: 1px;
+}
+</style>
+
+<div class="archive-content">
+  <div class="archive-gallery">
+    
+    <div class="archive-exhibit">
+      <h2>The Timeline of Creation</h2>
+      <div style="height: 300px;">
+        <canvas id="commitsChart"></canvas>
+      </div>
+      <div class="archive-exhibit-label">Fig 1. Temporal Analysis</div>
+    </div>
+
+    <div class="archive-exhibit">
+      <h2>Mastered Languages</h2>
+      <div style="height: 300px;">
+        <canvas id="languageChart"></canvas>
+      </div>
+      <div class="archive-exhibit-label">Fig 2. Linguistic Palette</div>
+    </div>
+
+    <div class="archive-exhibit" style="grid-column: 1 / -1;">
+      <h2>Curated Collections (Repositories)</h2>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;">
+        {% for repo in context.repo_insights %}
+        <div style="border: 1px solid #eee; padding: 20px; text-align: center;">
+          <h3 style="margin: 0 0 10px 0; font-weight: normal;">{{ repo.full_name }}</h3>
+          <p style="font-style: italic; color: #666; font-size: 0.9rem;">{{ repo.description or 'Untitled Artifact' }}</p>
+          <div style="margin-top: 15px; font-family: sans-serif; font-size: 0.7rem; color: #999;">
+            STARS: {{ repo.stars }} | FORKS: {{ repo.forks }}
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      <div class="archive-exhibit-label">Fig 3. Artifacts</div>
+    </div>
+
+  </div>
+  
+  <div class="archive-stats-row">
+    {% for card in context.stats_cards %}
+    <div class="archive-stat">
+      <div class="val">{{ card.value }}</div>
+      <div class="lbl">{{ card.label }}</div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
