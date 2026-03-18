@@ -1,0 +1,1178 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GitHub Activity Report - @mojomast</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+      :root {
+        --bg: #f4efe6;
+        --bg-strong: #ead9c5;
+        --paper: rgba(255, 252, 246, 0.82);
+        --paper-strong: rgba(255, 248, 239, 0.96);
+        --ink: #18222f;
+        --muted: #526171;
+        --line: rgba(24, 34, 47, 0.1);
+        --teal: #0f766e;
+        --amber: #d97706;
+        --green: #15803d;
+        --red: #b91c1c;
+        --blue: #1d4ed8;
+        --slate: #334155;
+        --orange: #ea580c;
+        --violet: #7c3aed;
+        --shadow: 0 24px 60px rgba(17, 24, 39, 0.16);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Space Grotesk", "Avenir Next", "Trebuchet MS", sans-serif;
+        color: var(--ink);
+        background:
+          radial-gradient(circle at top left, rgba(15, 118, 110, 0.22), transparent 28%),
+          radial-gradient(circle at right, rgba(217, 119, 6, 0.22), transparent 24%),
+          linear-gradient(160deg, #f8f2e8 0%, #f3ead8 48%, #efe5d0 100%);
+        min-height: 100vh;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background-image:
+          linear-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+        background-size: 28px 28px;
+        pointer-events: none;
+        opacity: 0.32;
+      }
+
+      .shell {
+        width: min(1200px, calc(100% - 32px));
+        margin: 28px auto 40px;
+        position: relative;
+        z-index: 1;
+      }
+
+      .hero,
+      .panel {
+        backdrop-filter: blur(18px);
+        background: var(--paper);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        box-shadow: var(--shadow);
+        border-radius: 28px;
+      }
+
+      .hero {
+        padding: 28px;
+        display: grid;
+        grid-template-columns: 1.35fr 0.9fr;
+        gap: 18px;
+        overflow: hidden;
+      }
+
+      .hero-copy {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        width: fit-content;
+        padding: 8px 12px;
+        border-radius: 999px;
+        background: rgba(15, 118, 110, 0.12);
+        color: var(--teal);
+        font-size: 12px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+
+      h1, h2, h3, h4 {
+        margin: 0;
+        font-family: "IBM Plex Sans", "Franklin Gothic Medium", sans-serif;
+      }
+
+      h1 {
+        font-size: clamp(2.2rem, 5vw, 4.3rem);
+        line-height: 0.94;
+        max-width: 12ch;
+      }
+
+      .subtitle,
+      .meta-chip,
+      .muted,
+      .fact-text,
+      .repo-copy p,
+      .warning p {
+        color: var(--muted);
+      }
+
+      .hero-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+        align-self: end;
+      }
+
+      .hero-stat {
+        padding: 16px;
+        border-radius: 22px;
+        background: rgba(255, 255, 255, 0.58);
+        border: 1px solid rgba(24, 34, 47, 0.08);
+        transform: translateY(14px);
+        opacity: 0;
+        animation: rise 0.65s ease forwards;
+      }
+
+      .hero-stat:nth-child(2) { animation-delay: 0.08s; }
+      .hero-stat:nth-child(3) { animation-delay: 0.16s; }
+      .hero-stat:nth-child(4) { animation-delay: 0.24s; }
+
+      .hero-stat .label,
+      .stat-card .label,
+      .repo-kpi,
+      .section-kicker {
+        font-size: 12px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .hero-stat .value {
+        margin-top: 8px;
+        font-size: 2rem;
+        font-weight: 700;
+      }
+
+      .hero-side {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+
+      .profile-card,
+      .warning,
+      .fact,
+      .repo-card,
+      .stat-card,
+      .chart-card,
+      .mini-panel {
+        border-radius: 24px;
+        background: var(--paper-strong);
+        border: 1px solid rgba(24, 34, 47, 0.08);
+      }
+
+      .profile-card {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 18px;
+      }
+
+      .profile-card img {
+        width: 68px;
+        height: 68px;
+        border-radius: 22px;
+        object-fit: cover;
+      }
+
+      .meta-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .meta-chip {
+        padding: 10px 12px;
+        border-radius: 999px;
+        background: rgba(24, 34, 47, 0.05);
+        font-size: 0.9rem;
+      }
+
+      .layout {
+        display: grid;
+        gap: 18px;
+        margin-top: 18px;
+      }
+
+      .stats-grid,
+      .charts-grid,
+      .facts-grid,
+      .repo-grid,
+      .bottom-grid {
+        display: grid;
+        gap: 18px;
+      }
+
+      .stats-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .stat-card,
+      .chart-card,
+      .panel {
+        padding: 18px;
+      }
+
+      .stat-card .value {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-top: 10px;
+      }
+
+      .accent-teal { border-top: 4px solid var(--teal); }
+      .accent-amber { border-top: 4px solid var(--amber); }
+      .accent-green { border-top: 4px solid var(--green); }
+      .accent-red { border-top: 4px solid var(--red); }
+      .accent-blue { border-top: 4px solid var(--blue); }
+      .accent-slate { border-top: 4px solid var(--slate); }
+      .accent-orange { border-top: 4px solid var(--orange); }
+      .accent-violet { border-top: 4px solid var(--violet); }
+
+      .charts-grid {
+        grid-template-columns: 1.35fr 1fr;
+      }
+
+      .chart-stack {
+        display: grid;
+        gap: 18px;
+      }
+
+      .chart-card canvas {
+        width: 100% !important;
+        height: 280px !important;
+      }
+
+      .heatmap-card {
+        padding: 18px;
+      }
+
+      .calendar-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(14px, 1fr));
+        gap: 6px;
+        margin-top: 16px;
+      }
+
+      .cell {
+        aspect-ratio: 1;
+        border-radius: 6px;
+        background: rgba(24, 34, 47, 0.08);
+      }
+
+      .level-0 { background: rgba(24, 34, 47, 0.08); }
+      .level-1 { background: rgba(15, 118, 110, 0.24); }
+      .level-2 { background: rgba(15, 118, 110, 0.44); }
+      .level-3 { background: rgba(15, 118, 110, 0.68); }
+      .level-4 { background: rgba(15, 118, 110, 0.92); }
+
+      .weekday-heatmap {
+        margin-top: 14px;
+        display: grid;
+        gap: 8px;
+      }
+
+      .heat-row {
+        display: grid;
+        grid-template-columns: 46px repeat(24, minmax(0, 1fr));
+        gap: 6px;
+        align-items: center;
+      }
+
+      .heat-row .tag {
+        font-size: 0.84rem;
+        color: var(--muted);
+      }
+
+      .heat-hour {
+        height: 14px;
+        border-radius: 999px;
+        background: rgba(24, 34, 47, 0.08);
+      }
+
+      .facts-grid,
+      .repo-grid,
+      .bottom-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .fact,
+      .repo-card {
+        padding: 18px;
+      }
+
+      .fact-value {
+        font-size: 1.65rem;
+        font-weight: 700;
+        margin-top: 10px;
+      }
+
+      .repo-card {
+        display: grid;
+        gap: 14px;
+      }
+
+      .repo-head {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 16px;
+      }
+
+      .repo-copy a,
+      .profile-card a {
+        color: var(--ink);
+        text-decoration: none;
+      }
+
+      .repo-chips,
+      .warning-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .chip {
+        padding: 8px 10px;
+        border-radius: 999px;
+        background: rgba(24, 34, 47, 0.06);
+        font-size: 0.88rem;
+      }
+
+      .warning {
+        padding: 16px 18px;
+      }
+
+      .warning strong {
+        display: block;
+        margin-bottom: 6px;
+      }
+
+      .section-head {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 8px;
+      }
+
+      @keyframes rise {
+        from {
+          transform: translateY(14px);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      @media (max-width: 980px) {
+        .hero,
+        .charts-grid,
+        .stats-grid,
+        .facts-grid,
+        .repo-grid,
+        .bottom-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .hero-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .shell {
+          width: min(100% - 20px, 1200px);
+        }
+
+        .hero {
+          padding: 18px;
+        }
+
+        .hero-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .heat-row {
+          grid-template-columns: 38px repeat(24, minmax(0, 1fr));
+          gap: 4px;
+        }
+
+        .chart-card canvas {
+          height: 240px !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="shell">
+      <section class="hero">
+        <div class="hero-copy">
+          <span class="eyebrow">GitHub Activity Infographic</span>
+          <h1>Kyle Durepos</h1>
+          <p class="subtitle">A contribution snapshot for @mojomast</p>
+          <div class="meta-row">
+            <span class="meta-chip">Window: 2026-02-17 - 2026-03-18</span>
+            <span class="meta-chip">30 days</span>
+            <span class="meta-chip">Timezone: UTC</span>
+          </div>
+          <div class="hero-grid">
+            <div class="hero-stat">
+              <div class="label">Total commits</div>
+              <div class="value">32</div>
+            </div>
+            <div class="hero-stat">
+              <div class="label">Avg commits/day</div>
+              <div class="value">1.07</div>
+            </div>
+            <div class="hero-stat">
+              <div class="label">Lines added</div>
+              <div class="value">71626</div>
+            </div>
+            <div class="hero-stat">
+              <div class="label">Lines deleted</div>
+              <div class="value">42307</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-side">
+          <div class="profile-card">
+            <img src="https://avatars.githubusercontent.com/u/76818041?u=fb0c8d9fb783940fbbe5c2f63c3f5cc36b89e426&v=4" alt="avatar for mojomast" />
+            <div>
+              <div class="section-kicker">Profile</div>
+              <h3><a href="https://github.com/mojomast">@mojomast</a></h3>
+              <p class="muted">Generated by ghstats 0.1.0</p>
+            </div>
+          </div>
+
+          <div class="mini-panel panel">
+            <div class="section-head">
+              <div>
+                <div class="section-kicker">Coverage</div>
+                <h3>What this report captures</h3>
+              </div>
+            </div>
+            <p class="muted">Commit activity, authored pull requests and issues, repo language mix, contribution streaks, and a handful of fun facts for the selected window.</p>
+          </div>
+        </div>
+      </section>
+
+      <div class="layout">
+        <section class="panel">
+          <div class="section-head">
+            <div>
+              <div class="section-kicker">Key stats</div>
+              <h2>Signal at a glance</h2>
+            </div>
+          </div>
+          <div class="stats-grid">
+            <article class="stat-card accent-teal">
+              <div class="label">Total commits</div>
+              <div class="value">32</div>
+<div class="muted">commits</div>            </article>
+            <article class="stat-card accent-amber">
+              <div class="label">Avg commits/day</div>
+              <div class="value">1.07</div>
+            </article>
+            <article class="stat-card accent-green">
+              <div class="label">Lines added</div>
+              <div class="value">71626</div>
+<div class="muted">lines</div>            </article>
+            <article class="stat-card accent-red">
+              <div class="label">Lines deleted</div>
+              <div class="value">42307</div>
+<div class="muted">lines</div>            </article>
+            <article class="stat-card accent-slate">
+              <div class="label">PRs opened / merged</div>
+              <div class="value">41 / 32</div>
+            </article>
+            <article class="stat-card accent-blue">
+              <div class="label">Issues opened</div>
+              <div class="value">26</div>
+<div class="muted">issues</div>            </article>
+            <article class="stat-card accent-violet">
+              <div class="label">Repos contributed to</div>
+              <div class="value">74</div>
+<div class="muted">repos</div>            </article>
+            <article class="stat-card accent-orange">
+              <div class="label">Current / longest streak</div>
+              <div class="value">0 / 2</div>
+<div class="muted">days</div>            </article>
+          </div>
+        </section>
+
+        <section class="charts-grid">
+          <div class="chart-stack">
+            <article class="chart-card">
+              <div class="section-head">
+                <div>
+                  <div class="section-kicker">Activity charts</div>
+                  <h2>Commits per Day</h2>
+                </div>
+              </div>
+              <canvas id="commitsChart"></canvas>
+            </article>
+
+            <article class="chart-card">
+              <div class="section-head">
+                <div>
+                  <div class="section-kicker">Code churn</div>
+                  <h2>Lines Added vs Deleted</h2>
+                </div>
+              </div>
+              <canvas id="locChart"></canvas>
+            </article>
+          </div>
+
+          <div class="chart-stack">
+            <article class="chart-card heatmap-card">
+              <div class="section-head">
+                <div>
+                  <div class="section-kicker">Calendar</div>
+                  <h2>Contribution Calendar</h2>
+                </div>
+                <div class="muted">116 total contributions</div>
+              </div>
+              <div class="calendar-grid">
+                  <div class="cell level-0" title="2026-02-17: 0 contributions"></div>
+                  <div class="cell level-4" title="2026-02-18: 56 contributions"></div>
+                  <div class="cell level-0" title="2026-02-19: 3 contributions"></div>
+                  <div class="cell level-0" title="2026-02-20: 0 contributions"></div>
+                  <div class="cell level-0" title="2026-02-21: 1 contributions"></div>
+                  <div class="cell level-2" title="2026-02-22: 31 contributions"></div>
+                  <div class="cell level-0" title="2026-02-23: 1 contributions"></div>
+                  <div class="cell level-0" title="2026-02-24: 4 contributions"></div>
+                  <div class="cell level-0" title="2026-02-25: 0 contributions"></div>
+                  <div class="cell level-0" title="2026-02-26: 1 contributions"></div>
+                  <div class="cell level-0" title="2026-02-27: 0 contributions"></div>
+                  <div class="cell level-0" title="2026-02-28: 0 contributions"></div>
+                  <div class="cell level-0" title="2026-03-01: 0 contributions"></div>
+                  <div class="cell level-0" title="2026-03-02: 0 contributions"></div>
+                  <div class="cell level-0" title="2026-03-03: 0 contributions"></div>
+                  <div class="cell level-0" title="2026-03-04: 6 contributions"></div>
+                  <div class="cell level-0" title="2026-03-05: 0 contributions"></div>
+                  <div class="cell level-0" title="2026-03-06: 3 contributions"></div>
+                  <div class="cell level-0" title="2026-03-07: 1 contributions"></div>
+                  <div class="cell level-0" title="2026-03-08: 0 contributions"></div>
+                  <div class="cell level-0" title="2026-03-09: 1 contributions"></div>
+                  <div class="cell level-0" title="2026-03-10: 1 contributions"></div>
+                  <div class="cell level-0" title="2026-03-11: 2 contributions"></div>
+                  <div class="cell level-0" title="2026-03-12: 0 contributions"></div>
+                  <div class="cell level-0" title="2026-03-13: 1 contributions"></div>
+                  <div class="cell level-0" title="2026-03-14: 0 contributions"></div>
+                  <div class="cell level-0" title="2026-03-15: 2 contributions"></div>
+                  <div class="cell level-0" title="2026-03-16: 1 contributions"></div>
+                  <div class="cell level-0" title="2026-03-17: 0 contributions"></div>
+                  <div class="cell level-0" title="2026-03-18: 1 contributions"></div>
+                  <div class="cell level-0" title="No data"></div>
+                  <div class="cell level-0" title="No data"></div>
+                  <div class="cell level-0" title="No data"></div>
+                  <div class="cell level-0" title="No data"></div>
+                  <div class="cell level-0" title="No data"></div>
+              </div>
+              <div class="meta-row" style="margin-top: 14px;">
+                <span class="meta-chip">Current streak: 0 days</span>
+                <span class="meta-chip">Longest streak: 2 days</span>
+              </div>
+            </article>
+
+            <article class="chart-card">
+              <div class="section-head">
+                <div>
+                  <div class="section-kicker">Languages</div>
+                  <h2>Top Languages</h2>
+                </div>
+              </div>
+              <canvas id="languageChart"></canvas>
+            </article>
+          </div>
+        </section>
+
+        <section class="bottom-grid">
+          <article class="panel">
+            <div class="section-head">
+              <div>
+                <div class="section-kicker">Heatmap</div>
+                <h2>Activity by Weekday and Hour</h2>
+              </div>
+              <div class="muted">Darker bars indicate more commits in that hour slot.</div>
+            </div>
+            <div class="weekday-heatmap">
+              <div class="heat-row">
+                <div class="tag">Mon</div>
+                <div class="heat-hour" title="Mon 00:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Mon 01:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Mon 02:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Mon 03:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Mon 04:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Mon 05:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Mon 06:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Mon 07:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Mon 08:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Mon 09:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Mon 10:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Mon 11:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Mon 12:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Mon 13:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Mon 14:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Mon 15:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Mon 16:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Mon 17:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Mon 18:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Mon 19:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Mon 20:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Mon 21:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Mon 22:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Mon 23:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+              </div>
+              <div class="heat-row">
+                <div class="tag">Tue</div>
+                <div class="heat-hour" title="Tue 00:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Tue 01:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Tue 02:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Tue 03:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Tue 04:00: 1 commits" style="background: rgba(29, 78, 216, 0.122);"></div>
+                <div class="heat-hour" title="Tue 05:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Tue 06:00: 1 commits" style="background: rgba(29, 78, 216, 0.122);"></div>
+                <div class="heat-hour" title="Tue 07:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Tue 08:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Tue 09:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Tue 10:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Tue 11:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Tue 12:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Tue 13:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Tue 14:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Tue 15:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Tue 16:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Tue 17:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Tue 18:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Tue 19:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Tue 20:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Tue 21:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Tue 22:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Tue 23:00: 1 commits" style="background: rgba(29, 78, 216, 0.122);"></div>
+              </div>
+              <div class="heat-row">
+                <div class="tag">Wed</div>
+                <div class="heat-hour" title="Wed 00:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Wed 01:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Wed 02:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Wed 03:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Wed 04:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Wed 05:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Wed 06:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Wed 07:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Wed 08:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Wed 09:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Wed 10:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Wed 11:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Wed 12:00: 22 commits" style="background: rgba(29, 78, 216, 1.000);"></div>
+                <div class="heat-hour" title="Wed 13:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Wed 14:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Wed 15:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Wed 16:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Wed 17:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Wed 18:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Wed 19:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Wed 20:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Wed 21:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Wed 22:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Wed 23:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+              </div>
+              <div class="heat-row">
+                <div class="tag">Thu</div>
+                <div class="heat-hour" title="Thu 00:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Thu 01:00: 6 commits" style="background: rgba(29, 78, 216, 0.331);"></div>
+                <div class="heat-hour" title="Thu 02:00: 1 commits" style="background: rgba(29, 78, 216, 0.122);"></div>
+                <div class="heat-hour" title="Thu 03:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Thu 04:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Thu 05:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Thu 06:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Thu 07:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Thu 08:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Thu 09:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Thu 10:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Thu 11:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Thu 12:00: 1 commits" style="background: rgba(29, 78, 216, 0.122);"></div>
+                <div class="heat-hour" title="Thu 13:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Thu 14:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Thu 15:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Thu 16:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Thu 17:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Thu 18:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Thu 19:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Thu 20:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Thu 21:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Thu 22:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Thu 23:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+              </div>
+              <div class="heat-row">
+                <div class="tag">Fri</div>
+                <div class="heat-hour" title="Fri 00:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Fri 01:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Fri 02:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Fri 03:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Fri 04:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Fri 05:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Fri 06:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Fri 07:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Fri 08:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Fri 09:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Fri 10:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Fri 11:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Fri 12:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Fri 13:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Fri 14:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Fri 15:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Fri 16:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Fri 17:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Fri 18:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Fri 19:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Fri 20:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Fri 21:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Fri 22:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Fri 23:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+              </div>
+              <div class="heat-row">
+                <div class="tag">Sat</div>
+                <div class="heat-hour" title="Sat 00:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Sat 01:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Sat 02:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Sat 03:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Sat 04:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Sat 05:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Sat 06:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Sat 07:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Sat 08:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Sat 09:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Sat 10:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Sat 11:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Sat 12:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Sat 13:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Sat 14:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Sat 15:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Sat 16:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Sat 17:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Sat 18:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Sat 19:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Sat 20:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Sat 21:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Sat 22:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Sat 23:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+              </div>
+              <div class="heat-row">
+                <div class="tag">Sun</div>
+                <div class="heat-hour" title="Sun 00:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Sun 01:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Sun 02:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Sun 03:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Sun 04:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Sun 05:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Sun 06:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Sun 07:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Sun 08:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Sun 09:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Sun 10:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Sun 11:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Sun 12:00: 1 commits" style="background: rgba(29, 78, 216, 0.122);"></div>
+                <div class="heat-hour" title="Sun 13:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Sun 14:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Sun 15:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Sun 16:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Sun 17:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Sun 18:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Sun 19:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Sun 20:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Sun 21:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Sun 22:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+                <div class="heat-hour" title="Sun 23:00: 0 commits" style="background: rgba(29, 78, 216, 0.080);"></div>
+              </div>
+            </div>
+          </article>
+
+          <article class="panel">
+            <div class="section-head">
+              <div>
+                <div class="section-kicker">Language mix</div>
+                <h2>By repository footprint</h2>
+              </div>
+            </div>
+            <div class="warning-list">
+              <div class="chip" style="border: 1px solid #3178c644;">
+                TypeScript - 32.45%
+              </div>
+              <div class="chip" style="border: 1px solid #3572A544;">
+                Python - 30.38%
+              </div>
+              <div class="chip" style="border: 1px solid #4F5D9544;">
+                PHP - 8.86%
+              </div>
+              <div class="chip" style="border: 1px solid #fcb32c44;">
+                MDX - 8.81%
+              </div>
+              <div class="chip" style="border: 1px solid #f1e05a44;">
+                JavaScript - 6.21%
+              </div>
+              <div class="chip" style="border: 1px solid #00ADD844;">
+                Go - 5.87%
+              </div>
+              <div class="chip" style="border: 1px solid #e34c2644;">
+                HTML - 2.33%
+              </div>
+              <div class="chip" style="border: 1px solid #89e05144;">
+                Shell - 1.71%
+              </div>
+            </div>
+          </article>
+        </section>
+
+        <section class="panel">
+          <div class="section-head">
+            <div>
+              <div class="section-kicker">Highlights</div>
+              <h2>Fun facts and notable spikes</h2>
+            </div>
+          </div>
+          <div class="facts-grid">
+            <article class="fact">
+              <div class="section-kicker">trend</div>
+              <h3>Most active weekday</h3>
+<div class="fact-value">Wed</div>              <p class="fact-text">Wed is your busiest commit day.</p>
+            </article>
+            <article class="fact">
+              <div class="section-kicker">trend</div>
+              <h3>Most active hour</h3>
+<div class="fact-value">12:00</div>              <p class="fact-text">Peak coding time lands around 12:00 UTC.</p>
+            </article>
+            <article class="fact">
+              <div class="section-kicker">streak</div>
+              <h3>Longest streak</h3>
+<div class="fact-value">2</div>              <p class="fact-text">You sustained a 2-day commit streak.</p>
+            </article>
+            <article class="fact">
+              <div class="section-kicker">milestone</div>
+              <h3>Most productive day</h3>
+<div class="fact-value">22</div>              <p class="fact-text">2026-02-18 led the chart with 22 commits.</p>
+            </article>
+            <article class="fact">
+              <div class="section-kicker">note</div>
+              <h3>Average commit size</h3>
+<div class="fact-value">3350.97</div>              <p class="fact-text">Your average detailed commit changed 3350.97 lines.</p>
+            </article>
+            <article class="fact">
+              <div class="section-kicker">note</div>
+              <h3>Weekday vs weekend ratio</h3>
+<div class="fact-value">33.0</div>              <p class="fact-text">Weekday activity outweighs weekend commits by 33.0:1.</p>
+            </article>
+            <article class="fact">
+              <div class="section-kicker">repo</div>
+              <h3>Largest commit</h3>
+<div class="fact-value">72035</div>              <p class="fact-text">mojomast/openclawssy had the largest detailed commit at 72035 changed lines.</p>
+            </article>
+            <article class="fact">
+              <div class="section-kicker">milestone</div>
+              <h3>Highest code churn</h3>
+<div class="fact-value">72035</div>              <p class="fact-text">2026-03-15 moved 72035 lines.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="section-head">
+            <div>
+              <div class="section-kicker">Repos</div>
+              <h2>Where the work happened</h2>
+            </div>
+          </div>
+          <div class="repo-grid">
+            <article class="repo-card">
+              <div class="repo-head">
+                <div class="repo-copy">
+                  <div class="repo-kpi">Go</div>
+                  <h3><a href="https://github.com/mojomast/openclawssy">mojomast/openclawssy</a></h3>
+                  <p>PROTOTYPE IN DEVELOPMENT: experimental AI harness/runtime with major rough edges. Do NOT use in production; honestly most people should not use this (or OpenClaw) yet.</p>
+                </div>
+                <div class="warning-list">
+                  <span class="chip">4 stars</span>
+                  <span class="chip">2 forks</span>
+                </div>
+              </div>
+              <div class="warning-list">
+                <span class="chip">30 commits</span>
+                <span class="chip">36 PRs</span>
+                <span class="chip">0 issues</span>
+                <span class="chip">0 reviews</span>
+              </div>
+              <div class="warning-list">
+                <span class="chip">30 commit contributions</span>
+                <span class="chip">36 pull requests opened</span>
+              </div>
+            </article>
+            <article class="repo-card">
+              <div class="repo-head">
+                <div class="repo-copy">
+                  <div class="repo-kpi">TypeScript</div>
+                  <h3><a href="https://github.com/mojomast/ragussy">mojomast/ragussy</a></h3>
+                  <p>A universal RAG chatbot with full management UI. Point it at your markdown docs and get an AI-powered Q&A system with complete control over configuration, documents, and vector storage.</p>
+                </div>
+                <div class="warning-list">
+                  <span class="chip">1 stars</span>
+                  <span class="chip">0 forks</span>
+                </div>
+              </div>
+              <div class="warning-list">
+                <span class="chip">2 commits</span>
+                <span class="chip">2 PRs</span>
+                <span class="chip">0 issues</span>
+                <span class="chip">0 reviews</span>
+              </div>
+              <div class="warning-list">
+                <span class="chip">2 commit contributions</span>
+                <span class="chip">2 pull requests opened</span>
+              </div>
+            </article>
+            <article class="repo-card">
+              <div class="repo-head">
+                <div class="repo-copy">
+                  <div class="repo-kpi">TypeScript</div>
+                  <h3><a href="https://github.com/RooCodeInc/Roo-Code">RooCodeInc/Roo-Code</a></h3>
+                  <p>Roo Code gives you a whole dev team of AI agents in your code editor.</p>
+                </div>
+                <div class="warning-list">
+                  <span class="chip">22725 stars</span>
+                  <span class="chip">2914 forks</span>
+                </div>
+              </div>
+              <div class="warning-list">
+                <span class="chip">0 commits</span>
+                <span class="chip">1 PRs</span>
+                <span class="chip">26 issues</span>
+                <span class="chip">0 reviews</span>
+              </div>
+              <div class="warning-list">
+                <span class="chip">1 pull requests opened</span>
+              </div>
+            </article>
+            <article class="repo-card">
+              <div class="repo-head">
+                <div class="repo-copy">
+                  <div class="repo-kpi">HTML</div>
+                  <h3><a href="https://github.com/clawdeckio/clawdeck">clawdeckio/clawdeck</a></h3>
+                  <p>Open source mission control for your OpenClaw agents 🦞</p>
+                </div>
+                <div class="warning-list">
+                  <span class="chip">319 stars</span>
+                  <span class="chip">59 forks</span>
+                </div>
+              </div>
+              <div class="warning-list">
+                <span class="chip">0 commits</span>
+                <span class="chip">1 PRs</span>
+                <span class="chip">0 issues</span>
+                <span class="chip">0 reviews</span>
+              </div>
+              <div class="warning-list">
+                <span class="chip">1 pull requests opened</span>
+              </div>
+            </article>
+            <article class="repo-card">
+              <div class="repo-head">
+                <div class="repo-copy">
+                  <div class="repo-kpi">HTML</div>
+                  <h3><a href="https://github.com/mojomast/uberclawcontrol">mojomast/uberclawcontrol</a></h3>
+                  <p>Open source mission control for your OpenClaw agents 🦞</p>
+                </div>
+                <div class="warning-list">
+                  <span class="chip">1 stars</span>
+                  <span class="chip">0 forks</span>
+                </div>
+              </div>
+              <div class="warning-list">
+                <span class="chip">0 commits</span>
+                <span class="chip">1 PRs</span>
+                <span class="chip">0 issues</span>
+                <span class="chip">0 reviews</span>
+              </div>
+              <div class="warning-list">
+                <span class="chip">1 pull requests opened</span>
+                <span class="chip">Forked project</span>
+              </div>
+            </article>
+            <article class="repo-card">
+              <div class="repo-head">
+                <div class="repo-copy">
+                  <div class="repo-kpi">Python</div>
+                  <h3><a href="https://github.com/Mirrowel/LLM-API-Key-Proxy">Mirrowel/LLM-API-Key-Proxy</a></h3>
+                  <p>Universal LLM Gateway: One API, every LLM. OpenAI/Anthropic-compatible endpoints with multi-provider translation and intelligent load-balancing.</p>
+                </div>
+                <div class="warning-list">
+                  <span class="chip">428 stars</span>
+                  <span class="chip">77 forks</span>
+                </div>
+              </div>
+              <div class="warning-list">
+                <span class="chip">0 commits</span>
+                <span class="chip">0 PRs</span>
+                <span class="chip">0 issues</span>
+                <span class="chip">0 reviews</span>
+              </div>
+              <div class="warning-list">
+              </div>
+            </article>
+            <article class="repo-card">
+              <div class="repo-head">
+                <div class="repo-copy">
+                  <div class="repo-kpi">Python</div>
+                  <h3><a href="https://github.com/mojomast/devussy">mojomast/devussy</a></h3>
+                  <p>Devussy — interview to DevPlan. Multi‑stage AI planning pipeline with live progress. Generated devplans can be used with any agent by asking them to read handoff and resume development. circular development go brrrrrrrrrrrr!</p>
+                </div>
+                <div class="warning-list">
+                  <span class="chip">19 stars</span>
+                  <span class="chip">2 forks</span>
+                </div>
+              </div>
+              <div class="warning-list">
+                <span class="chip">0 commits</span>
+                <span class="chip">0 PRs</span>
+                <span class="chip">0 issues</span>
+                <span class="chip">0 reviews</span>
+              </div>
+              <div class="warning-list">
+              </div>
+            </article>
+            <article class="repo-card">
+              <div class="repo-head">
+                <div class="repo-copy">
+                  <div class="repo-kpi">Python</div>
+                  <h3><a href="https://github.com/mojomast/swarmussy">mojomast/swarmussy</a></h3>
+                  <p>Experimental multi-agent orchestration framework for collaborative software development. Implements an intelligent agent swarm for distributed development workflows, paired with an in-progress Python terminal UI dashboard for real-time visualization.</p>
+                </div>
+                <div class="warning-list">
+                  <span class="chip">4 stars</span>
+                  <span class="chip">1 forks</span>
+                </div>
+              </div>
+              <div class="warning-list">
+                <span class="chip">0 commits</span>
+                <span class="chip">0 PRs</span>
+                <span class="chip">0 issues</span>
+                <span class="chip">0 reviews</span>
+              </div>
+              <div class="warning-list">
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="section-head">
+            <div>
+              <div class="section-kicker">Notes</div>
+              <h2>Warnings and caveats</h2>
+            </div>
+          </div>
+          <div class="chart-stack">
+            <article class="warning">
+              <strong>Some private contributions are only available as aggregate counts.</strong>
+<p>GitHub reported 3 restricted contributions in the selected window.</p>            </article>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <script>
+      const payload = {"commits": {"title": "Commits per Day", "labels": ["2026-02-17", "2026-02-18", "2026-02-19", "2026-02-20", "2026-02-21", "2026-02-22", "2026-02-23", "2026-02-24", "2026-02-25", "2026-02-26", "2026-02-27", "2026-02-28", "2026-03-01", "2026-03-02", "2026-03-03", "2026-03-04", "2026-03-05", "2026-03-06", "2026-03-07", "2026-03-08", "2026-03-09", "2026-03-10", "2026-03-11", "2026-03-12", "2026-03-13", "2026-03-14", "2026-03-15", "2026-03-16", "2026-03-17", "2026-03-18"], "series": [{"id": "commits", "label": "Commits", "values": [0, 22, 6, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0], "color": "#0f766e"}]}, "loc": {"title": "Lines Added vs Deleted", "labels": ["2026-02-17", "2026-02-18", "2026-02-19", "2026-02-20", "2026-02-21", "2026-02-22", "2026-02-23", "2026-02-24", "2026-02-25", "2026-02-26", "2026-02-27", "2026-02-28", "2026-03-01", "2026-03-02", "2026-03-03", "2026-03-04", "2026-03-05", "2026-03-06", "2026-03-07", "2026-03-08", "2026-03-09", "2026-03-10", "2026-03-11", "2026-03-12", "2026-03-13", "2026-03-14", "2026-03-15", "2026-03-16", "2026-03-17", "2026-03-18"], "series": [{"id": "additions", "label": "Added", "values": [0, 2693, 2482, 0, 0, 0, 0, 1684, 0, 0, 0, 0, 0, 0, 0, 0, 11501, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53266, 0, 0, 0], "color": "#16a34a"}, {"id": "deletions", "label": "Deleted", "values": [0, 1033, 237, 0, 0, 0, 0, 532, 0, 0, 0, 0, 0, 0, 0, 0, 21736, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18769, 0, 0, 0], "color": "#dc2626"}]}, "languages": {"title": "Top Languages", "labels": ["TypeScript", "Python", "PHP", "MDX", "JavaScript", "Go", "HTML", "Shell"], "values": [24995363, 23403657, 6824137, 6787707, 4785637, 4525589, 1796748, 1319448], "colors": ["#3178c6", "#3572A5", "#4F5D95", "#fcb32c", "#f1e05a", "#00ADD8", "#e34c26", "#89e051"]}, "weekdayHours": {"title": "Activity by Weekday and Hour", "x_labels": ["00:00", "01:00", "02:00", "03:00", "04:00", "05:00", "06:00", "07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00", "23:00"], "y_labels": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"], "matrix": [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 6, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]], "min": 0, "max": 22}};
+
+      const sharedOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            labels: {
+              color: '#18222f',
+              font: { family: 'Space Grotesk, Trebuchet MS, sans-serif' }
+            }
+          }
+        },
+        scales: {
+          x: {
+            ticks: { color: '#526171', maxTicksLimit: 8 },
+            grid: { color: 'rgba(24,34,47,0.08)' }
+          },
+          y: {
+            ticks: { color: '#526171' },
+            grid: { color: 'rgba(24,34,47,0.08)' }
+          }
+        }
+      };
+
+      new Chart(document.getElementById('commitsChart'), {
+        type: 'line',
+        data: {
+          labels: payload.commits.labels,
+          datasets: payload.commits.series.map((series) => ({
+            label: series.label,
+            data: series.values,
+            borderColor: series.color,
+            backgroundColor: `${series.color}22`,
+            fill: true,
+            tension: 0.35,
+            pointRadius: 0,
+            borderWidth: 3,
+          }))
+        },
+        options: sharedOptions,
+      });
+
+      new Chart(document.getElementById('locChart'), {
+        type: 'bar',
+        data: {
+          labels: payload.loc.labels,
+          datasets: payload.loc.series.map((series) => ({
+            label: series.label,
+            data: series.values,
+            backgroundColor: series.color,
+            borderRadius: 10,
+          }))
+        },
+        options: sharedOptions,
+      });
+
+      new Chart(document.getElementById('languageChart'), {
+        type: 'pie',
+        data: {
+          labels: payload.languages.labels,
+          datasets: [{
+            data: payload.languages.values,
+            backgroundColor: payload.languages.colors,
+            borderWidth: 0,
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: {
+                color: '#18222f',
+                usePointStyle: true,
+                padding: 16,
+                font: { family: 'Space Grotesk, Trebuchet MS, sans-serif' }
+              }
+            }
+          }
+        }
+      });
+    </script>
+  </body>
+</html>

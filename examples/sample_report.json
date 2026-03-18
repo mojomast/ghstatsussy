@@ -1,0 +1,1899 @@
+{
+  "dataset": {
+    "viewer": {
+      "login": "octo-builder",
+      "name": "Octo Builder",
+      "url": "https://github.com/octo-builder",
+      "avatar_url": "https://avatars.githubusercontent.com/u/583231?v=4"
+    },
+    "start_at": "2026-02-17T00:00:00+00:00",
+    "end_at": "2026-03-18T12:00:00+00:00",
+    "include_private": false,
+    "repos": [
+      {
+        "id": "R_demo_1",
+        "name": "signalboard",
+        "name_with_owner": "octo-builder/signalboard",
+        "owner_login": "octo-builder",
+        "url": "https://github.com/octo-builder/signalboard",
+        "description": "Team observability dashboard for release and incident visibility.",
+        "is_private": false,
+        "is_fork": false,
+        "primary_language": "Python",
+        "primary_language_color": "#3572A5",
+        "stargazer_count": 88,
+        "fork_count": 12,
+        "pushed_at": null,
+        "languages": [
+          {
+            "name": "Python",
+            "color": "#3572A5",
+            "size": 84000
+          },
+          {
+            "name": "HTML",
+            "color": "#e34c26",
+            "size": 18000
+          },
+          {
+            "name": "CSS",
+            "color": "#663399",
+            "size": 9000
+          }
+        ],
+        "commit_contributions": 34,
+        "issue_contributions": 5,
+        "pull_request_contributions": 8,
+        "review_contributions": 11
+      },
+      {
+        "id": "R_demo_2",
+        "name": "flare-ui",
+        "name_with_owner": "octo-builder/flare-ui",
+        "owner_login": "octo-builder",
+        "url": "https://github.com/octo-builder/flare-ui",
+        "description": "Marketing microsite with component-driven interactions.",
+        "is_private": false,
+        "is_fork": false,
+        "primary_language": "TypeScript",
+        "primary_language_color": "#3178c6",
+        "stargazer_count": 54,
+        "fork_count": 6,
+        "pushed_at": null,
+        "languages": [
+          {
+            "name": "TypeScript",
+            "color": "#3178c6",
+            "size": 71000
+          },
+          {
+            "name": "CSS",
+            "color": "#663399",
+            "size": 22000
+          },
+          {
+            "name": "JavaScript",
+            "color": "#f1e05a",
+            "size": 14000
+          }
+        ],
+        "commit_contributions": 22,
+        "issue_contributions": 4,
+        "pull_request_contributions": 6,
+        "review_contributions": 3
+      },
+      {
+        "id": "R_demo_3",
+        "name": "rusty-cache",
+        "name_with_owner": "octo-builder/rusty-cache",
+        "owner_login": "octo-builder",
+        "url": "https://github.com/octo-builder/rusty-cache",
+        "description": "Experimental cache service with a compact CLI control plane.",
+        "is_private": false,
+        "is_fork": false,
+        "primary_language": "Rust",
+        "primary_language_color": "#dea584",
+        "stargazer_count": 39,
+        "fork_count": 3,
+        "pushed_at": null,
+        "languages": [
+          {
+            "name": "Rust",
+            "color": "#dea584",
+            "size": 68000
+          },
+          {
+            "name": "Shell",
+            "color": "#89e051",
+            "size": 4000
+          }
+        ],
+        "commit_contributions": 17,
+        "issue_contributions": 2,
+        "pull_request_contributions": 3,
+        "review_contributions": 2
+      }
+    ],
+    "commits": [
+      {
+        "repo_name_with_owner": "octo-builder/flare-ui",
+        "sha": "2026021700",
+        "message": "Refine report layout",
+        "committed_at": "2026-02-17T10:15:00+00:00",
+        "url": "https://github.com/octo-builder/flare-ui/commit/2026021700",
+        "additions": 65,
+        "deletions": 17
+      },
+      {
+        "repo_name_with_owner": "octo-builder/rusty-cache",
+        "sha": "2026021701",
+        "message": "Refine report layout",
+        "committed_at": "2026-02-17T13:05:00+00:00",
+        "url": "https://github.com/octo-builder/rusty-cache/commit/2026021701",
+        "additions": 159,
+        "deletions": 54
+      },
+      {
+        "repo_name_with_owner": "octo-builder/rusty-cache",
+        "sha": "2026021800",
+        "message": "Fix GitHub pagination edge case",
+        "committed_at": "2026-02-18T10:15:00+00:00",
+        "url": "https://github.com/octo-builder/rusty-cache/commit/2026021800",
+        "additions": 122,
+        "deletions": 75
+      },
+      {
+        "repo_name_with_owner": "octo-builder/signalboard",
+        "sha": "2026021802",
+        "message": "Refine report layout",
+        "committed_at": "2026-02-18T13:15:00+00:00",
+        "url": "https://github.com/octo-builder/signalboard/commit/2026021802",
+        "additions": 94,
+        "deletions": 13
+      },
+      {
+        "repo_name_with_owner": "octo-builder/signalboard",
+        "sha": "2026021901",
+        "message": "Fix GitHub pagination edge case",
+        "committed_at": "2026-02-19T11:35:00+00:00",
+        "url": "https://github.com/octo-builder/signalboard/commit/2026021901",
+        "additions": 168,
+        "deletions": 79
+      },
+      {
+        "repo_name_with_owner": "octo-builder/signalboard",
+        "sha": "2026022400",
+        "message": "Fix GitHub pagination edge case",
+        "committed_at": "2026-02-24T09:15:00+00:00",
+        "url": "https://github.com/octo-builder/signalboard/commit/2026022400",
+        "additions": 151,
+        "deletions": 68
+      },
+      {
+        "repo_name_with_owner": "octo-builder/rusty-cache",
+        "sha": "2026022402",
+        "message": "Refine report layout",
+        "committed_at": "2026-02-24T13:15:00+00:00",
+        "url": "https://github.com/octo-builder/rusty-cache/commit/2026022402",
+        "additions": 138,
+        "deletions": 63
+      },
+      {
+        "repo_name_with_owner": "octo-builder/flare-ui",
+        "sha": "2026022401",
+        "message": "Fix GitHub pagination edge case",
+        "committed_at": "2026-02-24T13:50:00+00:00",
+        "url": "https://github.com/octo-builder/flare-ui/commit/2026022401",
+        "additions": 157,
+        "deletions": 51
+      },
+      {
+        "repo_name_with_owner": "octo-builder/flare-ui",
+        "sha": "2026022500",
+        "message": "Fix GitHub pagination edge case",
+        "committed_at": "2026-02-25T09:05:00+00:00",
+        "url": "https://github.com/octo-builder/flare-ui/commit/2026022500",
+        "additions": 145,
+        "deletions": 34
+      },
+      {
+        "repo_name_with_owner": "octo-builder/rusty-cache",
+        "sha": "2026022501",
+        "message": "Polish responsive card spacing",
+        "committed_at": "2026-02-25T11:35:00+00:00",
+        "url": "https://github.com/octo-builder/rusty-cache/commit/2026022501",
+        "additions": 119,
+        "deletions": 20
+      },
+      {
+        "repo_name_with_owner": "octo-builder/signalboard",
+        "sha": "2026022503",
+        "message": "Add repo language summary",
+        "committed_at": "2026-02-25T15:35:00+00:00",
+        "url": "https://github.com/octo-builder/signalboard/commit/2026022503",
+        "additions": 171,
+        "deletions": 64
+      },
+      {
+        "repo_name_with_owner": "octo-builder/flare-ui",
+        "sha": "2026022504",
+        "message": "Add repo language summary",
+        "committed_at": "2026-02-25T17:15:00+00:00",
+        "url": "https://github.com/octo-builder/flare-ui/commit/2026022504",
+        "additions": 103,
+        "deletions": 20
+      },
+      {
+        "repo_name_with_owner": "octo-builder/rusty-cache",
+        "sha": "2026022505",
+        "message": "Polish responsive card spacing",
+        "committed_at": "2026-02-25T21:05:00+00:00",
+        "url": "https://github.com/octo-builder/rusty-cache/commit/2026022505",
+        "additions": 161,
+        "deletions": 41
+      },
+      {
+        "repo_name_with_owner": "octo-builder/signalboard",
+        "sha": "2026022701",
+        "message": "Improve metrics aggregation",
+        "committed_at": "2026-02-27T12:50:00+00:00",
+        "url": "https://github.com/octo-builder/signalboard/commit/2026022701",
+        "additions": 38,
+        "deletions": 31
+      },
+      {
+        "repo_name_with_owner": "octo-builder/flare-ui",
+        "sha": "2026022702",
+        "message": "Add repo language summary",
+        "committed_at": "2026-02-27T13:35:00+00:00",
+        "url": "https://github.com/octo-builder/flare-ui/commit/2026022702",
+        "additions": 13,
+        "deletions": 75
+      },
+      {
+        "repo_name_with_owner": "octo-builder/flare-ui",
+        "sha": "2026030100",
+        "message": "Polish responsive card spacing",
+        "committed_at": "2026-03-01T11:50:00+00:00",
+        "url": "https://github.com/octo-builder/flare-ui/commit/2026030100",
+        "additions": 70,
+        "deletions": 60
+      },
+      {
+        "repo_name_with_owner": "octo-builder/rusty-cache",
+        "sha": "2026030200",
+        "message": "Refine report layout",
+        "committed_at": "2026-03-02T10:05:00+00:00",
+        "url": "https://github.com/octo-builder/rusty-cache/commit/2026030200",
+        "additions": 180,
+        "deletions": 83
+      },
+      {
+        "repo_name_with_owner": "octo-builder/signalboard",
+        "sha": "2026030400",
+        "message": "Polish responsive card spacing",
+        "committed_at": "2026-03-04T09:15:00+00:00",
+        "url": "https://github.com/octo-builder/signalboard/commit/2026030400",
+        "additions": 112,
+        "deletions": 62
+      },
+      {
+        "repo_name_with_owner": "octo-builder/flare-ui",
+        "sha": "2026030401",
+        "message": "Polish responsive card spacing",
+        "committed_at": "2026-03-04T11:50:00+00:00",
+        "url": "https://github.com/octo-builder/flare-ui/commit/2026030401",
+        "additions": 23,
+        "deletions": 21
+      },
+      {
+        "repo_name_with_owner": "octo-builder/rusty-cache",
+        "sha": "2026030402",
+        "message": "Fix GitHub pagination edge case",
+        "committed_at": "2026-03-04T13:50:00+00:00",
+        "url": "https://github.com/octo-builder/rusty-cache/commit/2026030402",
+        "additions": 75,
+        "deletions": 58
+      },
+      {
+        "repo_name_with_owner": "octo-builder/flare-ui",
+        "sha": "2026030500",
+        "message": "Polish responsive card spacing",
+        "committed_at": "2026-03-05T10:05:00+00:00",
+        "url": "https://github.com/octo-builder/flare-ui/commit/2026030500",
+        "additions": 20,
+        "deletions": 74
+      },
+      {
+        "repo_name_with_owner": "octo-builder/rusty-cache",
+        "sha": "2026030501",
+        "message": "Refine report layout",
+        "committed_at": "2026-03-05T13:15:00+00:00",
+        "url": "https://github.com/octo-builder/rusty-cache/commit/2026030501",
+        "additions": 22,
+        "deletions": 65
+      },
+      {
+        "repo_name_with_owner": "octo-builder/rusty-cache",
+        "sha": "2026030600",
+        "message": "Fix GitHub pagination edge case",
+        "committed_at": "2026-03-06T11:35:00+00:00",
+        "url": "https://github.com/octo-builder/rusty-cache/commit/2026030600",
+        "additions": 74,
+        "deletions": 26
+      },
+      {
+        "repo_name_with_owner": "octo-builder/signalboard",
+        "sha": "2026030800",
+        "message": "Add repo language summary",
+        "committed_at": "2026-03-08T10:35:00+00:00",
+        "url": "https://github.com/octo-builder/signalboard/commit/2026030800",
+        "additions": 48,
+        "deletions": 56
+      },
+      {
+        "repo_name_with_owner": "octo-builder/flare-ui",
+        "sha": "2026030801",
+        "message": "Add repo language summary",
+        "committed_at": "2026-03-08T13:35:00+00:00",
+        "url": "https://github.com/octo-builder/flare-ui/commit/2026030801",
+        "additions": 164,
+        "deletions": 83
+      },
+      {
+        "repo_name_with_owner": "octo-builder/flare-ui",
+        "sha": "2026030900",
+        "message": "Fix GitHub pagination edge case",
+        "committed_at": "2026-03-09T10:15:00+00:00",
+        "url": "https://github.com/octo-builder/flare-ui/commit/2026030900",
+        "additions": 95,
+        "deletions": 26
+      },
+      {
+        "repo_name_with_owner": "octo-builder/rusty-cache",
+        "sha": "2026030901",
+        "message": "Refine report layout",
+        "committed_at": "2026-03-09T13:50:00+00:00",
+        "url": "https://github.com/octo-builder/rusty-cache/commit/2026030901",
+        "additions": 72,
+        "deletions": 6
+      },
+      {
+        "repo_name_with_owner": "octo-builder/flare-ui",
+        "sha": "2026031300",
+        "message": "Improve metrics aggregation",
+        "committed_at": "2026-03-13T11:15:00+00:00",
+        "url": "https://github.com/octo-builder/flare-ui/commit/2026031300",
+        "additions": 68,
+        "deletions": 20
+      },
+      {
+        "repo_name_with_owner": "octo-builder/rusty-cache",
+        "sha": "2026031400",
+        "message": "Fix GitHub pagination edge case",
+        "committed_at": "2026-03-14T10:15:00+00:00",
+        "url": "https://github.com/octo-builder/rusty-cache/commit/2026031400",
+        "additions": 59,
+        "deletions": 58
+      },
+      {
+        "repo_name_with_owner": "octo-builder/signalboard",
+        "sha": "2026031501",
+        "message": "Fix GitHub pagination edge case",
+        "committed_at": "2026-03-15T11:35:00+00:00",
+        "url": "https://github.com/octo-builder/signalboard/commit/2026031501",
+        "additions": 53,
+        "deletions": 74
+      },
+      {
+        "repo_name_with_owner": "octo-builder/flare-ui",
+        "sha": "2026031502",
+        "message": "Fix GitHub pagination edge case",
+        "committed_at": "2026-03-15T13:05:00+00:00",
+        "url": "https://github.com/octo-builder/flare-ui/commit/2026031502",
+        "additions": 160,
+        "deletions": 55
+      },
+      {
+        "repo_name_with_owner": "octo-builder/signalboard",
+        "sha": "2026031600",
+        "message": "Add repo language summary",
+        "committed_at": "2026-03-16T11:50:00+00:00",
+        "url": "https://github.com/octo-builder/signalboard/commit/2026031600",
+        "additions": 8,
+        "deletions": 66
+      },
+      {
+        "repo_name_with_owner": "octo-builder/flare-ui",
+        "sha": "2026031601",
+        "message": "Refine report layout",
+        "committed_at": "2026-03-16T13:15:00+00:00",
+        "url": "https://github.com/octo-builder/flare-ui/commit/2026031601",
+        "additions": 101,
+        "deletions": 55
+      },
+      {
+        "repo_name_with_owner": "octo-builder/rusty-cache",
+        "sha": "2026031602",
+        "message": "Refine report layout",
+        "committed_at": "2026-03-16T15:35:00+00:00",
+        "url": "https://github.com/octo-builder/rusty-cache/commit/2026031602",
+        "additions": 167,
+        "deletions": 40
+      },
+      {
+        "repo_name_with_owner": "octo-builder/flare-ui",
+        "sha": "2026031700",
+        "message": "Improve metrics aggregation",
+        "committed_at": "2026-03-17T11:05:00+00:00",
+        "url": "https://github.com/octo-builder/flare-ui/commit/2026031700",
+        "additions": 85,
+        "deletions": 36
+      },
+      {
+        "repo_name_with_owner": "octo-builder/rusty-cache",
+        "sha": "2026031701",
+        "message": "Polish responsive card spacing",
+        "committed_at": "2026-03-17T12:35:00+00:00",
+        "url": "https://github.com/octo-builder/rusty-cache/commit/2026031701",
+        "additions": 127,
+        "deletions": 56
+      },
+      {
+        "repo_name_with_owner": "octo-builder/rusty-cache",
+        "sha": "2026031800",
+        "message": "Improve metrics aggregation",
+        "committed_at": "2026-03-18T09:15:00+00:00",
+        "url": "https://github.com/octo-builder/rusty-cache/commit/2026031800",
+        "additions": 180,
+        "deletions": 39
+      },
+      {
+        "repo_name_with_owner": "octo-builder/signalboard",
+        "sha": "2026031802",
+        "message": "Add repo language summary",
+        "committed_at": "2026-03-18T14:05:00+00:00",
+        "url": "https://github.com/octo-builder/signalboard/commit/2026031802",
+        "additions": 124,
+        "deletions": 53
+      },
+      {
+        "repo_name_with_owner": "octo-builder/flare-ui",
+        "sha": "2026031803",
+        "message": "Improve metrics aggregation",
+        "committed_at": "2026-03-18T15:50:00+00:00",
+        "url": "https://github.com/octo-builder/flare-ui/commit/2026031803",
+        "additions": 134,
+        "deletions": 51
+      }
+    ],
+    "pull_requests": [
+      {
+        "repo_name_with_owner": "octo-builder/signalboard",
+        "repo_is_private": false,
+        "number": 50,
+        "title": "Improve HTML card motion timing",
+        "created_at": "2026-02-19T14:10:00+00:00",
+        "url": "https://github.com/octo-builder/signalboard/pull/50",
+        "state": "MERGED",
+        "merged_at": "2026-02-20T09:00:00+00:00",
+        "additions": 64,
+        "deletions": 64
+      },
+      {
+        "repo_name_with_owner": "octo-builder/signalboard",
+        "repo_is_private": false,
+        "number": 51,
+        "title": "Refactor contribution parsing",
+        "created_at": "2026-02-21T14:10:00+00:00",
+        "url": "https://github.com/octo-builder/signalboard/pull/51",
+        "state": "MERGED",
+        "merged_at": "2026-02-22T09:00:00+00:00",
+        "additions": 297,
+        "deletions": 67
+      },
+      {
+        "repo_name_with_owner": "octo-builder/signalboard",
+        "repo_is_private": false,
+        "number": 52,
+        "title": "Add demo export pipeline",
+        "created_at": "2026-02-22T14:10:00+00:00",
+        "url": "https://github.com/octo-builder/signalboard/pull/52",
+        "state": "OPEN",
+        "merged_at": null,
+        "additions": 185,
+        "deletions": 107
+      },
+      {
+        "repo_name_with_owner": "octo-builder/rusty-cache",
+        "repo_is_private": false,
+        "number": 53,
+        "title": "Refactor contribution parsing",
+        "created_at": "2026-02-25T14:10:00+00:00",
+        "url": "https://github.com/octo-builder/rusty-cache/pull/53",
+        "state": "OPEN",
+        "merged_at": null,
+        "additions": 314,
+        "deletions": 25
+      },
+      {
+        "repo_name_with_owner": "octo-builder/flare-ui",
+        "repo_is_private": false,
+        "number": 54,
+        "title": "Expose JSON serialization hook",
+        "created_at": "2026-02-26T14:10:00+00:00",
+        "url": "https://github.com/octo-builder/flare-ui/pull/54",
+        "state": "OPEN",
+        "merged_at": null,
+        "additions": 132,
+        "deletions": 143
+      },
+      {
+        "repo_name_with_owner": "octo-builder/rusty-cache",
+        "repo_is_private": false,
+        "number": 55,
+        "title": "Refactor contribution parsing",
+        "created_at": "2026-02-28T14:10:00+00:00",
+        "url": "https://github.com/octo-builder/rusty-cache/pull/55",
+        "state": "OPEN",
+        "merged_at": null,
+        "additions": 166,
+        "deletions": 176
+      },
+      {
+        "repo_name_with_owner": "octo-builder/signalboard",
+        "repo_is_private": false,
+        "number": 56,
+        "title": "Add demo export pipeline",
+        "created_at": "2026-03-03T14:10:00+00:00",
+        "url": "https://github.com/octo-builder/signalboard/pull/56",
+        "state": "MERGED",
+        "merged_at": "2026-03-04T09:00:00+00:00",
+        "additions": 49,
+        "deletions": 171
+      },
+      {
+        "repo_name_with_owner": "octo-builder/flare-ui",
+        "repo_is_private": false,
+        "number": 57,
+        "title": "Add demo export pipeline",
+        "created_at": "2026-03-05T14:10:00+00:00",
+        "url": "https://github.com/octo-builder/flare-ui/pull/57",
+        "state": "MERGED",
+        "merged_at": "2026-03-06T09:00:00+00:00",
+        "additions": 341,
+        "deletions": 25
+      },
+      {
+        "repo_name_with_owner": "octo-builder/rusty-cache",
+        "repo_is_private": false,
+        "number": 58,
+        "title": "Add demo export pipeline",
+        "created_at": "2026-03-08T14:10:00+00:00",
+        "url": "https://github.com/octo-builder/rusty-cache/pull/58",
+        "state": "MERGED",
+        "merged_at": "2026-03-09T09:00:00+00:00",
+        "additions": 92,
+        "deletions": 72
+      },
+      {
+        "repo_name_with_owner": "octo-builder/signalboard",
+        "repo_is_private": false,
+        "number": 59,
+        "title": "Refactor contribution parsing",
+        "created_at": "2026-03-09T14:10:00+00:00",
+        "url": "https://github.com/octo-builder/signalboard/pull/59",
+        "state": "OPEN",
+        "merged_at": null,
+        "additions": 350,
+        "deletions": 72
+      },
+      {
+        "repo_name_with_owner": "octo-builder/flare-ui",
+        "repo_is_private": false,
+        "number": 61,
+        "title": "Expose JSON serialization hook",
+        "created_at": "2026-03-16T14:10:00+00:00",
+        "url": "https://github.com/octo-builder/flare-ui/pull/61",
+        "state": "OPEN",
+        "merged_at": null,
+        "additions": 370,
+        "deletions": 49
+      },
+      {
+        "repo_name_with_owner": "octo-builder/signalboard",
+        "repo_is_private": false,
+        "number": 62,
+        "title": "Refactor contribution parsing",
+        "created_at": "2026-03-18T14:10:00+00:00",
+        "url": "https://github.com/octo-builder/signalboard/pull/62",
+        "state": "MERGED",
+        "merged_at": "2026-03-19T09:00:00+00:00",
+        "additions": 114,
+        "deletions": 137
+      }
+    ],
+    "issues": [
+      {
+        "repo_name_with_owner": "octo-builder/flare-ui",
+        "repo_is_private": false,
+        "number": 100,
+        "title": "Tune chart color contrast on mobile",
+        "created_at": "2026-02-22T11:30:00+00:00",
+        "url": "https://github.com/octo-builder/flare-ui/issues/100",
+        "state": "CLOSED"
+      },
+      {
+        "repo_name_with_owner": "octo-builder/rusty-cache",
+        "repo_is_private": false,
+        "number": 101,
+        "title": "Investigate flaky API retry behavior",
+        "created_at": "2026-02-23T11:30:00+00:00",
+        "url": "https://github.com/octo-builder/rusty-cache/issues/101",
+        "state": "CLOSED"
+      },
+      {
+        "repo_name_with_owner": "octo-builder/flare-ui",
+        "repo_is_private": false,
+        "number": 103,
+        "title": "Investigate flaky API retry behavior",
+        "created_at": "2026-02-26T11:30:00+00:00",
+        "url": "https://github.com/octo-builder/flare-ui/issues/103",
+        "state": "CLOSED"
+      },
+      {
+        "repo_name_with_owner": "octo-builder/signalboard",
+        "repo_is_private": false,
+        "number": 104,
+        "title": "Investigate flaky API retry behavior",
+        "created_at": "2026-03-07T11:30:00+00:00",
+        "url": "https://github.com/octo-builder/signalboard/issues/104",
+        "state": "OPEN"
+      },
+      {
+        "repo_name_with_owner": "octo-builder/signalboard",
+        "repo_is_private": false,
+        "number": 105,
+        "title": "Document contribution heatmap legend",
+        "created_at": "2026-03-11T11:30:00+00:00",
+        "url": "https://github.com/octo-builder/signalboard/issues/105",
+        "state": "OPEN"
+      },
+      {
+        "repo_name_with_owner": "octo-builder/flare-ui",
+        "repo_is_private": false,
+        "number": 106,
+        "title": "Tune chart color contrast on mobile",
+        "created_at": "2026-03-12T11:30:00+00:00",
+        "url": "https://github.com/octo-builder/flare-ui/issues/106",
+        "state": "OPEN"
+      },
+      {
+        "repo_name_with_owner": "octo-builder/signalboard",
+        "repo_is_private": false,
+        "number": 107,
+        "title": "Investigate flaky API retry behavior",
+        "created_at": "2026-03-13T11:30:00+00:00",
+        "url": "https://github.com/octo-builder/signalboard/issues/107",
+        "state": "CLOSED"
+      },
+      {
+        "repo_name_with_owner": "octo-builder/rusty-cache",
+        "repo_is_private": false,
+        "number": 108,
+        "title": "Document contribution heatmap legend",
+        "created_at": "2026-03-15T11:30:00+00:00",
+        "url": "https://github.com/octo-builder/rusty-cache/issues/108",
+        "state": "OPEN"
+      }
+    ],
+    "contribution_days": [
+      {
+        "day": "2026-02-17",
+        "count": 5,
+        "weekday": 1,
+        "color": null
+      },
+      {
+        "day": "2026-02-18",
+        "count": 5,
+        "weekday": 2,
+        "color": null
+      },
+      {
+        "day": "2026-02-19",
+        "count": 2,
+        "weekday": 3,
+        "color": null
+      },
+      {
+        "day": "2026-02-20",
+        "count": 0,
+        "weekday": 4,
+        "color": null
+      },
+      {
+        "day": "2026-02-21",
+        "count": 1,
+        "weekday": 5,
+        "color": null
+      },
+      {
+        "day": "2026-02-22",
+        "count": 0,
+        "weekday": 6,
+        "color": null
+      },
+      {
+        "day": "2026-02-23",
+        "count": 2,
+        "weekday": 0,
+        "color": null
+      },
+      {
+        "day": "2026-02-24",
+        "count": 5,
+        "weekday": 1,
+        "color": null
+      },
+      {
+        "day": "2026-02-25",
+        "count": 8,
+        "weekday": 2,
+        "color": null
+      },
+      {
+        "day": "2026-02-26",
+        "count": 0,
+        "weekday": 3,
+        "color": null
+      },
+      {
+        "day": "2026-02-27",
+        "count": 5,
+        "weekday": 4,
+        "color": null
+      },
+      {
+        "day": "2026-02-28",
+        "count": 0,
+        "weekday": 5,
+        "color": null
+      },
+      {
+        "day": "2026-03-01",
+        "count": 1,
+        "weekday": 6,
+        "color": null
+      },
+      {
+        "day": "2026-03-02",
+        "count": 3,
+        "weekday": 0,
+        "color": null
+      },
+      {
+        "day": "2026-03-03",
+        "count": 1,
+        "weekday": 1,
+        "color": null
+      },
+      {
+        "day": "2026-03-04",
+        "count": 4,
+        "weekday": 2,
+        "color": null
+      },
+      {
+        "day": "2026-03-05",
+        "count": 5,
+        "weekday": 3,
+        "color": null
+      },
+      {
+        "day": "2026-03-06",
+        "count": 3,
+        "weekday": 4,
+        "color": null
+      },
+      {
+        "day": "2026-03-07",
+        "count": 2,
+        "weekday": 5,
+        "color": null
+      },
+      {
+        "day": "2026-03-08",
+        "count": 2,
+        "weekday": 6,
+        "color": null
+      },
+      {
+        "day": "2026-03-09",
+        "count": 3,
+        "weekday": 0,
+        "color": null
+      },
+      {
+        "day": "2026-03-10",
+        "count": 1,
+        "weekday": 1,
+        "color": null
+      },
+      {
+        "day": "2026-03-11",
+        "count": 0,
+        "weekday": 2,
+        "color": null
+      },
+      {
+        "day": "2026-03-12",
+        "count": 0,
+        "weekday": 3,
+        "color": null
+      },
+      {
+        "day": "2026-03-13",
+        "count": 2,
+        "weekday": 4,
+        "color": null
+      },
+      {
+        "day": "2026-03-14",
+        "count": 2,
+        "weekday": 5,
+        "color": null
+      },
+      {
+        "day": "2026-03-15",
+        "count": 4,
+        "weekday": 6,
+        "color": null
+      },
+      {
+        "day": "2026-03-16",
+        "count": 4,
+        "weekday": 0,
+        "color": null
+      },
+      {
+        "day": "2026-03-17",
+        "count": 4,
+        "weekday": 1,
+        "color": null
+      },
+      {
+        "day": "2026-03-18",
+        "count": 5,
+        "weekday": 2,
+        "color": null
+      }
+    ],
+    "warnings": [
+      {
+        "code": "sample-data",
+        "message": "This report was generated from deterministic sample data.",
+        "level": "info",
+        "details": "Use GITHUB_TOKEN for live GitHub activity."
+      }
+    ],
+    "total_commit_contributions": 73,
+    "total_issue_contributions": 8,
+    "total_pull_request_contributions": 12,
+    "total_pull_request_review_contributions": 16,
+    "pull_requests_total": 12,
+    "pull_requests_merged_total": 6,
+    "issues_total": 8,
+    "restricted_contributions_count": 7
+  },
+  "report": {
+    "meta": {
+      "title": "GitHub Activity Report",
+      "subtitle": "A contribution snapshot for @octo-builder",
+      "subject": {
+        "login": "octo-builder",
+        "display_name": "Octo Builder",
+        "avatar_url": "https://avatars.githubusercontent.com/u/583231?v=4",
+        "profile_url": "https://github.com/octo-builder"
+      },
+      "period": {
+        "label": "2026-02-17 to 2026-03-18",
+        "start": "2026-02-17",
+        "end": "2026-03-18",
+        "timezone": "UTC",
+        "days": 30
+      },
+      "generated_at": "2026-03-18T12:00:00+00:00",
+      "generator": {
+        "name": "ghstats",
+        "version": "0.1.0"
+      }
+    },
+    "stats_cards": [
+      {
+        "id": "commits",
+        "label": "Total commits",
+        "value": "73",
+        "raw_value": 73,
+        "unit": "commits",
+        "delta": {
+          "value": null,
+          "label": null,
+          "direction": null
+        },
+        "accent": "teal",
+        "icon": null
+      },
+      {
+        "id": "avg-commits",
+        "label": "Avg commits/day",
+        "value": "2.43",
+        "raw_value": 2.43,
+        "unit": null,
+        "delta": {
+          "value": null,
+          "label": null,
+          "direction": null
+        },
+        "accent": "amber",
+        "icon": null
+      },
+      {
+        "id": "loc-added",
+        "label": "Lines added",
+        "value": "4025",
+        "raw_value": 4025,
+        "unit": "lines",
+        "delta": {
+          "value": null,
+          "label": null,
+          "direction": null
+        },
+        "accent": "green",
+        "icon": null
+      },
+      {
+        "id": "loc-deleted",
+        "label": "Lines deleted",
+        "value": "1928",
+        "raw_value": 1928,
+        "unit": "lines",
+        "delta": {
+          "value": null,
+          "label": null,
+          "direction": null
+        },
+        "accent": "red",
+        "icon": null
+      },
+      {
+        "id": "prs",
+        "label": "PRs opened / merged",
+        "value": "12 / 6",
+        "raw_value": "12 / 6",
+        "unit": null,
+        "delta": {
+          "value": null,
+          "label": null,
+          "direction": null
+        },
+        "accent": "slate",
+        "icon": null
+      },
+      {
+        "id": "issues",
+        "label": "Issues opened",
+        "value": "8",
+        "raw_value": 8,
+        "unit": "issues",
+        "delta": {
+          "value": null,
+          "label": null,
+          "direction": null
+        },
+        "accent": "blue",
+        "icon": null
+      },
+      {
+        "id": "repos",
+        "label": "Repos contributed to",
+        "value": "3",
+        "raw_value": 3,
+        "unit": "repos",
+        "delta": {
+          "value": null,
+          "label": null,
+          "direction": null
+        },
+        "accent": "violet",
+        "icon": null
+      },
+      {
+        "id": "streak",
+        "label": "Current / longest streak",
+        "value": "6 / 6",
+        "raw_value": "6 / 6",
+        "unit": "days",
+        "delta": {
+          "value": null,
+          "label": null,
+          "direction": null
+        },
+        "accent": "orange",
+        "icon": null
+      }
+    ],
+    "chart_datasets": {
+      "commits_timeline": {
+        "title": "Commits per Day",
+        "labels": [
+          "2026-02-17",
+          "2026-02-18",
+          "2026-02-19",
+          "2026-02-20",
+          "2026-02-21",
+          "2026-02-22",
+          "2026-02-23",
+          "2026-02-24",
+          "2026-02-25",
+          "2026-02-26",
+          "2026-02-27",
+          "2026-02-28",
+          "2026-03-01",
+          "2026-03-02",
+          "2026-03-03",
+          "2026-03-04",
+          "2026-03-05",
+          "2026-03-06",
+          "2026-03-07",
+          "2026-03-08",
+          "2026-03-09",
+          "2026-03-10",
+          "2026-03-11",
+          "2026-03-12",
+          "2026-03-13",
+          "2026-03-14",
+          "2026-03-15",
+          "2026-03-16",
+          "2026-03-17",
+          "2026-03-18"
+        ],
+        "series": [
+          {
+            "id": "commits",
+            "label": "Commits",
+            "values": [
+              2,
+              2,
+              1,
+              0,
+              0,
+              0,
+              0,
+              3,
+              5,
+              0,
+              2,
+              0,
+              1,
+              1,
+              0,
+              3,
+              2,
+              1,
+              0,
+              2,
+              2,
+              0,
+              0,
+              0,
+              1,
+              1,
+              2,
+              3,
+              2,
+              3
+            ],
+            "color": "#0f766e"
+          }
+        ]
+      },
+      "loc_timeline": {
+        "title": "Lines Added vs Deleted",
+        "labels": [
+          "2026-02-17",
+          "2026-02-18",
+          "2026-02-19",
+          "2026-02-20",
+          "2026-02-21",
+          "2026-02-22",
+          "2026-02-23",
+          "2026-02-24",
+          "2026-02-25",
+          "2026-02-26",
+          "2026-02-27",
+          "2026-02-28",
+          "2026-03-01",
+          "2026-03-02",
+          "2026-03-03",
+          "2026-03-04",
+          "2026-03-05",
+          "2026-03-06",
+          "2026-03-07",
+          "2026-03-08",
+          "2026-03-09",
+          "2026-03-10",
+          "2026-03-11",
+          "2026-03-12",
+          "2026-03-13",
+          "2026-03-14",
+          "2026-03-15",
+          "2026-03-16",
+          "2026-03-17",
+          "2026-03-18"
+        ],
+        "series": [
+          {
+            "id": "additions",
+            "label": "Added",
+            "values": [
+              224,
+              216,
+              168,
+              0,
+              0,
+              0,
+              0,
+              446,
+              699,
+              0,
+              51,
+              0,
+              70,
+              180,
+              0,
+              210,
+              42,
+              74,
+              0,
+              212,
+              167,
+              0,
+              0,
+              0,
+              68,
+              59,
+              213,
+              276,
+              212,
+              438
+            ],
+            "color": "#16a34a"
+          },
+          {
+            "id": "deletions",
+            "label": "Deleted",
+            "values": [
+              71,
+              88,
+              79,
+              0,
+              0,
+              0,
+              0,
+              182,
+              179,
+              0,
+              106,
+              0,
+              60,
+              83,
+              0,
+              141,
+              139,
+              26,
+              0,
+              139,
+              32,
+              0,
+              0,
+              0,
+              20,
+              58,
+              129,
+              161,
+              92,
+              143
+            ],
+            "color": "#dc2626"
+          }
+        ]
+      },
+      "weekday_hours": {
+        "title": "Activity by Weekday and Hour",
+        "x_labels": [
+          "00:00",
+          "01:00",
+          "02:00",
+          "03:00",
+          "04:00",
+          "05:00",
+          "06:00",
+          "07:00",
+          "08:00",
+          "09:00",
+          "10:00",
+          "11:00",
+          "12:00",
+          "13:00",
+          "14:00",
+          "15:00",
+          "16:00",
+          "17:00",
+          "18:00",
+          "19:00",
+          "20:00",
+          "21:00",
+          "22:00",
+          "23:00"
+        ],
+        "y_labels": [
+          "Mon",
+          "Tue",
+          "Wed",
+          "Thu",
+          "Fri",
+          "Sat",
+          "Sun"
+        ],
+        "matrix": [
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            2,
+            1,
+            0,
+            2,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            1,
+            1,
+            1,
+            3,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            3,
+            1,
+            2,
+            0,
+            2,
+            1,
+            2,
+            0,
+            1,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            1,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            2,
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            2,
+            0,
+            2,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "min": 0,
+        "max": 3
+      },
+      "languages": {
+        "title": "Top Languages",
+        "labels": [
+          "Python",
+          "TypeScript",
+          "Rust",
+          "CSS",
+          "HTML",
+          "JavaScript",
+          "Shell"
+        ],
+        "values": [
+          84000,
+          71000,
+          68000,
+          31000,
+          18000,
+          14000,
+          4000
+        ],
+        "colors": [
+          "#3572A5",
+          "#3178c6",
+          "#dea584",
+          "#663399",
+          "#e34c26",
+          "#f1e05a",
+          "#89e051"
+        ]
+      }
+    },
+    "heatmap": {
+      "title": "Contribution Calendar",
+      "weeks": [
+        {
+          "label": "2026-02-17",
+          "days": [
+            {
+              "date": "2026-02-17",
+              "count": 5,
+              "level": 2,
+              "tooltip": "2026-02-17: 5 contributions"
+            },
+            {
+              "date": "2026-02-18",
+              "count": 5,
+              "level": 2,
+              "tooltip": "2026-02-18: 5 contributions"
+            },
+            {
+              "date": "2026-02-19",
+              "count": 2,
+              "level": 1,
+              "tooltip": "2026-02-19: 2 contributions"
+            },
+            {
+              "date": "2026-02-20",
+              "count": 0,
+              "level": 0,
+              "tooltip": "2026-02-20: 0 contributions"
+            },
+            {
+              "date": "2026-02-21",
+              "count": 1,
+              "level": 0,
+              "tooltip": "2026-02-21: 1 contributions"
+            },
+            {
+              "date": "2026-02-22",
+              "count": 0,
+              "level": 0,
+              "tooltip": "2026-02-22: 0 contributions"
+            },
+            {
+              "date": "2026-02-23",
+              "count": 2,
+              "level": 1,
+              "tooltip": "2026-02-23: 2 contributions"
+            }
+          ]
+        },
+        {
+          "label": "2026-02-24",
+          "days": [
+            {
+              "date": "2026-02-24",
+              "count": 5,
+              "level": 2,
+              "tooltip": "2026-02-24: 5 contributions"
+            },
+            {
+              "date": "2026-02-25",
+              "count": 8,
+              "level": 4,
+              "tooltip": "2026-02-25: 8 contributions"
+            },
+            {
+              "date": "2026-02-26",
+              "count": 0,
+              "level": 0,
+              "tooltip": "2026-02-26: 0 contributions"
+            },
+            {
+              "date": "2026-02-27",
+              "count": 5,
+              "level": 2,
+              "tooltip": "2026-02-27: 5 contributions"
+            },
+            {
+              "date": "2026-02-28",
+              "count": 0,
+              "level": 0,
+              "tooltip": "2026-02-28: 0 contributions"
+            },
+            {
+              "date": "2026-03-01",
+              "count": 1,
+              "level": 0,
+              "tooltip": "2026-03-01: 1 contributions"
+            },
+            {
+              "date": "2026-03-02",
+              "count": 3,
+              "level": 2,
+              "tooltip": "2026-03-02: 3 contributions"
+            }
+          ]
+        },
+        {
+          "label": "2026-03-03",
+          "days": [
+            {
+              "date": "2026-03-03",
+              "count": 1,
+              "level": 0,
+              "tooltip": "2026-03-03: 1 contributions"
+            },
+            {
+              "date": "2026-03-04",
+              "count": 4,
+              "level": 2,
+              "tooltip": "2026-03-04: 4 contributions"
+            },
+            {
+              "date": "2026-03-05",
+              "count": 5,
+              "level": 2,
+              "tooltip": "2026-03-05: 5 contributions"
+            },
+            {
+              "date": "2026-03-06",
+              "count": 3,
+              "level": 2,
+              "tooltip": "2026-03-06: 3 contributions"
+            },
+            {
+              "date": "2026-03-07",
+              "count": 2,
+              "level": 1,
+              "tooltip": "2026-03-07: 2 contributions"
+            },
+            {
+              "date": "2026-03-08",
+              "count": 2,
+              "level": 1,
+              "tooltip": "2026-03-08: 2 contributions"
+            },
+            {
+              "date": "2026-03-09",
+              "count": 3,
+              "level": 2,
+              "tooltip": "2026-03-09: 3 contributions"
+            }
+          ]
+        },
+        {
+          "label": "2026-03-10",
+          "days": [
+            {
+              "date": "2026-03-10",
+              "count": 1,
+              "level": 0,
+              "tooltip": "2026-03-10: 1 contributions"
+            },
+            {
+              "date": "2026-03-11",
+              "count": 0,
+              "level": 0,
+              "tooltip": "2026-03-11: 0 contributions"
+            },
+            {
+              "date": "2026-03-12",
+              "count": 0,
+              "level": 0,
+              "tooltip": "2026-03-12: 0 contributions"
+            },
+            {
+              "date": "2026-03-13",
+              "count": 2,
+              "level": 1,
+              "tooltip": "2026-03-13: 2 contributions"
+            },
+            {
+              "date": "2026-03-14",
+              "count": 2,
+              "level": 1,
+              "tooltip": "2026-03-14: 2 contributions"
+            },
+            {
+              "date": "2026-03-15",
+              "count": 4,
+              "level": 2,
+              "tooltip": "2026-03-15: 4 contributions"
+            },
+            {
+              "date": "2026-03-16",
+              "count": 4,
+              "level": 2,
+              "tooltip": "2026-03-16: 4 contributions"
+            }
+          ]
+        },
+        {
+          "label": "2026-03-17",
+          "days": [
+            {
+              "date": "2026-03-17",
+              "count": 4,
+              "level": 2,
+              "tooltip": "2026-03-17: 4 contributions"
+            },
+            {
+              "date": "2026-03-18",
+              "count": 5,
+              "level": 2,
+              "tooltip": "2026-03-18: 5 contributions"
+            },
+            {
+              "date": "",
+              "count": 0,
+              "level": 0,
+              "tooltip": "No data"
+            },
+            {
+              "date": "",
+              "count": 0,
+              "level": 0,
+              "tooltip": "No data"
+            },
+            {
+              "date": "",
+              "count": 0,
+              "level": 0,
+              "tooltip": "No data"
+            },
+            {
+              "date": "",
+              "count": 0,
+              "level": 0,
+              "tooltip": "No data"
+            },
+            {
+              "date": "",
+              "count": 0,
+              "level": 0,
+              "tooltip": "No data"
+            }
+          ]
+        }
+      ],
+      "total": 79,
+      "streak": {
+        "current": 6,
+        "longest": 6
+      }
+    },
+    "language_slices": [
+      {
+        "name": "Python",
+        "value": 84000,
+        "percent": 28.97,
+        "color": "#3572A5",
+        "repo_count": 1
+      },
+      {
+        "name": "TypeScript",
+        "value": 71000,
+        "percent": 24.48,
+        "color": "#3178c6",
+        "repo_count": 1
+      },
+      {
+        "name": "Rust",
+        "value": 68000,
+        "percent": 23.45,
+        "color": "#dea584",
+        "repo_count": 1
+      },
+      {
+        "name": "CSS",
+        "value": 31000,
+        "percent": 10.69,
+        "color": "#663399",
+        "repo_count": 2
+      },
+      {
+        "name": "HTML",
+        "value": 18000,
+        "percent": 6.21,
+        "color": "#e34c26",
+        "repo_count": 1
+      },
+      {
+        "name": "JavaScript",
+        "value": 14000,
+        "percent": 4.83,
+        "color": "#f1e05a",
+        "repo_count": 1
+      },
+      {
+        "name": "Shell",
+        "value": 4000,
+        "percent": 1.38,
+        "color": "#89e051",
+        "repo_count": 1
+      }
+    ],
+    "repo_insights": [
+      {
+        "name": "signalboard",
+        "full_name": "octo-builder/signalboard",
+        "url": "https://github.com/octo-builder/signalboard",
+        "description": "Team observability dashboard for release and incident visibility.",
+        "primary_language": "Python",
+        "stars": 88,
+        "forks": 12,
+        "activity": {
+          "commits": 34,
+          "pull_requests": 8,
+          "issues": 5,
+          "reviews": 11
+        },
+        "highlights": [
+          "34 commit contributions",
+          "8 pull requests opened",
+          "11 reviews submitted"
+        ],
+        "health": {
+          "last_active_at": null,
+          "opened": 5,
+          "merged_prs": 8
+        }
+      },
+      {
+        "name": "flare-ui",
+        "full_name": "octo-builder/flare-ui",
+        "url": "https://github.com/octo-builder/flare-ui",
+        "description": "Marketing microsite with component-driven interactions.",
+        "primary_language": "TypeScript",
+        "stars": 54,
+        "forks": 6,
+        "activity": {
+          "commits": 22,
+          "pull_requests": 6,
+          "issues": 4,
+          "reviews": 3
+        },
+        "highlights": [
+          "22 commit contributions",
+          "6 pull requests opened",
+          "3 reviews submitted"
+        ],
+        "health": {
+          "last_active_at": null,
+          "opened": 4,
+          "merged_prs": 6
+        }
+      },
+      {
+        "name": "rusty-cache",
+        "full_name": "octo-builder/rusty-cache",
+        "url": "https://github.com/octo-builder/rusty-cache",
+        "description": "Experimental cache service with a compact CLI control plane.",
+        "primary_language": "Rust",
+        "stars": 39,
+        "forks": 3,
+        "activity": {
+          "commits": 17,
+          "pull_requests": 3,
+          "issues": 2,
+          "reviews": 2
+        },
+        "highlights": [
+          "17 commit contributions",
+          "3 pull requests opened",
+          "2 reviews submitted"
+        ],
+        "health": {
+          "last_active_at": null,
+          "opened": 2,
+          "merged_prs": 3
+        }
+      }
+    ],
+    "highlights": [
+      {
+        "kind": "trend",
+        "title": "Most active weekday",
+        "text": "Wed is your busiest commit day.",
+        "value": "Wed"
+      },
+      {
+        "kind": "trend",
+        "title": "Most active hour",
+        "text": "Peak coding time lands around 13:00 UTC.",
+        "value": "13:00"
+      },
+      {
+        "kind": "streak",
+        "title": "Longest streak",
+        "text": "You sustained a 6-day commit streak.",
+        "value": "6"
+      },
+      {
+        "kind": "milestone",
+        "title": "Most productive day",
+        "text": "2026-02-25 led the chart with 5 commits.",
+        "value": "5"
+      },
+      {
+        "kind": "note",
+        "title": "Average commit size",
+        "text": "Your average detailed commit changed 152.64 lines.",
+        "value": "152.64"
+      },
+      {
+        "kind": "note",
+        "title": "Weekday vs weekend ratio",
+        "text": "Weekday activity outweighs weekend commits by 5.5:1.",
+        "value": "5.5"
+      },
+      {
+        "kind": "repo",
+        "title": "Largest commit",
+        "text": "octo-builder/rusty-cache had the largest detailed commit at 263 changed lines.",
+        "value": "263"
+      },
+      {
+        "kind": "milestone",
+        "title": "Highest code churn",
+        "text": "2026-02-25 moved 878 lines.",
+        "value": "878"
+      }
+    ],
+    "warnings": [
+      {
+        "code": "sample-data",
+        "message": "This report was generated from deterministic sample data.",
+        "level": "info",
+        "details": "Use GITHUB_TOKEN for live GitHub activity."
+      }
+    ]
+  }
+}

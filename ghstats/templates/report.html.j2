@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ context.meta.title }} - @{{ context.meta.subject.login }}</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+      :root {
+        --bg: #f4efe6;
+        --bg-strong: #ead9c5;
+        --paper: rgba(255, 252, 246, 0.82);
+        --paper-strong: rgba(255, 248, 239, 0.96);
+        --ink: #18222f;
+        --muted: #526171;
+        --line: rgba(24, 34, 47, 0.1);
+        --teal: #0f766e;
+        --amber: #d97706;
+        --green: #15803d;
+        --red: #b91c1c;
+        --blue: #1d4ed8;
+        --slate: #334155;
+        --orange: #ea580c;
+        --violet: #7c3aed;
+        --shadow: 0 24px 60px rgba(17, 24, 39, 0.16);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Space Grotesk", "Avenir Next", "Trebuchet MS", sans-serif;
+        color: var(--ink);
+        background:
+          radial-gradient(circle at top left, rgba(15, 118, 110, 0.22), transparent 28%),
+          radial-gradient(circle at right, rgba(217, 119, 6, 0.22), transparent 24%),
+          linear-gradient(160deg, #f8f2e8 0%, #f3ead8 48%, #efe5d0 100%);
+        min-height: 100vh;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background-image:
+          linear-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+        background-size: 28px 28px;
+        pointer-events: none;
+        opacity: 0.32;
+      }
+
+      .shell {
+        width: min(1200px, calc(100% - 32px));
+        margin: 28px auto 40px;
+        position: relative;
+        z-index: 1;
+      }
+
+      .hero,
+      .panel {
+        backdrop-filter: blur(18px);
+        background: var(--paper);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        box-shadow: var(--shadow);
+        border-radius: 28px;
+      }
+
+      .hero {
+        padding: 28px;
+        display: grid;
+        grid-template-columns: 1.35fr 0.9fr;
+        gap: 18px;
+        overflow: hidden;
+      }
+
+      .hero-copy {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        width: fit-content;
+        padding: 8px 12px;
+        border-radius: 999px;
+        background: rgba(15, 118, 110, 0.12);
+        color: var(--teal);
+        font-size: 12px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+
+      h1, h2, h3, h4 {
+        margin: 0;
+        font-family: "IBM Plex Sans", "Franklin Gothic Medium", sans-serif;
+      }
+
+      h1 {
+        font-size: clamp(2.2rem, 5vw, 4.3rem);
+        line-height: 0.94;
+        max-width: 12ch;
+      }
+
+      .subtitle,
+      .meta-chip,
+      .muted,
+      .fact-text,
+      .repo-copy p,
+      .warning p {
+        color: var(--muted);
+      }
+
+      .hero-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+        align-self: end;
+      }
+
+      .hero-stat {
+        padding: 16px;
+        border-radius: 22px;
+        background: rgba(255, 255, 255, 0.58);
+        border: 1px solid rgba(24, 34, 47, 0.08);
+        transform: translateY(14px);
+        opacity: 0;
+        animation: rise 0.65s ease forwards;
+      }
+
+      .hero-stat:nth-child(2) { animation-delay: 0.08s; }
+      .hero-stat:nth-child(3) { animation-delay: 0.16s; }
+      .hero-stat:nth-child(4) { animation-delay: 0.24s; }
+
+      .hero-stat .label,
+      .stat-card .label,
+      .repo-kpi,
+      .section-kicker {
+        font-size: 12px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .hero-stat .value {
+        margin-top: 8px;
+        font-size: 2rem;
+        font-weight: 700;
+      }
+
+      .hero-side {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+
+      .profile-card,
+      .warning,
+      .fact,
+      .repo-card,
+      .stat-card,
+      .chart-card,
+      .mini-panel {
+        border-radius: 24px;
+        background: var(--paper-strong);
+        border: 1px solid rgba(24, 34, 47, 0.08);
+      }
+
+      .profile-card {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 18px;
+      }
+
+      .profile-card img {
+        width: 68px;
+        height: 68px;
+        border-radius: 22px;
+        object-fit: cover;
+      }
+
+      .meta-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .meta-chip {
+        padding: 10px 12px;
+        border-radius: 999px;
+        background: rgba(24, 34, 47, 0.05);
+        font-size: 0.9rem;
+      }
+
+      .layout {
+        display: grid;
+        gap: 18px;
+        margin-top: 18px;
+      }
+
+      .stats-grid,
+      .charts-grid,
+      .facts-grid,
+      .repo-grid,
+      .bottom-grid {
+        display: grid;
+        gap: 18px;
+      }
+
+      .stats-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .stat-card,
+      .chart-card,
+      .panel {
+        padding: 18px;
+      }
+
+      .stat-card .value {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-top: 10px;
+      }
+
+      .accent-teal { border-top: 4px solid var(--teal); }
+      .accent-amber { border-top: 4px solid var(--amber); }
+      .accent-green { border-top: 4px solid var(--green); }
+      .accent-red { border-top: 4px solid var(--red); }
+      .accent-blue { border-top: 4px solid var(--blue); }
+      .accent-slate { border-top: 4px solid var(--slate); }
+      .accent-orange { border-top: 4px solid var(--orange); }
+      .accent-violet { border-top: 4px solid var(--violet); }
+
+      .charts-grid {
+        grid-template-columns: 1.35fr 1fr;
+      }
+
+      .chart-stack {
+        display: grid;
+        gap: 18px;
+      }
+
+      .chart-card canvas {
+        width: 100% !important;
+        height: 280px !important;
+      }
+
+      .heatmap-card {
+        padding: 18px;
+      }
+
+      .calendar-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(14px, 1fr));
+        gap: 6px;
+        margin-top: 16px;
+      }
+
+      .cell {
+        aspect-ratio: 1;
+        border-radius: 6px;
+        background: rgba(24, 34, 47, 0.08);
+      }
+
+      .level-0 { background: rgba(24, 34, 47, 0.08); }
+      .level-1 { background: rgba(15, 118, 110, 0.24); }
+      .level-2 { background: rgba(15, 118, 110, 0.44); }
+      .level-3 { background: rgba(15, 118, 110, 0.68); }
+      .level-4 { background: rgba(15, 118, 110, 0.92); }
+
+      .weekday-heatmap {
+        margin-top: 14px;
+        display: grid;
+        gap: 8px;
+      }
+
+      .heat-row {
+        display: grid;
+        grid-template-columns: 46px repeat(24, minmax(0, 1fr));
+        gap: 6px;
+        align-items: center;
+      }
+
+      .heat-row .tag {
+        font-size: 0.84rem;
+        color: var(--muted);
+      }
+
+      .heat-hour {
+        height: 14px;
+        border-radius: 999px;
+        background: rgba(24, 34, 47, 0.08);
+      }
+
+      .facts-grid,
+      .repo-grid,
+      .bottom-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .fact,
+      .repo-card {
+        padding: 18px;
+      }
+
+      .fact-value {
+        font-size: 1.65rem;
+        font-weight: 700;
+        margin-top: 10px;
+      }
+
+      .repo-card {
+        display: grid;
+        gap: 14px;
+      }
+
+      .repo-head {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 16px;
+      }
+
+      .repo-copy a,
+      .profile-card a {
+        color: var(--ink);
+        text-decoration: none;
+      }
+
+      .repo-chips,
+      .warning-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .chip {
+        padding: 8px 10px;
+        border-radius: 999px;
+        background: rgba(24, 34, 47, 0.06);
+        font-size: 0.88rem;
+      }
+
+      .warning {
+        padding: 16px 18px;
+      }
+
+      .warning strong {
+        display: block;
+        margin-bottom: 6px;
+      }
+
+      .section-head {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 8px;
+      }
+
+      .footer-links {
+        margin-top: 18px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        padding: 18px 6px 0;
+        color: var(--muted);
+      }
+
+      .footer-links a {
+        color: var(--ink);
+        text-decoration: none;
+        border-bottom: 1px solid rgba(24, 34, 47, 0.18);
+      }
+
+      @keyframes rise {
+        from {
+          transform: translateY(14px);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      @media (max-width: 980px) {
+        .hero,
+        .charts-grid,
+        .stats-grid,
+        .facts-grid,
+        .repo-grid,
+        .bottom-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .hero-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .shell {
+          width: min(100% - 20px, 1200px);
+        }
+
+        .hero {
+          padding: 18px;
+        }
+
+        .hero-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .heat-row {
+          grid-template-columns: 38px repeat(24, minmax(0, 1fr));
+          gap: 4px;
+        }
+
+        .chart-card canvas {
+          height: 240px !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="shell">
+      <section class="hero">
+        <div class="hero-copy">
+          <span class="eyebrow">GitHub Activity Infographic</span>
+          <h1>{{ context.meta.subject.display_name or context.meta.subject.login }}</h1>
+          <p class="subtitle">{{ context.meta.subtitle }}</p>
+          <div class="meta-row">
+            <span class="meta-chip">Window: {{ context.meta.period.start }} - {{ context.meta.period.end }}</span>
+            <span class="meta-chip">{{ context.meta.period.days }} days</span>
+            <span class="meta-chip">Timezone: {{ context.meta.period.timezone }}</span>
+          </div>
+          <div class="hero-grid">
+            {% for card in context.stats_cards[:4] %}
+            <div class="hero-stat">
+              <div class="label">{{ card.label }}</div>
+              <div class="value">{{ card.value }}</div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div class="hero-side">
+          <div class="profile-card">
+            {% if context.meta.subject.avatar_url %}
+            <img src="{{ context.meta.subject.avatar_url }}" alt="avatar for {{ context.meta.subject.login }}" />
+            {% endif %}
+            <div>
+              <div class="section-kicker">Profile</div>
+              <h3><a href="{{ context.meta.subject.profile_url }}">@{{ context.meta.subject.login }}</a></h3>
+              <p class="muted">Generated by {{ context.meta.generator.name }} {{ context.meta.generator.version }}</p>
+            </div>
+          </div>
+
+          <div class="mini-panel panel">
+            <div class="section-head">
+              <div>
+                <div class="section-kicker">Coverage</div>
+                <h3>What this report captures</h3>
+              </div>
+            </div>
+            <p class="muted">Commit activity, authored pull requests and issues, repo language mix, contribution streaks, and a handful of fun facts for the selected window.</p>
+          </div>
+        </div>
+      </section>
+
+      <div class="layout">
+        <section class="panel">
+          <div class="section-head">
+            <div>
+              <div class="section-kicker">Key stats</div>
+              <h2>Signal at a glance</h2>
+            </div>
+          </div>
+          <div class="stats-grid">
+            {% for card in context.stats_cards %}
+            <article class="stat-card accent-{{ card.accent }}">
+              <div class="label">{{ card.label }}</div>
+              <div class="value">{{ card.value }}</div>
+              {% if card.unit %}<div class="muted">{{ card.unit }}</div>{% endif %}
+            </article>
+            {% endfor %}
+          </div>
+        </section>
+
+        <section class="charts-grid">
+          <div class="chart-stack">
+            <article class="chart-card">
+              <div class="section-head">
+                <div>
+                  <div class="section-kicker">Activity charts</div>
+                  <h2>{{ context.chart_datasets.commits_timeline.title }}</h2>
+                </div>
+              </div>
+              <canvas id="commitsChart"></canvas>
+            </article>
+
+            <article class="chart-card">
+              <div class="section-head">
+                <div>
+                  <div class="section-kicker">Code churn</div>
+                  <h2>{{ context.chart_datasets.loc_timeline.title }}</h2>
+                </div>
+              </div>
+              <canvas id="locChart"></canvas>
+            </article>
+          </div>
+
+          <div class="chart-stack">
+            <article class="chart-card heatmap-card">
+              <div class="section-head">
+                <div>
+                  <div class="section-kicker">Calendar</div>
+                  <h2>{{ context.heatmap.title }}</h2>
+                </div>
+                <div class="muted">{{ context.heatmap.total }} total contributions</div>
+              </div>
+              <div class="calendar-grid">
+                {% for week in context.heatmap.weeks %}
+                  {% for day in week.days %}
+                  <div class="cell level-{{ day.level }}" title="{{ day.tooltip }}"></div>
+                  {% endfor %}
+                {% endfor %}
+              </div>
+              <div class="meta-row" style="margin-top: 14px;">
+                <span class="meta-chip">Current streak: {{ context.heatmap.streak.current }} days</span>
+                <span class="meta-chip">Longest streak: {{ context.heatmap.streak.longest }} days</span>
+              </div>
+            </article>
+
+            <article class="chart-card">
+              <div class="section-head">
+                <div>
+                  <div class="section-kicker">Languages</div>
+                  <h2>{{ context.chart_datasets.languages.title }}</h2>
+                </div>
+              </div>
+              <canvas id="languageChart"></canvas>
+            </article>
+          </div>
+        </section>
+
+        <section class="bottom-grid">
+          <article class="panel">
+            <div class="section-head">
+              <div>
+                <div class="section-kicker">Heatmap</div>
+                <h2>{{ context.chart_datasets.weekday_hours.title }}</h2>
+              </div>
+              <div class="muted">Darker bars indicate more commits in that hour slot.</div>
+            </div>
+            <div class="weekday-heatmap">
+              {% for row in context.chart_datasets.weekday_hours.matrix %}
+              <div class="heat-row">
+                {% set row_label = context.chart_datasets.weekday_hours.y_labels[loop.index0] %}
+                <div class="tag">{{ row_label }}</div>
+                {% for cell in row %}
+                {% set max_val = context.chart_datasets.weekday_hours.max or 1 %}
+                {% set opacity = 0.08 + (cell / max_val) * 0.92 %}
+                <div class="heat-hour" title="{{ row_label }} {{ context.chart_datasets.weekday_hours.x_labels[loop.index0] }}: {{ cell }} commits" style="background: rgba(29, 78, 216, {{ '%.3f'|format(opacity if cell else 0.08) }});"></div>
+                {% endfor %}
+              </div>
+              {% endfor %}
+            </div>
+          </article>
+
+          <article class="panel">
+            <div class="section-head">
+              <div>
+                <div class="section-kicker">Language mix</div>
+                <h2>By repository footprint</h2>
+              </div>
+            </div>
+            <div class="warning-list">
+              {% for language in context.language_slices %}
+              <div class="chip" style="border: 1px solid {{ language.color }}44;">
+                {{ language.name }} - {{ language.percent }}%
+              </div>
+              {% endfor %}
+            </div>
+          </article>
+        </section>
+
+        <section class="panel">
+          <div class="section-head">
+            <div>
+              <div class="section-kicker">Highlights</div>
+              <h2>Fun facts and notable spikes</h2>
+            </div>
+          </div>
+          <div class="facts-grid">
+            {% for item in context.highlights %}
+            <article class="fact">
+              <div class="section-kicker">{{ item.kind }}</div>
+              <h3>{{ item.title }}</h3>
+              {% if item.value %}<div class="fact-value">{{ item.value }}</div>{% endif %}
+              <p class="fact-text">{{ item.text }}</p>
+            </article>
+            {% endfor %}
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="section-head">
+            <div>
+              <div class="section-kicker">Repos</div>
+              <h2>Where the work happened</h2>
+            </div>
+          </div>
+          <div class="repo-grid">
+            {% for repo in context.repo_insights %}
+            <article class="repo-card">
+              <div class="repo-head">
+                <div class="repo-copy">
+                  <div class="repo-kpi">{{ repo.primary_language or 'Mixed stack' }}</div>
+                  <h3><a href="{{ repo.url }}">{{ repo.full_name }}</a></h3>
+                  <p>{{ repo.description or 'No repository description provided.' }}</p>
+                </div>
+                <div class="warning-list">
+                  <span class="chip">{{ repo.stars }} stars</span>
+                  <span class="chip">{{ repo.forks }} forks</span>
+                </div>
+              </div>
+              <div class="warning-list">
+                <span class="chip">{{ repo.activity.commits }} commits</span>
+                <span class="chip">{{ repo.activity.pull_requests }} PRs</span>
+                <span class="chip">{{ repo.activity.issues }} issues</span>
+                <span class="chip">{{ repo.activity.reviews }} reviews</span>
+              </div>
+              <div class="warning-list">
+                {% for note in repo.highlights %}
+                <span class="chip">{{ note }}</span>
+                {% endfor %}
+              </div>
+            </article>
+            {% endfor %}
+          </div>
+        </section>
+
+        {% if context.warnings %}
+        <section class="panel">
+          <div class="section-head">
+            <div>
+              <div class="section-kicker">Notes</div>
+              <h2>Warnings and caveats</h2>
+            </div>
+          </div>
+          <div class="chart-stack">
+            {% for warning in context.warnings %}
+            <article class="warning">
+              <strong>{{ warning.message }}</strong>
+              {% if warning.details %}<p>{{ warning.details }}</p>{% endif %}
+            </article>
+            {% endfor %}
+          </div>
+        </section>
+        {% endif %}
+
+        <footer class="footer-links">
+          <div>Built with {{ context.meta.generator.name }} {{ context.meta.generator.version }}</div>
+          <div>
+            <a href="{{ context.meta.links.repository_url }}">{{ context.meta.links.repository_label }}</a>
+            &middot;
+            <a href="{{ context.meta.links.ussyverse_url }}">{{ context.meta.links.ussyverse_label }}</a>
+          </div>
+        </footer>
+      </div>
+    </main>
+
+    <script>
+      const payload = {{ chart_payload_json|safe }};
+
+      const sharedOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            labels: {
+              color: '#18222f',
+              font: { family: 'Space Grotesk, Trebuchet MS, sans-serif' }
+            }
+          }
+        },
+        scales: {
+          x: {
+            ticks: { color: '#526171', maxTicksLimit: 8 },
+            grid: { color: 'rgba(24,34,47,0.08)' }
+          },
+          y: {
+            ticks: { color: '#526171' },
+            grid: { color: 'rgba(24,34,47,0.08)' }
+          }
+        }
+      };
+
+      new Chart(document.getElementById('commitsChart'), {
+        type: 'line',
+        data: {
+          labels: payload.commits.labels,
+          datasets: payload.commits.series.map((series) => ({
+            label: series.label,
+            data: series.values,
+            borderColor: series.color,
+            backgroundColor: `${series.color}22`,
+            fill: true,
+            tension: 0.35,
+            pointRadius: 0,
+            borderWidth: 3,
+          }))
+        },
+        options: sharedOptions,
+      });
+
+      new Chart(document.getElementById('locChart'), {
+        type: 'bar',
+        data: {
+          labels: payload.loc.labels,
+          datasets: payload.loc.series.map((series) => ({
+            label: series.label,
+            data: series.values,
+            backgroundColor: series.color,
+            borderRadius: 10,
+          }))
+        },
+        options: sharedOptions,
+      });
+
+      new Chart(document.getElementById('languageChart'), {
+        type: 'pie',
+        data: {
+          labels: payload.languages.labels,
+          datasets: [{
+            data: payload.languages.values,
+            backgroundColor: payload.languages.colors,
+            borderWidth: 0,
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: {
+                color: '#18222f',
+                usePointStyle: true,
+                padding: 16,
+                font: { family: 'Space Grotesk, Trebuchet MS, sans-serif' }
+              }
+            }
+          }
+        }
+      });
+    </script>
+  </body>
+</html>

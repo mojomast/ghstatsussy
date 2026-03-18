@@ -1,0 +1,5217 @@
+{
+  "dataset": {
+    "viewer": {
+      "login": "mojomast",
+      "name": "Kyle Durepos",
+      "url": "https://github.com/mojomast",
+      "avatar_url": "https://avatars.githubusercontent.com/u/76818041?u=fb0c8d9fb783940fbbe5c2f63c3f5cc36b89e426&v=4"
+    },
+    "start_at": "2026-02-17T00:00:00+00:00",
+    "end_at": "2026-03-18T17:16:35+00:00",
+    "include_private": false,
+    "repos": [
+      {
+        "id": "R_kgDORQsUgg",
+        "name": "openclawssy",
+        "name_with_owner": "mojomast/openclawssy",
+        "owner_login": "mojomast",
+        "url": "https://github.com/mojomast/openclawssy",
+        "description": "PROTOTYPE IN DEVELOPMENT: experimental AI harness/runtime with major rough edges. Do NOT use in production; honestly most people should not use this (or OpenClaw) yet.",
+        "is_private": false,
+        "is_fork": false,
+        "primary_language": "Go",
+        "primary_language_color": "#00ADD8",
+        "stargazer_count": 4,
+        "fork_count": 2,
+        "pushed_at": "2026-03-17T20:13:46+00:00",
+        "languages": [
+          {
+            "name": "Go",
+            "color": "#00ADD8",
+            "size": 2498571
+          },
+          {
+            "name": "TypeScript",
+            "color": "#3178c6",
+            "size": 1069502
+          },
+          {
+            "name": "Python",
+            "color": "#3572A5",
+            "size": 28987
+          },
+          {
+            "name": "Shell",
+            "color": "#89e051",
+            "size": 17817
+          },
+          {
+            "name": "CSS",
+            "color": "#663399",
+            "size": 5458
+          },
+          {
+            "name": "JavaScript",
+            "color": "#f1e05a",
+            "size": 5318
+          }
+        ],
+        "commit_contributions": 30,
+        "issue_contributions": 0,
+        "pull_request_contributions": 36,
+        "review_contributions": 0
+      },
+      {
+        "id": "R_kgDONIq5lA",
+        "name": "Roo-Code",
+        "name_with_owner": "RooCodeInc/Roo-Code",
+        "owner_login": "RooCodeInc",
+        "url": "https://github.com/RooCodeInc/Roo-Code",
+        "description": "Roo Code gives you a whole dev team of AI agents in your code editor.",
+        "is_private": false,
+        "is_fork": false,
+        "primary_language": "TypeScript",
+        "primary_language_color": "#3178c6",
+        "stargazer_count": 22725,
+        "fork_count": 2914,
+        "pushed_at": "2026-03-18T14:50:04+00:00",
+        "languages": [],
+        "commit_contributions": 0,
+        "issue_contributions": 26,
+        "pull_request_contributions": 1,
+        "review_contributions": 0
+      },
+      {
+        "id": "R_kgDOQ5X0Yw",
+        "name": "ragussy",
+        "name_with_owner": "mojomast/ragussy",
+        "owner_login": "mojomast",
+        "url": "https://github.com/mojomast/ragussy",
+        "description": "A universal RAG chatbot with full management UI. Point it at your markdown docs and get an AI-powered Q&A system with complete control over configuration, documents, and vector storage.",
+        "is_private": false,
+        "is_fork": false,
+        "primary_language": "TypeScript",
+        "primary_language_color": "#3178c6",
+        "stargazer_count": 1,
+        "fork_count": 0,
+        "pushed_at": "2026-03-05T02:17:31+00:00",
+        "languages": [
+          {
+            "name": "TypeScript",
+            "color": "#3178c6",
+            "size": 262034
+          },
+          {
+            "name": "Python",
+            "color": "#3572A5",
+            "size": 79335
+          },
+          {
+            "name": "Shell",
+            "color": "#89e051",
+            "size": 2298
+          },
+          {
+            "name": "CSS",
+            "color": "#663399",
+            "size": 1324
+          },
+          {
+            "name": "JavaScript",
+            "color": "#f1e05a",
+            "size": 1162
+          },
+          {
+            "name": "Dockerfile",
+            "color": "#384d54",
+            "size": 671
+          }
+        ],
+        "commit_contributions": 2,
+        "issue_contributions": 0,
+        "pull_request_contributions": 2,
+        "review_contributions": 0
+      },
+      {
+        "id": "R_kgDORE-XSg",
+        "name": "clawdeck",
+        "name_with_owner": "clawdeckio/clawdeck",
+        "owner_login": "clawdeckio",
+        "url": "https://github.com/clawdeckio/clawdeck",
+        "description": "Open source mission control for your OpenClaw agents \ud83e\udd9e",
+        "is_private": false,
+        "is_fork": false,
+        "primary_language": "HTML",
+        "primary_language_color": "#e34c26",
+        "stargazer_count": 319,
+        "fork_count": 59,
+        "pushed_at": "2026-02-27T06:35:32+00:00",
+        "languages": [],
+        "commit_contributions": 0,
+        "issue_contributions": 0,
+        "pull_request_contributions": 1,
+        "review_contributions": 0
+      },
+      {
+        "id": "R_kgDORWarzA",
+        "name": "uberclawcontrol",
+        "name_with_owner": "mojomast/uberclawcontrol",
+        "owner_login": "mojomast",
+        "url": "https://github.com/mojomast/uberclawcontrol",
+        "description": "Open source mission control for your OpenClaw agents \ud83e\udd9e",
+        "is_private": false,
+        "is_fork": true,
+        "primary_language": "HTML",
+        "primary_language_color": "#e34c26",
+        "stargazer_count": 1,
+        "fork_count": 0,
+        "pushed_at": "2026-02-23T01:36:56+00:00",
+        "languages": [
+          {
+            "name": "HTML",
+            "color": "#e34c26",
+            "size": 189657
+          },
+          {
+            "name": "Ruby",
+            "color": "#701516",
+            "size": 140984
+          },
+          {
+            "name": "JavaScript",
+            "color": "#f1e05a",
+            "size": 72502
+          },
+          {
+            "name": "CSS",
+            "color": "#663399",
+            "size": 4711
+          },
+          {
+            "name": "Shell",
+            "color": "#89e051",
+            "size": 4461
+          }
+        ],
+        "commit_contributions": 0,
+        "issue_contributions": 0,
+        "pull_request_contributions": 1,
+        "review_contributions": 0
+      },
+      {
+        "id": "R_kgDORqDQlg",
+        "name": "Tchaikovskussy",
+        "name_with_owner": "mojomast/Tchaikovskussy",
+        "owner_login": "mojomast",
+        "url": "https://github.com/mojomast/Tchaikovskussy",
+        "description": "Communication-first multilingual chat with BabelFish-style per-user translation, shared translation caching, and admin-controlled model routing.",
+        "is_private": false,
+        "is_fork": false,
+        "primary_language": "Python",
+        "primary_language_color": "#3572A5",
+        "stargazer_count": 2,
+        "fork_count": 0,
+        "pushed_at": "2026-03-18T15:06:19+00:00",
+        "languages": [
+          {
+            "name": "Python",
+            "color": "#3572A5",
+            "size": 89262
+          },
+          {
+            "name": "TypeScript",
+            "color": "#3178c6",
+            "size": 88216
+          },
+          {
+            "name": "CSS",
+            "color": "#663399",
+            "size": 564
+          },
+          {
+            "name": "HTML",
+            "color": "#e34c26",
+            "size": 410
+          },
+          {
+            "name": "JavaScript",
+            "color": "#f1e05a",
+            "size": 262
+          }
+        ],
+        "commit_contributions": 0,
+        "issue_contributions": 0,
+        "pull_request_contributions": 0,
+        "review_contributions": 0
+      },
+      {
+        "id": "R_kgDORi2T3A",
+        "name": "diffusionchatussy",
+        "name_with_owner": "mojomast/diffusionchatussy",
+        "owner_login": "mojomast",
+        "url": "https://github.com/mojomast/diffusionchatussy",
+        "description": "Chat where every message is tone-rewritten by an LLM. Uses Mercury 2 (diffusion LLM) to stream real denoising steps live \u2014 watch text resolve from noise into the room's vibe. FastAPI + React + WebSocket.",
+        "is_private": false,
+        "is_fork": false,
+        "primary_language": "TypeScript",
+        "primary_language_color": "#3178c6",
+        "stargazer_count": 0,
+        "fork_count": 0,
+        "pushed_at": "2026-03-18T03:24:33+00:00",
+        "languages": [
+          {
+            "name": "TypeScript",
+            "color": "#3178c6",
+            "size": 95220
+          },
+          {
+            "name": "Python",
+            "color": "#3572A5",
+            "size": 90722
+          },
+          {
+            "name": "CSS",
+            "color": "#663399",
+            "size": 564
+          },
+          {
+            "name": "HTML",
+            "color": "#e34c26",
+            "size": 404
+          },
+          {
+            "name": "JavaScript",
+            "color": "#f1e05a",
+            "size": 262
+          }
+        ],
+        "commit_contributions": 0,
+        "issue_contributions": 0,
+        "pull_request_contributions": 0,
+        "review_contributions": 0
+      },
+      {
+        "id": "R_kgDOO5ZloA",
+        "name": "LLM-API-Key-Proxy",
+        "name_with_owner": "Mirrowel/LLM-API-Key-Proxy",
+        "owner_login": "Mirrowel",
+        "url": "https://github.com/Mirrowel/LLM-API-Key-Proxy",
+        "description": "Universal LLM Gateway: One API, every LLM. OpenAI/Anthropic-compatible endpoints with multi-provider translation and intelligent load-balancing.",
+        "is_private": false,
+        "is_fork": false,
+        "primary_language": "Python",
+        "primary_language_color": "#3572A5",
+        "stargazer_count": 428,
+        "fork_count": 77,
+        "pushed_at": "2026-03-16T21:32:56+00:00",
+        "languages": [
+          {
+            "name": "Python",
+            "color": "#3572A5",
+            "size": 2105034
+          },
+          {
+            "name": "Dockerfile",
+            "color": "#384d54",
+            "size": 1150
+          }
+        ],
+        "commit_contributions": 0,
+        "issue_contributions": 0,
+        "pull_request_contributions": 0,
+        "review_contributions": 0
+      },
+      {
+        "id": "R_kgDORmVE_A",
+        "name": "templeossy",
+        "name_with_owner": "mojomast/templeossy",
+        "owner_login": "mojomast",
+        "url": "https://github.com/mojomast/templeossy",
+        "description": "Browser-hosted QEMU compiled to WebAssembly for 64-bit x86 guest operating systems",
+        "is_private": false,
+        "is_fork": false,
+        "primary_language": "JavaScript",
+        "primary_language_color": "#f1e05a",
+        "stargazer_count": 0,
+        "fork_count": 0,
+        "pushed_at": "2026-03-13T20:30:32+00:00",
+        "languages": [
+          {
+            "name": "JavaScript",
+            "color": "#f1e05a",
+            "size": 279320
+          },
+          {
+            "name": "TypeScript",
+            "color": "#3178c6",
+            "size": 232234
+          },
+          {
+            "name": "Shell",
+            "color": "#89e051",
+            "size": 20884
+          },
+          {
+            "name": "Dockerfile",
+            "color": "#384d54",
+            "size": 11280
+          },
+          {
+            "name": "C",
+            "color": "#555555",
+            "size": 8823
+          },
+          {
+            "name": "CSS",
+            "color": "#663399",
+            "size": 8275
+          }
+        ],
+        "commit_contributions": 0,
+        "issue_contributions": 0,
+        "pull_request_contributions": 0,
+        "review_contributions": 0
+      },
+      {
+        "id": "R_kgDORkimGw",
+        "name": "dashboardussy",
+        "name_with_owner": "mojomast/dashboardussy",
+        "owner_login": "mojomast",
+        "url": "https://github.com/mojomast/dashboardussy",
+        "description": "A Flask-based VPS operations dashboard for comparing local and remote Linux hosts with movable widgets, network visibility, firewall posture, and Fail2Ban status.",
+        "is_private": false,
+        "is_fork": false,
+        "primary_language": "Python",
+        "primary_language_color": "#3572A5",
+        "stargazer_count": 2,
+        "fork_count": 0,
+        "pushed_at": "2026-03-11T19:09:12+00:00",
+        "languages": [
+          {
+            "name": "Python",
+            "color": "#3572A5",
+            "size": 206858
+          },
+          {
+            "name": "HTML",
+            "color": "#e34c26",
+            "size": 101572
+          },
+          {
+            "name": "Shell",
+            "color": "#89e051",
+            "size": 1750
+          }
+        ],
+        "commit_contributions": 0,
+        "issue_contributions": 0,
+        "pull_request_contributions": 0,
+        "review_contributions": 0
+      },
+      {
+        "id": "R_kgDORj4V_g",
+        "name": "fruityboofs",
+        "name_with_owner": "mojomast/fruityboofs",
+        "owner_login": "mojomast",
+        "url": "https://github.com/mojomast/fruityboofs",
+        "description": "Browser-based vocal synth DAW built around Paul Batchelor's WASM engines from pbat.ch/recurse/demos. Step sequencer, transport, MIDI, save/load. We love you Paul.",
+        "is_private": false,
+        "is_fork": false,
+        "primary_language": "JavaScript",
+        "primary_language_color": "#f1e05a",
+        "stargazer_count": 0,
+        "fork_count": 0,
+        "pushed_at": "2026-03-11T14:55:18+00:00",
+        "languages": [
+          {
+            "name": "JavaScript",
+            "color": "#f1e05a",
+            "size": 202438
+          },
+          {
+            "name": "CSS",
+            "color": "#663399",
+            "size": 30838
+          },
+          {
+            "name": "HTML",
+            "color": "#e34c26",
+            "size": 14845
+          },
+          {
+            "name": "Python",
+            "color": "#3572A5",
+            "size": 1183
+          }
+        ],
+        "commit_contributions": 0,
+        "issue_contributions": 0,
+        "pull_request_contributions": 0,
+        "review_contributions": 0
+      },
+      {
+        "id": "R_kgDORgSZ8Q",
+        "name": "365compromisesleuth",
+        "name_with_owner": "mojomast/365compromisesleuth",
+        "owner_login": "mojomast",
+        "url": "https://github.com/mojomast/365compromisesleuth",
+        "description": "Read-only M365 compromise evidence collection tool for incident response. Collects Entra ID and Exchange Online forensic data into structured case folders.",
+        "is_private": false,
+        "is_fork": false,
+        "primary_language": "PowerShell",
+        "primary_language_color": "#012456",
+        "stargazer_count": 0,
+        "fork_count": 0,
+        "pushed_at": "2026-03-09T18:02:46+00:00",
+        "languages": [
+          {
+            "name": "PowerShell",
+            "color": "#012456",
+            "size": 217771
+          }
+        ],
+        "commit_contributions": 0,
+        "issue_contributions": 0,
+        "pull_request_contributions": 0,
+        "review_contributions": 0
+      },
+      {
+        "id": "R_kgDORgme0A",
+        "name": "ussycodeproxy",
+        "name_with_owner": "mojomast/ussycodeproxy",
+        "owner_login": "mojomast",
+        "url": "https://github.com/mojomast/ussycodeproxy",
+        "description": "ussyco.de webring API + automatic subdomain provisioning service",
+        "is_private": false,
+        "is_fork": false,
+        "primary_language": "HTML",
+        "primary_language_color": "#e34c26",
+        "stargazer_count": 0,
+        "fork_count": 0,
+        "pushed_at": "2026-03-07T22:36:06+00:00",
+        "languages": [
+          {
+            "name": "HTML",
+            "color": "#e34c26",
+            "size": 145641
+          },
+          {
+            "name": "Go",
+            "color": "#00ADD8",
+            "size": 73240
+          },
+          {
+            "name": "CSS",
+            "color": "#663399",
+            "size": 29580
+          },
+          {
+            "name": "Shell",
+            "color": "#89e051",
+            "size": 1156
+          }
+        ],
+        "commit_contributions": 0,
+        "issue_contributions": 0,
+        "pull_request_contributions": 0,
+        "review_contributions": 0
+      },
+      {
+        "id": "R_kgDORgh4Rg",
+        "name": "ussyring",
+        "name_with_owner": "mojomast/ussyring",
+        "owner_login": "mojomast",
+        "url": "https://github.com/mojomast/ussyring",
+        "description": "A simple webring API and embeddable widget. Join the ussy.host + lesbianguide.de webring! Discord: https://discord.gg/6b2Ej3rS3q",
+        "is_private": false,
+        "is_fork": false,
+        "primary_language": "Python",
+        "primary_language_color": "#3572A5",
+        "stargazer_count": 1,
+        "fork_count": 0,
+        "pushed_at": "2026-03-07T03:27:43+00:00",
+        "languages": [
+          {
+            "name": "Python",
+            "color": "#3572A5",
+            "size": 7177
+          },
+          {
+            "name": "JavaScript",
+            "color": "#f1e05a",
+            "size": 6609
+          }
+        ],
+        "commit_contributions": 0,
+        "issue_contributions": 0,
+        "pull_request_contributions": 0,
+        "review_contributions": 0
+      },
+      {
+        "id": "R_kgDORgcoUw",
+        "name": "becomussy",
+        "name_with_owner": "mojomast/becomussy",
+        "owner_login": "mojomast",
+        "url": "https://github.com/mojomast/becomussy",
+        "description": "A governed continuity system for agent self-development \u2014 persistent memory, reflection journals, versioned self-model with semantic diffing, and human-gated revision proposals. Built with FastAPI, PostgreSQL, and Next.js.",
+        "is_private": false,
+        "is_fork": false,
+        "primary_language": "Python",
+        "primary_language_color": "#3572A5",
+        "stargazer_count": 0,
+        "fork_count": 0,
+        "pushed_at": "2026-03-06T23:57:47+00:00",
+        "languages": [
+          {
+            "name": "Python",
+            "color": "#3572A5",
+            "size": 280227
+          },
+          {
+            "name": "TypeScript",
+            "color": "#3178c6",
+            "size": 131913
+          },
+          {
+            "name": "Mako",
+            "color": "#7e858d",
+            "size": 635
+          },
+          {
+            "name": "Dockerfile",
+            "color": "#384d54",
+            "size": 557
+          },
+          {
+            "name": "CSS",
+            "color": "#663399",
+            "size": 504
+          },
+          {
+            "name": "JavaScript",
+            "color": "#f1e05a",
+            "size": 81
+          }
+        ],
+        "commit_contributions": 0,
+        "issue_contributions": 0,
+        "pull_request_contributions": 0,
+        "review_contributions": 0
+      },
+      {
+        "id": "R_kgDOQ-tGTw",
+        "name": "llmproxy",
+        "name_with_owner": "mojomast/llmproxy",
+        "owner_login": "mojomast",
+        "url": "https://github.com/mojomast/llmproxy",
+        "description": "Universal LLM Gateway: One API, every LLM. OpenAI/Anthropic-compatible endpoints with multi-provider translation and intelligent load-balancing.",
+        "is_private": false,
+        "is_fork": true,
+        "primary_language": "Python",
+        "primary_language_color": "#3572A5",
+        "stargazer_count": 0,
+        "fork_count": 0,
+        "pushed_at": "2026-03-05T15:48:10+00:00",
+        "languages": [
+          {
+            "name": "Python",
+            "color": "#3572A5",
+            "size": 2139360
+          },
+          {
+            "name": "Dockerfile",
+            "color": "#384d54",
+            "size": 1150
+          }
+        ],
+        "commit_contributions": 0,
+        "issue_contributions": 0,
+        "pull_request_contributions": 0,
+        "review_contributions": 0
+      },
+      {
+        "id": "R_kgDORewPVw",
+        "name": "pfsense",
+        "name_with_owner": "mojomast/pfsense",
+        "owner_login": "mojomast",
+        "url": "https://github.com/mojomast/pfsense",
+        "description": "Main repository for pfSense",
+        "is_private": false,
+        "is_fork": true,
+        "primary_language": "PHP",
+        "primary_language_color": "#4F5D95",
+        "stargazer_count": 0,
+        "fork_count": 0,
+        "pushed_at": "2026-03-05T00:18:54+00:00",
+        "languages": [
+          {
+            "name": "PHP",
+            "color": "#4F5D95",
+            "size": 6824137
+          },
+          {
+            "name": "Shell",
+            "color": "#89e051",
+            "size": 269714
+          },
+          {
+            "name": "JavaScript",
+            "color": "#f1e05a",
+            "size": 75355
+          },
+          {
+            "name": "CSS",
+            "color": "#663399",
+            "size": 46201
+          },
+          {
+            "name": "Python",
+            "color": "#3572A5",
+            "size": 15224
+          },
+          {
+            "name": "ECL",
+            "color": "#8a1267",
+            "size": 7575
+          }
+        ],
+        "commit_contributions": 0,
+        "issue_contributions": 0,
+        "pull_request_contributions": 0,
+        "review_contributions": 0
+      },
+      {
+        "id": "R_kgDORYPeyw",
+        "name": "openclawremoteussy",
+        "name_with_owner": "mojomast/openclawremoteussy",
+        "owner_login": "mojomast",
+        "url": "https://github.com/mojomast/openclawremoteussy",
+        "description": "Production-grade standalone OpenClaw remote gateway integration CLI/service for Openclawssy.",
+        "is_private": false,
+        "is_fork": false,
+        "primary_language": "Go",
+        "primary_language_color": "#00ADD8",
+        "stargazer_count": 0,
+        "fork_count": 0,
+        "pushed_at": "2026-02-25T03:39:51+00:00",
+        "languages": [
+          {
+            "name": "Go",
+            "color": "#00ADD8",
+            "size": 44010
+          }
+        ],
+        "commit_contributions": 0,
+        "issue_contributions": 0,
+        "pull_request_contributions": 0,
+        "review_contributions": 0
+      },
+      {
+        "id": "R_kgDOPqtm4A",
+        "name": "roo-code-cloud-alternate-auth",
+        "name_with_owner": "mojomast/roo-code-cloud-alternate-auth",
+        "owner_login": "mojomast",
+        "url": "https://github.com/mojomast/roo-code-cloud-alternate-auth",
+        "description": "Roo Code gives you a whole dev team of AI agents in your code editor.",
+        "is_private": false,
+        "is_fork": true,
+        "primary_language": "TypeScript",
+        "primary_language_color": "#3178c6",
+        "stargazer_count": 0,
+        "fork_count": 1,
+        "pushed_at": "2026-02-22T17:52:07+00:00",
+        "languages": [
+          {
+            "name": "TypeScript",
+            "color": "#3178c6",
+            "size": 8356567
+          },
+          {
+            "name": "JavaScript",
+            "color": "#f1e05a",
+            "size": 60110
+          },
+          {
+            "name": "CSS",
+            "color": "#663399",
+            "size": 58948
+          },
+          {
+            "name": "Shell",
+            "color": "#89e051",
+            "size": 14956
+          },
+          {
+            "name": "HTML",
+            "color": "#e34c26",
+            "size": 282
+          }
+        ],
+        "commit_contributions": 0,
+        "issue_contributions": 0,
+        "pull_request_contributions": 0,
+        "review_contributions": 0
+      },
+      {
+        "id": "R_kgDORWNu7A",
+        "name": "opencode",
+        "name_with_owner": "mojomast/opencode",
+        "owner_login": "mojomast",
+        "url": "https://github.com/mojomast/opencode",
+        "description": "The open source coding agent.",
+        "is_private": false,
+        "is_fork": true,
+        "primary_language": "TypeScript",
+        "primary_language_color": "#3178c6",
+        "stargazer_count": 0,
+        "fork_count": 0,
+        "pushed_at": "2026-02-22T17:36:08+00:00",
+        "languages": [
+          {
+            "name": "TypeScript",
+            "color": "#3178c6",
+            "size": 7800673
+          },
+          {
+            "name": "MDX",
+            "color": "#fcb32c",
+            "size": 6763284
+          },
+          {
+            "name": "CSS",
+            "color": "#663399",
+            "size": 492525
+          },
+          {
+            "name": "Rust",
+            "color": "#dea584",
+            "size": 77217
+          },
+          {
+            "name": "Astro",
+            "color": "#ff5a03",
+            "size": 31596
+          },
+          {
+            "name": "JavaScript",
+            "color": "#f1e05a",
+            "size": 22036
+          }
+        ],
+        "commit_contributions": 0,
+        "issue_contributions": 0,
+        "pull_request_contributions": 0,
+        "review_contributions": 0
+      },
+      {
+        "id": "R_kgDORV0AhQ",
+        "name": "topussy",
+        "name_with_owner": "mojomast/topussy",
+        "owner_login": "mojomast",
+        "url": "https://github.com/mojomast/topussy",
+        "description": "Ussycoded btop-style OpenTUI monitor with multi-host remote mode, process tree, signals, and Linux metrics",
+        "is_private": false,
+        "is_fork": false,
+        "primary_language": "TypeScript",
+        "primary_language_color": "#3178c6",
+        "stargazer_count": 0,
+        "fork_count": 1,
+        "pushed_at": "2026-02-22T03:23:37+00:00",
+        "languages": [
+          {
+            "name": "TypeScript",
+            "color": "#3178c6",
+            "size": 135357
+          }
+        ],
+        "commit_contributions": 0,
+        "issue_contributions": 0,
+        "pull_request_contributions": 0,
+        "review_contributions": 0
+      },
+      {
+        "id": "R_kgDORDwHAg",
+        "name": "geoffrussy",
+        "name_with_owner": "mojomast/geoffrussy",
+        "owner_login": "mojomast",
+        "url": "https://github.com/mojomast/geoffrussy",
+        "description": "Go 1.24 AI-driven software delivery orchestrator that guides projects through a staged pipeline (interview \u2192 design \u2192 plan \u2192 review \u2192 develop). It uses SQLite (via mattn/go-sqlite3, requires CGO), Cobra for CLI, Bubbletea for TUI, and supports 16 AI providers via an OpenAI-compatible interface pattern.",
+        "is_private": false,
+        "is_fork": false,
+        "primary_language": "Go",
+        "primary_language_color": "#00ADD8",
+        "stargazer_count": 2,
+        "fork_count": 0,
+        "pushed_at": "2026-02-13T20:10:52+00:00",
+        "languages": [
+          {
+            "name": "Go",
+            "color": "#00ADD8",
+            "size": 1395099
+          },
+          {
+            "name": "JavaScript",
+            "color": "#f1e05a",
+            "size": 19977
+          },
+          {
+            "name": "Shell",
+            "color": "#89e051",
+            "size": 16237
+          },
+          {
+            "name": "Python",
+            "color": "#3572A5",
+            "size": 14825
+          },
+          {
+            "name": "CSS",
+            "color": "#663399",
+            "size": 4079
+          },
+          {
+            "name": "Makefile",
+            "color": "#427819",
+            "size": 3824
+          }
+        ],
+        "commit_contributions": 0,
+        "issue_contributions": 0,
+        "pull_request_contributions": 0,
+        "review_contributions": 0
+      },
+      {
+        "id": "R_kgDOROTTzw",
+        "name": "STARDUSTUSSY",
+        "name_with_owner": "mojomast/STARDUSTUSSY",
+        "owner_login": "mojomast",
+        "url": "https://github.com/mojomast/STARDUSTUSSY",
+        "description": "a security research proof of concept project",
+        "is_private": false,
+        "is_fork": false,
+        "primary_language": "TypeScript",
+        "primary_language_color": "#3178c6",
+        "stargazer_count": 0,
+        "fork_count": 0,
+        "pushed_at": "2026-02-12T01:51:47+00:00",
+        "languages": [
+          {
+            "name": "TypeScript",
+            "color": "#3178c6",
+            "size": 1185008
+          },
+          {
+            "name": "Go",
+            "color": "#00ADD8",
+            "size": 349110
+          },
+          {
+            "name": "Shell",
+            "color": "#89e051",
+            "size": 94491
+          },
+          {
+            "name": "JavaScript",
+            "color": "#f1e05a",
+            "size": 56929
+          },
+          {
+            "name": "CSS",
+            "color": "#663399",
+            "size": 44883
+          },
+          {
+            "name": "HCL",
+            "color": "#844FBA",
+            "size": 18804
+          }
+        ],
+        "commit_contributions": 0,
+        "issue_contributions": 0,
+        "pull_request_contributions": 0,
+        "review_contributions": 0
+      },
+      {
+        "id": "R_kgDORKXe2g",
+        "name": "ussyverse-monitor",
+        "name_with_owner": "mojomast/ussyverse-monitor",
+        "owner_login": "mojomast",
+        "url": "https://github.com/mojomast/ussyverse-monitor",
+        "description": null,
+        "is_private": false,
+        "is_fork": false,
+        "primary_language": "JavaScript",
+        "primary_language_color": "#f1e05a",
+        "stargazer_count": 0,
+        "fork_count": 0,
+        "pushed_at": "2026-02-06T22:01:00+00:00",
+        "languages": [
+          {
+            "name": "JavaScript",
+            "color": "#f1e05a",
+            "size": 49013
+          },
+          {
+            "name": "HTML",
+            "color": "#e34c26",
+            "size": 19325
+          },
+          {
+            "name": "Shell",
+            "color": "#89e051",
+            "size": 1860
+          }
+        ],
+        "commit_contributions": 0,
+        "issue_contributions": 0,
+        "pull_request_contributions": 0,
+        "review_contributions": 0
+      },
+      {
+        "id": "R_kgDORHO53Q",
+        "name": "onno",
+        "name_with_owner": "mojomast/onno",
+        "owner_login": "mojomast",
+        "url": "https://github.com/mojomast/onno",
+        "description": "AI-Driven Quality Assurance workspace for OpenClaw. Built in public.",
+        "is_private": false,
+        "is_fork": true,
+        "primary_language": "HTML",
+        "primary_language_color": "#e34c26",
+        "stargazer_count": 0,
+        "fork_count": 0,
+        "pushed_at": "2026-02-03T00:54:42+00:00",
+        "languages": [
+          {
+            "name": "HTML",
+            "color": "#e34c26",
+            "size": 22264
+          }
+        ],
+        "commit_contributions": 0,
+        "issue_contributions": 0,
+        "pull_request_contributions": 0,
+        "review_contributions": 0
+      },
+      {
+        "id": "R_kgDORC-BDg",
+        "name": "sigintussy",
+        "name_with_owner": "mojomast/sigintussy",
+        "owner_login": "mojomast",
+        "url": "https://github.com/mojomast/sigintussy",
+        "description": null,
+        "is_private": false,
+        "is_fork": false,
+        "primary_language": "TypeScript",
+        "primary_language_color": "#3178c6",
+        "stargazer_count": 0,
+        "fork_count": 0,
+        "pushed_at": "2026-01-30T06:53:17+00:00",
+        "languages": [
+          {
+            "name": "TypeScript",
+            "color": "#3178c6",
+            "size": 116734
+          },
+          {
+            "name": "CSS",
+            "color": "#663399",
+            "size": 60099
+          },
+          {
+            "name": "HTML",
+            "color": "#e34c26",
+            "size": 56026
+          },
+          {
+            "name": "JavaScript",
+            "color": "#f1e05a",
+            "size": 465
+          }
+        ],
+        "commit_contributions": 0,
+        "issue_contributions": 0,
+        "pull_request_contributions": 0,
+        "review_contributions": 0
+      },
+      {
+        "id": "R_kgDORAGVYQ",
+        "name": "warpussy",
+        "name_with_owner": "mojomast/warpussy",
+        "owner_login": "mojomast",
+        "url": "https://github.com/mojomast/warpussy",
+        "description": "AI-enhanced terminal emulator built as a Go learning project with PTY management and AI integration",
+        "is_private": false,
+        "is_fork": false,
+        "primary_language": "Go",
+        "primary_language_color": "#00ADD8",
+        "stargazer_count": 1,
+        "fork_count": 0,
+        "pushed_at": "2026-01-29T00:26:31+00:00",
+        "languages": [
+          {
+            "name": "Go",
+            "color": "#00ADD8",
+            "size": 165559
+          }
+        ],
+        "commit_contributions": 0,
+        "issue_contributions": 0,
+        "pull_request_contributions": 0,
+        "review_contributions": 0
+      },
+      {
+        "id": "R_kgDOQ-m0Zg",
+        "name": "ralphussy",
+        "name_with_owner": "mojomast/ralphussy",
+        "owner_login": "mojomast",
+        "url": "https://github.com/mojomast/ralphussy",
+        "description": "Ralphussy: The Autonomous AI Coding Toolbelt (CLI + TUI + Swarm)",
+        "is_private": false,
+        "is_fork": false,
+        "primary_language": "Shell",
+        "primary_language_color": "#89e051",
+        "stargazer_count": 0,
+        "fork_count": 0,
+        "pushed_at": "2026-01-29T00:21:23+00:00",
+        "languages": [
+          {
+            "name": "Shell",
+            "color": "#89e051",
+            "size": 663093
+          },
+          {
+            "name": "Python",
+            "color": "#3572A5",
+            "size": 311946
+          },
+          {
+            "name": "JavaScript",
+            "color": "#f1e05a",
+            "size": 172299
+          },
+          {
+            "name": "TypeScript",
+            "color": "#3178c6",
+            "size": 73225
+          },
+          {
+            "name": "Jinja",
+            "color": "#a52a22",
+            "size": 22483
+          }
+        ],
+        "commit_contributions": 0,
+        "issue_contributions": 0,
+        "pull_request_contributions": 0,
+        "review_contributions": 0
+      },
+      {
+        "id": "R_kgDOQ2WO8w",
+        "name": "rooagussy",
+        "name_with_owner": "mojomast/rooagussy",
+        "owner_login": "mojomast",
+        "url": "https://github.com/mojomast/rooagussy",
+        "description": "This is the documentation for Roo Code, an AI-powered autonomous coding agent that lives in your editor.",
+        "is_private": false,
+        "is_fork": true,
+        "primary_language": "TypeScript",
+        "primary_language_color": "#3178c6",
+        "stargazer_count": 0,
+        "fork_count": 0,
+        "pushed_at": "2026-01-09T18:25:46+00:00",
+        "languages": [
+          {
+            "name": "TypeScript",
+            "color": "#3178c6",
+            "size": 214313
+          },
+          {
+            "name": "CSS",
+            "color": "#663399",
+            "size": 75118
+          },
+          {
+            "name": "Shell",
+            "color": "#89e051",
+            "size": 16508
+          },
+          {
+            "name": "JavaScript",
+            "color": "#f1e05a",
+            "size": 8041
+          },
+          {
+            "name": "Dockerfile",
+            "color": "#384d54",
+            "size": 1709
+          },
+          {
+            "name": "Ruby",
+            "color": "#701516",
+            "size": 281
+          }
+        ],
+        "commit_contributions": 0,
+        "issue_contributions": 0,
+        "pull_request_contributions": 0,
+        "review_contributions": 0
+      },
+      {
+        "id": "R_kgDOQuDw0w",
+        "name": "voltronussy",
+        "name_with_owner": "mojomast/voltronussy",
+        "owner_login": "mojomast",
+        "url": "https://github.com/mojomast/voltronussy",
+        "description": " A tiny ECS game engine for friends to build games together. Clone, create a game, add your mechanics, submit a PR. No gatekeeping - your game is your sandbox!",
+        "is_private": false,
+        "is_fork": false,
+        "primary_language": "TypeScript",
+        "primary_language_color": "#3178c6",
+        "stargazer_count": 0,
+        "fork_count": 0,
+        "pushed_at": "2025-12-24T18:45:57+00:00",
+        "languages": [
+          {
+            "name": "TypeScript",
+            "color": "#3178c6",
+            "size": 85978
+          },
+          {
+            "name": "JavaScript",
+            "color": "#f1e05a",
+            "size": 3068
+          },
+          {
+            "name": "HTML",
+            "color": "#e34c26",
+            "size": 2154
+          }
+        ],
+        "commit_contributions": 0,
+        "issue_contributions": 0,
+        "pull_request_contributions": 0,
+        "review_contributions": 0
+      },
+      {
+        "id": "R_kgDOQovNfQ",
+        "name": "SwarmCraft",
+        "name_with_owner": "mojomast/SwarmCraft",
+        "owner_login": "mojomast",
+        "url": "https://github.com/mojomast/SwarmCraft",
+        "description": "Deterministic story-writing engine powered by Grok. Multi-project orchestration with templates + outline grid (threads \u00d7 parts), RAG memory for long-form continuity, and a scan\u2192plan\u2192execute pipeline with a TUI dashboard.",
+        "is_private": false,
+        "is_fork": false,
+        "primary_language": "Python",
+        "primary_language_color": "#3572A5",
+        "stargazer_count": 0,
+        "fork_count": 0,
+        "pushed_at": "2025-12-14T22:22:53+00:00",
+        "languages": [
+          {
+            "name": "Python",
+            "color": "#3572A5",
+            "size": 86428
+          }
+        ],
+        "commit_contributions": 0,
+        "issue_contributions": 0,
+        "pull_request_contributions": 0,
+        "review_contributions": 0
+      },
+      {
+        "id": "R_kgDOQjg0cA",
+        "name": "swarmussy",
+        "name_with_owner": "mojomast/swarmussy",
+        "owner_login": "mojomast",
+        "url": "https://github.com/mojomast/swarmussy",
+        "description": "Experimental multi-agent orchestration framework for collaborative software development. Implements an intelligent agent swarm for distributed development workflows, paired with an in-progress Python terminal UI dashboard for real-time visualization.",
+        "is_private": false,
+        "is_fork": false,
+        "primary_language": "Python",
+        "primary_language_color": "#3572A5",
+        "stargazer_count": 4,
+        "fork_count": 1,
+        "pushed_at": "2025-12-12T04:12:36+00:00",
+        "languages": [
+          {
+            "name": "Python",
+            "color": "#3572A5",
+            "size": 455407
+          },
+          {
+            "name": "JavaScript",
+            "color": "#f1e05a",
+            "size": 251179
+          },
+          {
+            "name": "HTML",
+            "color": "#e34c26",
+            "size": 75175
+          },
+          {
+            "name": "CSS",
+            "color": "#663399",
+            "size": 16878
+          },
+          {
+            "name": "Shell",
+            "color": "#89e051",
+            "size": 5098
+          },
+          {
+            "name": "TypeScript",
+            "color": "#3178c6",
+            "size": 4280
+          }
+        ],
+        "commit_contributions": 0,
+        "issue_contributions": 0,
+        "pull_request_contributions": 0,
+        "review_contributions": 0
+      },
+      {
+        "id": "R_kgDOQkO9cA",
+        "name": "partymemberbotussy",
+        "name_with_owner": "mojomast/partymemberbotussy",
+        "owner_login": "mojomast",
+        "url": "https://github.com/mojomast/partymemberbotussy",
+        "description": null,
+        "is_private": false,
+        "is_fork": false,
+        "primary_language": "Python",
+        "primary_language_color": "#3572A5",
+        "stargazer_count": 0,
+        "fork_count": 0,
+        "pushed_at": "2025-12-07T17:01:54+00:00",
+        "languages": [
+          {
+            "name": "Python",
+            "color": "#3572A5",
+            "size": 76531
+          }
+        ],
+        "commit_contributions": 0,
+        "issue_contributions": 0,
+        "pull_request_contributions": 0,
+        "review_contributions": 0
+      },
+      {
+        "id": "R_kgDOQiOjHQ",
+        "name": "rpg-dm-bot",
+        "name_with_owner": "mojomast/rpg-dm-bot",
+        "owner_login": "mojomast",
+        "url": "https://github.com/mojomast/rpg-dm-bot",
+        "description": "AI-powered Discord bot that serves as a Dungeon Master for tabletop RPG games. This entire project was created by giving Claude Opus 4.5 a single prompt asking it to transform ussybot into an RPG DM bot.",
+        "is_private": false,
+        "is_fork": false,
+        "primary_language": "Python",
+        "primary_language_color": "#3572A5",
+        "stargazer_count": 3,
+        "fork_count": 0,
+        "pushed_at": "2025-12-07T17:01:38+00:00",
+        "languages": [
+          {
+            "name": "Python",
+            "color": "#3572A5",
+            "size": 1062359
+          },
+          {
+            "name": "TypeScript",
+            "color": "#3178c6",
+            "size": 119688
+          },
+          {
+            "name": "HTML",
+            "color": "#e34c26",
+            "size": 77143
+          },
+          {
+            "name": "CSS",
+            "color": "#663399",
+            "size": 42221
+          }
+        ],
+        "commit_contributions": 0,
+        "issue_contributions": 0,
+        "pull_request_contributions": 0,
+        "review_contributions": 0
+      },
+      {
+        "id": "R_kgDOQkLV3Q",
+        "name": "botmanagussy",
+        "name_with_owner": "mojomast/botmanagussy",
+        "owner_login": "mojomast",
+        "url": "https://github.com/mojomast/botmanagussy",
+        "description": null,
+        "is_private": false,
+        "is_fork": false,
+        "primary_language": "Python",
+        "primary_language_color": "#3572A5",
+        "stargazer_count": 0,
+        "fork_count": 0,
+        "pushed_at": "2025-12-07T16:13:23+00:00",
+        "languages": [
+          {
+            "name": "Python",
+            "color": "#3572A5",
+            "size": 26480
+          }
+        ],
+        "commit_contributions": 0,
+        "issue_contributions": 0,
+        "pull_request_contributions": 0,
+        "review_contributions": 0
+      },
+      {
+        "id": "R_kgDOQfjBiw",
+        "name": "ussybiot",
+        "name_with_owner": "mojomast/ussybiot",
+        "owner_login": "mojomast",
+        "url": "https://github.com/mojomast/ussybiot",
+        "description": null,
+        "is_private": false,
+        "is_fork": false,
+        "primary_language": "Python",
+        "primary_language_color": "#3572A5",
+        "stargazer_count": 0,
+        "fork_count": 0,
+        "pushed_at": "2025-12-04T02:58:48+00:00",
+        "languages": [
+          {
+            "name": "Python",
+            "color": "#3572A5",
+            "size": 84160
+          }
+        ],
+        "commit_contributions": 0,
+        "issue_contributions": 0,
+        "pull_request_contributions": 0,
+        "review_contributions": 0
+      },
+      {
+        "id": "R_kgDOQh_e2w",
+        "name": "ussybot",
+        "name_with_owner": "mojomast/ussybot",
+        "owner_login": "mojomast",
+        "url": "https://github.com/mojomast/ussybot",
+        "description": "Ussyverse Discord 'Project of the Week' first weekend project  BRRR Bot",
+        "is_private": false,
+        "is_fork": false,
+        "primary_language": "Python",
+        "primary_language_color": "#3572A5",
+        "stargazer_count": 0,
+        "fork_count": 0,
+        "pushed_at": "2025-12-03T20:21:39+00:00",
+        "languages": [
+          {
+            "name": "Python",
+            "color": "#3572A5",
+            "size": 227687
+          }
+        ],
+        "commit_contributions": 0,
+        "issue_contributions": 0,
+        "pull_request_contributions": 0,
+        "review_contributions": 0
+      },
+      {
+        "id": "R_kgDOQT0MHA",
+        "name": "devussy",
+        "name_with_owner": "mojomast/devussy",
+        "owner_login": "mojomast",
+        "url": "https://github.com/mojomast/devussy",
+        "description": "Devussy \u2014 interview to DevPlan. Multi\u2011stage AI planning pipeline with live progress. Generated devplans can be used with any agent by asking them to read handoff and resume development. circular development go brrrrrrrrrrrr!",
+        "is_private": false,
+        "is_fork": false,
+        "primary_language": "Python",
+        "primary_language_color": "#3572A5",
+        "stargazer_count": 19,
+        "fork_count": 2,
+        "pushed_at": "2025-11-28T05:01:34+00:00",
+        "languages": [
+          {
+            "name": "Python",
+            "color": "#3572A5",
+            "size": 1706512
+          },
+          {
+            "name": "TypeScript",
+            "color": "#3178c6",
+            "size": 453163
+          },
+          {
+            "name": "Jinja",
+            "color": "#a52a22",
+            "size": 71348
+          },
+          {
+            "name": "PowerShell",
+            "color": "#012456",
+            "size": 21174
+          },
+          {
+            "name": "CSS",
+            "color": "#663399",
+            "size": 17315
+          },
+          {
+            "name": "MDX",
+            "color": "#fcb32c",
+            "size": 13063
+          }
+        ],
+        "commit_contributions": 0,
+        "issue_contributions": 0,
+        "pull_request_contributions": 0,
+        "review_contributions": 0
+      },
+      {
+        "id": "R_kgDOQaqVBg",
+        "name": "designussy",
+        "name_with_owner": "mojomast/designussy",
+        "owner_login": "mojomast",
+        "url": "https://github.com/mojomast/designussy",
+        "description": null,
+        "is_private": false,
+        "is_fork": false,
+        "primary_language": "Python",
+        "primary_language_color": "#3572A5",
+        "stargazer_count": 0,
+        "fork_count": 0,
+        "pushed_at": "2025-11-26T23:06:37+00:00",
+        "languages": [
+          {
+            "name": "Python",
+            "color": "#3572A5",
+            "size": 1454541
+          },
+          {
+            "name": "JavaScript",
+            "color": "#f1e05a",
+            "size": 260984
+          },
+          {
+            "name": "HTML",
+            "color": "#e34c26",
+            "size": 126231
+          },
+          {
+            "name": "CSS",
+            "color": "#663399",
+            "size": 63532
+          },
+          {
+            "name": "Vue",
+            "color": "#41b883",
+            "size": 15831
+          },
+          {
+            "name": "PowerShell",
+            "color": "#012456",
+            "size": 1205
+          }
+        ],
+        "commit_contributions": 0,
+        "issue_contributions": 0,
+        "pull_request_contributions": 0,
+        "review_contributions": 0
+      },
+      {
+        "id": "R_kgDOOjlXVA",
+        "name": "scoreboardussy",
+        "name_with_owner": "mojomast/scoreboardussy",
+        "owner_login": "mojomast",
+        "url": "https://github.com/mojomast/scoreboardussy",
+        "description": "A real-time, web-based scoreboard for improv shows with dynamic score tracking, audience interaction, and separate control/display panels. Built with React, Node.js, Express, and Socket.IO.",
+        "is_private": false,
+        "is_fork": false,
+        "primary_language": "TypeScript",
+        "primary_language_color": "#3178c6",
+        "stargazer_count": 4,
+        "fork_count": 0,
+        "pushed_at": "2025-11-21T01:55:51+00:00",
+        "languages": [
+          {
+            "name": "TypeScript",
+            "color": "#3178c6",
+            "size": 401971
+          },
+          {
+            "name": "PowerShell",
+            "color": "#012456",
+            "size": 26566
+          },
+          {
+            "name": "Shell",
+            "color": "#89e051",
+            "size": 11053
+          },
+          {
+            "name": "HTML",
+            "color": "#e34c26",
+            "size": 7794
+          },
+          {
+            "name": "Batchfile",
+            "color": "#C1F12E",
+            "size": 6011
+          },
+          {
+            "name": "Inno Setup",
+            "color": "#264b99",
+            "size": 2961
+          }
+        ],
+        "commit_contributions": 0,
+        "issue_contributions": 0,
+        "pull_request_contributions": 0,
+        "review_contributions": 0
+      },
+      {
+        "id": "R_kgDOQVhFyw",
+        "name": "devussy-testing",
+        "name_with_owner": "mojomast/devussy-testing",
+        "owner_login": "mojomast",
+        "url": "https://github.com/mojomast/devussy-testing",
+        "description": "Devussy - LLM-based development planning tool with terminal streaming UI",
+        "is_private": false,
+        "is_fork": false,
+        "primary_language": "Python",
+        "primary_language_color": "#3572A5",
+        "stargazer_count": 1,
+        "fork_count": 0,
+        "pushed_at": "2025-11-20T21:54:34+00:00",
+        "languages": [
+          {
+            "name": "Python",
+            "color": "#3572A5",
+            "size": 1450980
+          },
+          {
+            "name": "TypeScript",
+            "color": "#3178c6",
+            "size": 175776
+          },
+          {
+            "name": "Jinja",
+            "color": "#a52a22",
+            "size": 62417
+          },
+          {
+            "name": "PowerShell",
+            "color": "#012456",
+            "size": 18342
+          },
+          {
+            "name": "CSS",
+            "color": "#663399",
+            "size": 5617
+          },
+          {
+            "name": "Dockerfile",
+            "color": "#384d54",
+            "size": 1503
+          }
+        ],
+        "commit_contributions": 0,
+        "issue_contributions": 0,
+        "pull_request_contributions": 0,
+        "review_contributions": 0
+      },
+      {
+        "id": "R_kgDOQLyoLg",
+        "name": "agentussy",
+        "name_with_owner": "mojomast/agentussy",
+        "owner_login": "mojomast",
+        "url": "https://github.com/mojomast/agentussy",
+        "description": null,
+        "is_private": false,
+        "is_fork": false,
+        "primary_language": "TypeScript",
+        "primary_language_color": "#3178c6",
+        "stargazer_count": 0,
+        "fork_count": 0,
+        "pushed_at": "2025-10-30T00:40:36+00:00",
+        "languages": [
+          {
+            "name": "TypeScript",
+            "color": "#3178c6",
+            "size": 351735
+          },
+          {
+            "name": "JavaScript",
+            "color": "#f1e05a",
+            "size": 4332
+          },
+          {
+            "name": "Python",
+            "color": "#3572A5",
+            "size": 2976
+          },
+          {
+            "name": "CSS",
+            "color": "#663399",
+            "size": 2819
+          },
+          {
+            "name": "HTML",
+            "color": "#e34c26",
+            "size": 1111
+          }
+        ],
+        "commit_contributions": 0,
+        "issue_contributions": 0,
+        "pull_request_contributions": 0,
+        "review_contributions": 0
+      },
+      {
+        "id": "R_kgDOQLMa7g",
+        "name": "slophero",
+        "name_with_owner": "mojomast/slophero",
+        "owner_login": "mojomast",
+        "url": "https://github.com/mojomast/slophero",
+        "description": "ROO GANG - Infra Extraction Horror. Keep the stack alive. Get the man out.",
+        "is_private": false,
+        "is_fork": false,
+        "primary_language": "TypeScript",
+        "primary_language_color": "#3178c6",
+        "stargazer_count": 0,
+        "fork_count": 0,
+        "pushed_at": "2025-10-29T05:52:18+00:00",
+        "languages": [
+          {
+            "name": "TypeScript",
+            "color": "#3178c6",
+            "size": 53464
+          },
+          {
+            "name": "Ink",
+            "color": null,
+            "size": 33494
+          },
+          {
+            "name": "CSS",
+            "color": "#663399",
+            "size": 14301
+          },
+          {
+            "name": "HTML",
+            "color": "#e34c26",
+            "size": 7118
+          },
+          {
+            "name": "JavaScript",
+            "color": "#f1e05a",
+            "size": 2958
+          }
+        ],
+        "commit_contributions": 0,
+        "issue_contributions": 0,
+        "pull_request_contributions": 0,
+        "review_contributions": 0
+      },
+      {
+        "id": "R_kgDOQGvhRw",
+        "name": "devussy_old",
+        "name_with_owner": "mojomast/devussy_old",
+        "owner_login": "mojomast",
+        "url": "https://github.com/mojomast/devussy_old",
+        "description": null,
+        "is_private": false,
+        "is_fork": false,
+        "primary_language": "Python",
+        "primary_language_color": "#3572A5",
+        "stargazer_count": 2,
+        "fork_count": 0,
+        "pushed_at": "2025-10-23T03:01:07+00:00",
+        "languages": [
+          {
+            "name": "Python",
+            "color": "#3572A5",
+            "size": 679067
+          },
+          {
+            "name": "TypeScript",
+            "color": "#3178c6",
+            "size": 218140
+          },
+          {
+            "name": "Jinja",
+            "color": "#a52a22",
+            "size": 26077
+          },
+          {
+            "name": "PowerShell",
+            "color": "#012456",
+            "size": 5391
+          },
+          {
+            "name": "JavaScript",
+            "color": "#f1e05a",
+            "size": 926
+          },
+          {
+            "name": "CSS",
+            "color": "#663399",
+            "size": 880
+          }
+        ],
+        "commit_contributions": 0,
+        "issue_contributions": 0,
+        "pull_request_contributions": 0,
+        "review_contributions": 0
+      },
+      {
+        "id": "R_kgDOQFgNBQ",
+        "name": "devussy-fresh",
+        "name_with_owner": "mojomast/devussy-fresh",
+        "owner_login": "mojomast",
+        "url": "https://github.com/mojomast/devussy-fresh",
+        "description": null,
+        "is_private": false,
+        "is_fork": false,
+        "primary_language": "Python",
+        "primary_language_color": "#3572A5",
+        "stargazer_count": 0,
+        "fork_count": 0,
+        "pushed_at": "2025-10-20T00:14:26+00:00",
+        "languages": [
+          {
+            "name": "Python",
+            "color": "#3572A5",
+            "size": 369588
+          },
+          {
+            "name": "Jinja",
+            "color": "#a52a22",
+            "size": 19683
+          }
+        ],
+        "commit_contributions": 0,
+        "issue_contributions": 0,
+        "pull_request_contributions": 0,
+        "review_contributions": 0
+      },
+      {
+        "id": "R_kgDOQFgK9w",
+        "name": "testt",
+        "name_with_owner": "mojomast/testt",
+        "owner_login": "mojomast",
+        "url": "https://github.com/mojomast/testt",
+        "description": null,
+        "is_private": false,
+        "is_fork": false,
+        "primary_language": "Python",
+        "primary_language_color": "#3572A5",
+        "stargazer_count": 0,
+        "fork_count": 0,
+        "pushed_at": "2025-10-20T00:12:17+00:00",
+        "languages": [
+          {
+            "name": "Python",
+            "color": "#3572A5",
+            "size": 101
+          }
+        ],
+        "commit_contributions": 0,
+        "issue_contributions": 0,
+        "pull_request_contributions": 0,
+        "review_contributions": 0
+      },
+      {
+        "id": "R_kgDOQFgIng",
+        "name": "devussy-push-test",
+        "name_with_owner": "mojomast/devussy-push-test",
+        "owner_login": "mojomast",
+        "url": "https://github.com/mojomast/devussy-push-test",
+        "description": null,
+        "is_private": false,
+        "is_fork": false,
+        "primary_language": null,
+        "primary_language_color": null,
+        "stargazer_count": 0,
+        "fork_count": 0,
+        "pushed_at": "2025-10-20T00:09:57+00:00",
+        "languages": [],
+        "commit_contributions": 0,
+        "issue_contributions": 0,
+        "pull_request_contributions": 0,
+        "review_contributions": 0
+      },
+      {
+        "id": "R_kgDOQFfsZg",
+        "name": "devussy2",
+        "name_with_owner": "mojomast/devussy2",
+        "owner_login": "mojomast",
+        "url": "https://github.com/mojomast/devussy2",
+        "description": null,
+        "is_private": false,
+        "is_fork": false,
+        "primary_language": null,
+        "primary_language_color": null,
+        "stargazer_count": 0,
+        "fork_count": 0,
+        "pushed_at": "2025-10-19T23:40:23+00:00",
+        "languages": [],
+        "commit_contributions": 0,
+        "issue_contributions": 0,
+        "pull_request_contributions": 0,
+        "review_contributions": 0
+      },
+      {
+        "id": "R_kgDOQFfgzQ",
+        "name": "coderc",
+        "name_with_owner": "mojomast/coderc",
+        "owner_login": "mojomast",
+        "url": "https://github.com/mojomast/coderc",
+        "description": null,
+        "is_private": false,
+        "is_fork": false,
+        "primary_language": "TypeScript",
+        "primary_language_color": "#3178c6",
+        "stargazer_count": 0,
+        "fork_count": 0,
+        "pushed_at": "2025-10-19T23:28:51+00:00",
+        "languages": [
+          {
+            "name": "TypeScript",
+            "color": "#3178c6",
+            "size": 336211
+          },
+          {
+            "name": "JavaScript",
+            "color": "#f1e05a",
+            "size": 4222
+          },
+          {
+            "name": "CSS",
+            "color": "#663399",
+            "size": 1091
+          },
+          {
+            "name": "Dockerfile",
+            "color": "#384d54",
+            "size": 611
+          }
+        ],
+        "commit_contributions": 0,
+        "issue_contributions": 0,
+        "pull_request_contributions": 0,
+        "review_contributions": 0
+      },
+      {
+        "id": "R_kgDOQDaGxQ",
+        "name": "CONTAINERWARZ",
+        "name_with_owner": "mojomast/CONTAINERWARZ",
+        "owner_login": "mojomast",
+        "url": "https://github.com/mojomast/CONTAINERWARZ",
+        "description": null,
+        "is_private": false,
+        "is_fork": false,
+        "primary_language": "TypeScript",
+        "primary_language_color": "#3178c6",
+        "stargazer_count": 0,
+        "fork_count": 0,
+        "pushed_at": "2025-10-16T05:17:25+00:00",
+        "languages": [
+          {
+            "name": "TypeScript",
+            "color": "#3178c6",
+            "size": 66847
+          },
+          {
+            "name": "CSS",
+            "color": "#663399",
+            "size": 11764
+          },
+          {
+            "name": "JavaScript",
+            "color": "#f1e05a",
+            "size": 621
+          },
+          {
+            "name": "HTML",
+            "color": "#e34c26",
+            "size": 358
+          }
+        ],
+        "commit_contributions": 0,
+        "issue_contributions": 0,
+        "pull_request_contributions": 0,
+        "review_contributions": 0
+      },
+      {
+        "id": "R_kgDOP6A2Xg",
+        "name": "voice-rag-devplan-assistant",
+        "name_with_owner": "mojomast/voice-rag-devplan-assistant",
+        "owner_login": "mojomast",
+        "url": "https://github.com/mojomast/voice-rag-devplan-assistant",
+        "description": null,
+        "is_private": false,
+        "is_fork": false,
+        "primary_language": "Python",
+        "primary_language_color": "#3572A5",
+        "stargazer_count": 0,
+        "fork_count": 0,
+        "pushed_at": "2025-10-01T20:52:19+00:00",
+        "languages": [
+          {
+            "name": "Python",
+            "color": "#3572A5",
+            "size": 1737797
+          },
+          {
+            "name": "HCL",
+            "color": "#844FBA",
+            "size": 72454
+          },
+          {
+            "name": "TypeScript",
+            "color": "#3178c6",
+            "size": 13098
+          },
+          {
+            "name": "JavaScript",
+            "color": "#f1e05a",
+            "size": 12516
+          },
+          {
+            "name": "Dockerfile",
+            "color": "#384d54",
+            "size": 1960
+          }
+        ],
+        "commit_contributions": 0,
+        "issue_contributions": 0,
+        "pull_request_contributions": 0,
+        "review_contributions": 0
+      },
+      {
+        "id": "R_kgDOPzMEhQ",
+        "name": "evenia-mudlet-llm",
+        "name_with_owner": "mojomast/evenia-mudlet-llm",
+        "owner_login": "mojomast",
+        "url": "https://github.com/mojomast/evenia-mudlet-llm",
+        "description": null,
+        "is_private": false,
+        "is_fork": false,
+        "primary_language": "Python",
+        "primary_language_color": "#3572A5",
+        "stargazer_count": 1,
+        "fork_count": 0,
+        "pushed_at": "2025-09-19T17:43:12+00:00",
+        "languages": [
+          {
+            "name": "Python",
+            "color": "#3572A5",
+            "size": 6404091
+          },
+          {
+            "name": "JavaScript",
+            "color": "#f1e05a",
+            "size": 256656
+          },
+          {
+            "name": "HTML",
+            "color": "#e34c26",
+            "size": 78874
+          },
+          {
+            "name": "CSS",
+            "color": "#663399",
+            "size": 48321
+          },
+          {
+            "name": "Shell",
+            "color": "#89e051",
+            "size": 7197
+          },
+          {
+            "name": "Dockerfile",
+            "color": "#384d54",
+            "size": 3168
+          }
+        ],
+        "commit_contributions": 0,
+        "issue_contributions": 0,
+        "pull_request_contributions": 0,
+        "review_contributions": 0
+      },
+      {
+        "id": "R_kgDOPx-EhQ",
+        "name": "gamengine",
+        "name_with_owner": "mojomast/gamengine",
+        "owner_login": "mojomast",
+        "url": "https://github.com/mojomast/gamengine",
+        "description": null,
+        "is_private": false,
+        "is_fork": false,
+        "primary_language": "JavaScript",
+        "primary_language_color": "#f1e05a",
+        "stargazer_count": 1,
+        "fork_count": 0,
+        "pushed_at": "2025-09-18T23:51:41+00:00",
+        "languages": [
+          {
+            "name": "JavaScript",
+            "color": "#f1e05a",
+            "size": 1813426
+          },
+          {
+            "name": "HTML",
+            "color": "#e34c26",
+            "size": 602973
+          },
+          {
+            "name": "CSS",
+            "color": "#663399",
+            "size": 72281
+          },
+          {
+            "name": "Batchfile",
+            "color": "#C1F12E",
+            "size": 420
+          }
+        ],
+        "commit_contributions": 0,
+        "issue_contributions": 0,
+        "pull_request_contributions": 0,
+        "review_contributions": 0
+      },
+      {
+        "id": "R_kgDOPyE8iA",
+        "name": "buttfights-project",
+        "name_with_owner": "mojomast/buttfights-project",
+        "owner_login": "mojomast",
+        "url": "https://github.com/mojomast/buttfights-project",
+        "description": null,
+        "is_private": false,
+        "is_fork": false,
+        "primary_language": "HTML",
+        "primary_language_color": "#e34c26",
+        "stargazer_count": 1,
+        "fork_count": 0,
+        "pushed_at": "2025-09-18T04:01:02+00:00",
+        "languages": [
+          {
+            "name": "HTML",
+            "color": "#e34c26",
+            "size": 93012
+          },
+          {
+            "name": "JavaScript",
+            "color": "#f1e05a",
+            "size": 2827
+          },
+          {
+            "name": "Batchfile",
+            "color": "#C1F12E",
+            "size": 420
+          }
+        ],
+        "commit_contributions": 0,
+        "issue_contributions": 0,
+        "pull_request_contributions": 0,
+        "review_contributions": 0
+      },
+      {
+        "id": "R_kgDOPxXYIA",
+        "name": "verceltest1",
+        "name_with_owner": "mojomast/verceltest1",
+        "owner_login": "mojomast",
+        "url": "https://github.com/mojomast/verceltest1",
+        "description": null,
+        "is_private": false,
+        "is_fork": false,
+        "primary_language": "HTML",
+        "primary_language_color": "#e34c26",
+        "stargazer_count": 0,
+        "fork_count": 0,
+        "pushed_at": "2025-09-17T03:22:46+00:00",
+        "languages": [
+          {
+            "name": "HTML",
+            "color": "#e34c26",
+            "size": 25545
+          }
+        ],
+        "commit_contributions": 0,
+        "issue_contributions": 0,
+        "pull_request_contributions": 0,
+        "review_contributions": 0
+      },
+      {
+        "id": "R_kgDOPmKXpg",
+        "name": "iMaCoMpUtERussy",
+        "name_with_owner": "mojomast/iMaCoMpUtERussy",
+        "owner_login": "mojomast",
+        "url": "https://github.com/mojomast/iMaCoMpUtERussy",
+        "description": "The iMaCoMpUtERussy - The legendary 8-bit computer that never existed, brought to life through web technology. Features interactive assembly programming, retro CRT graphics, and the impossible ability to hide entire programs inside YouTube videos. Experience computing as it never was, but always should have been. ",
+        "is_private": false,
+        "is_fork": false,
+        "primary_language": "JavaScript",
+        "primary_language_color": "#f1e05a",
+        "stargazer_count": 1,
+        "fork_count": 0,
+        "pushed_at": "2025-09-16T23:35:31+00:00",
+        "languages": [
+          {
+            "name": "JavaScript",
+            "color": "#f1e05a",
+            "size": 243114
+          },
+          {
+            "name": "HTML",
+            "color": "#e34c26",
+            "size": 101723
+          },
+          {
+            "name": "CSS",
+            "color": "#663399",
+            "size": 9767
+          }
+        ],
+        "commit_contributions": 0,
+        "issue_contributions": 0,
+        "pull_request_contributions": 0,
+        "review_contributions": 0
+      },
+      {
+        "id": "R_kgDOPtkvCg",
+        "name": "bananagen",
+        "name_with_owner": "mojomast/bananagen",
+        "owner_login": "mojomast",
+        "url": "https://github.com/mojomast/bananagen",
+        "description": "CLI tool for generating image assets using Gemini 2.5 Flash",
+        "is_private": false,
+        "is_fork": false,
+        "primary_language": "Python",
+        "primary_language_color": "#3572A5",
+        "stargazer_count": 1,
+        "fork_count": 0,
+        "pushed_at": "2025-09-11T19:39:36+00:00",
+        "languages": [
+          {
+            "name": "Python",
+            "color": "#3572A5",
+            "size": 568835
+          },
+          {
+            "name": "Shell",
+            "color": "#89e051",
+            "size": 17958
+          }
+        ],
+        "commit_contributions": 0,
+        "issue_contributions": 0,
+        "pull_request_contributions": 0,
+        "review_contributions": 0
+      },
+      {
+        "id": "R_kgDOPtAFIg",
+        "name": "psp2",
+        "name_with_owner": "mojomast/psp2",
+        "owner_login": "mojomast",
+        "url": "https://github.com/mojomast/psp2",
+        "description": null,
+        "is_private": false,
+        "is_fork": false,
+        "primary_language": "Game Maker Language",
+        "primary_language_color": "#71b417",
+        "stargazer_count": 0,
+        "fork_count": 0,
+        "pushed_at": "2025-09-10T14:26:41+00:00",
+        "languages": [
+          {
+            "name": "Game Maker Language",
+            "color": "#71b417",
+            "size": 99972
+          }
+        ],
+        "commit_contributions": 0,
+        "issue_contributions": 0,
+        "pull_request_contributions": 0,
+        "review_contributions": 0
+      },
+      {
+        "id": "R_kgDOPsUL4Q",
+        "name": "blinkslice",
+        "name_with_owner": "mojomast/blinkslice",
+        "owner_login": "mojomast",
+        "url": "https://github.com/mojomast/blinkslice",
+        "description": null,
+        "is_private": false,
+        "is_fork": false,
+        "primary_language": "Python",
+        "primary_language_color": "#3572A5",
+        "stargazer_count": 0,
+        "fork_count": 0,
+        "pushed_at": "2025-09-09T01:56:07+00:00",
+        "languages": [
+          {
+            "name": "Python",
+            "color": "#3572A5",
+            "size": 74954
+          },
+          {
+            "name": "JavaScript",
+            "color": "#f1e05a",
+            "size": 15693
+          },
+          {
+            "name": "HTML",
+            "color": "#e34c26",
+            "size": 5886
+          },
+          {
+            "name": "CSS",
+            "color": "#663399",
+            "size": 1922
+          }
+        ],
+        "commit_contributions": 0,
+        "issue_contributions": 0,
+        "pull_request_contributions": 0,
+        "review_contributions": 0
+      },
+      {
+        "id": "R_kgDOPsKRow",
+        "name": "pawn-shop-pioneers",
+        "name_with_owner": "mojomast/pawn-shop-pioneers",
+        "owner_login": "mojomast",
+        "url": "https://github.com/mojomast/pawn-shop-pioneers",
+        "description": "Pawn Shop Pioneers - An idle/incremental game with crafting, pets, and biome exploration",
+        "is_private": false,
+        "is_fork": false,
+        "primary_language": "JavaScript",
+        "primary_language_color": "#f1e05a",
+        "stargazer_count": 0,
+        "fork_count": 0,
+        "pushed_at": "2025-09-08T23:41:35+00:00",
+        "languages": [
+          {
+            "name": "JavaScript",
+            "color": "#f1e05a",
+            "size": 227708
+          },
+          {
+            "name": "CSS",
+            "color": "#663399",
+            "size": 36570
+          },
+          {
+            "name": "Shell",
+            "color": "#89e051",
+            "size": 77
+          }
+        ],
+        "commit_contributions": 0,
+        "issue_contributions": 0,
+        "pull_request_contributions": 0,
+        "review_contributions": 0
+      },
+      {
+        "id": "R_kgDOP71C6Q",
+        "name": "agenttrafficcontrol",
+        "name_with_owner": "mojomast/agenttrafficcontrol",
+        "owner_login": "mojomast",
+        "url": "https://github.com/mojomast/agenttrafficcontrol",
+        "description": null,
+        "is_private": false,
+        "is_fork": true,
+        "primary_language": "TypeScript",
+        "primary_language_color": "#3178c6",
+        "stargazer_count": 0,
+        "fork_count": 0,
+        "pushed_at": "2025-09-08T15:21:24+00:00",
+        "languages": [
+          {
+            "name": "TypeScript",
+            "color": "#3178c6",
+            "size": 238832
+          },
+          {
+            "name": "Python",
+            "color": "#3572A5",
+            "size": 2976
+          },
+          {
+            "name": "CSS",
+            "color": "#663399",
+            "size": 2819
+          },
+          {
+            "name": "HTML",
+            "color": "#e34c26",
+            "size": 1111
+          },
+          {
+            "name": "JavaScript",
+            "color": "#f1e05a",
+            "size": 605
+          }
+        ],
+        "commit_contributions": 0,
+        "issue_contributions": 0,
+        "pull_request_contributions": 0,
+        "review_contributions": 0
+      },
+      {
+        "id": "R_kgDOPqGodA",
+        "name": "rackspace-spot-tool",
+        "name_with_owner": "mojomast/rackspace-spot-tool",
+        "owner_login": "mojomast",
+        "url": "https://github.com/mojomast/rackspace-spot-tool",
+        "description": "Interactive deployment automation for VS Code Server on Rackspace Spot cloud infrastructure with spot bidding management, pre-emption handling, and Kubernetes integration.",
+        "is_private": false,
+        "is_fork": false,
+        "primary_language": "Shell",
+        "primary_language_color": "#89e051",
+        "stargazer_count": 0,
+        "fork_count": 0,
+        "pushed_at": "2025-09-05T13:44:37+00:00",
+        "languages": [
+          {
+            "name": "Shell",
+            "color": "#89e051",
+            "size": 124194
+          },
+          {
+            "name": "HCL",
+            "color": "#844FBA",
+            "size": 4318
+          }
+        ],
+        "commit_contributions": 0,
+        "issue_contributions": 0,
+        "pull_request_contributions": 0,
+        "review_contributions": 0
+      },
+      {
+        "id": "R_kgDOPo2GoQ",
+        "name": "gemini-nano-banana-discord-bot",
+        "name_with_owner": "mojomast/gemini-nano-banana-discord-bot",
+        "owner_login": "mojomast",
+        "url": "https://github.com/mojomast/gemini-nano-banana-discord-bot",
+        "description": "gemini-nano-banana-discord-bot \u2014 a Discord bot that generates, edits, and blends images via Gemini Nano Banana using Openrouter API.",
+        "is_private": false,
+        "is_fork": false,
+        "primary_language": "Python",
+        "primary_language_color": "#3572A5",
+        "stargazer_count": 1,
+        "fork_count": 0,
+        "pushed_at": "2025-09-04T00:14:19+00:00",
+        "languages": [
+          {
+            "name": "Python",
+            "color": "#3572A5",
+            "size": 168054
+          },
+          {
+            "name": "Dockerfile",
+            "color": "#384d54",
+            "size": 620
+          }
+        ],
+        "commit_contributions": 0,
+        "issue_contributions": 0,
+        "pull_request_contributions": 0,
+        "review_contributions": 0
+      },
+      {
+        "id": "R_kgDOPmifPg",
+        "name": "roocodehackathon",
+        "name_with_owner": "mojomast/roocodehackathon",
+        "owner_login": "mojomast",
+        "url": "https://github.com/mojomast/roocodehackathon",
+        "description": null,
+        "is_private": false,
+        "is_fork": false,
+        "primary_language": "Python",
+        "primary_language_color": "#3572A5",
+        "stargazer_count": 0,
+        "fork_count": 1,
+        "pushed_at": "2025-08-31T02:25:56+00:00",
+        "languages": [
+          {
+            "name": "Python",
+            "color": "#3572A5",
+            "size": 218067
+          },
+          {
+            "name": "TypeScript",
+            "color": "#3178c6",
+            "size": 59666
+          },
+          {
+            "name": "JavaScript",
+            "color": "#f1e05a",
+            "size": 22217
+          },
+          {
+            "name": "Dockerfile",
+            "color": "#384d54",
+            "size": 2009
+          },
+          {
+            "name": "CSS",
+            "color": "#663399",
+            "size": 1576
+          }
+        ],
+        "commit_contributions": 0,
+        "issue_contributions": 0,
+        "pull_request_contributions": 0,
+        "review_contributions": 0
+      },
+      {
+        "id": "R_kgDOPleliQ",
+        "name": "ArtistSiteussy",
+        "name_with_owner": "mojomast/ArtistSiteussy",
+        "owner_login": "mojomast",
+        "url": "https://github.com/mojomast/ArtistSiteussy",
+        "description": "A production-ready Next.js 14 website template for contemporary artists, featuring bilingual support (English/French), portfolio management, commission requests, event calendar, Stripe-integrated shop functionality, and comprehensive admin panel with dynamic theme customization, social media management, and layout options.",
+        "is_private": false,
+        "is_fork": false,
+        "primary_language": "TypeScript",
+        "primary_language_color": "#3178c6",
+        "stargazer_count": 0,
+        "fork_count": 0,
+        "pushed_at": "2025-08-28T00:03:44+00:00",
+        "languages": [
+          {
+            "name": "TypeScript",
+            "color": "#3178c6",
+            "size": 254848
+          },
+          {
+            "name": "Shell",
+            "color": "#89e051",
+            "size": 7747
+          },
+          {
+            "name": "Batchfile",
+            "color": "#C1F12E",
+            "size": 7736
+          },
+          {
+            "name": "CSS",
+            "color": "#663399",
+            "size": 5307
+          },
+          {
+            "name": "JavaScript",
+            "color": "#f1e05a",
+            "size": 1818
+          }
+        ],
+        "commit_contributions": 0,
+        "issue_contributions": 0,
+        "pull_request_contributions": 0,
+        "review_contributions": 0
+      },
+      {
+        "id": "R_kgDOPiE9uA",
+        "name": "familydashboardussy",
+        "name_with_owner": "mojomast/familydashboardussy",
+        "owner_login": "mojomast",
+        "url": "https://github.com/mojomast/familydashboardussy",
+        "description": "familydashboardussy is a compact, opinionated React + TypeScript app for family planning: weekly tasks, meal planning, and simple grocery lists. Features include multi-user coordination, advanced task management, comprehensive meal planning, real-time synchronization, and mobile-first design.",
+        "is_private": false,
+        "is_fork": false,
+        "primary_language": "TypeScript",
+        "primary_language_color": "#3178c6",
+        "stargazer_count": 0,
+        "fork_count": 0,
+        "pushed_at": "2025-08-27T00:38:50+00:00",
+        "languages": [
+          {
+            "name": "TypeScript",
+            "color": "#3178c6",
+            "size": 255443
+          },
+          {
+            "name": "CSS",
+            "color": "#663399",
+            "size": 37511
+          },
+          {
+            "name": "JavaScript",
+            "color": "#f1e05a",
+            "size": 11157
+          },
+          {
+            "name": "PowerShell",
+            "color": "#012456",
+            "size": 548
+          },
+          {
+            "name": "HTML",
+            "color": "#e34c26",
+            "size": 366
+          }
+        ],
+        "commit_contributions": 0,
+        "issue_contributions": 0,
+        "pull_request_contributions": 0,
+        "review_contributions": 0
+      },
+      {
+        "id": "R_kgDOOP__Mw",
+        "name": "broipussy",
+        "name_with_owner": "mojomast/broipussy",
+        "owner_login": "mojomast",
+        "url": "https://github.com/mojomast/broipussy",
+        "description": "BROIP Simulator: Bong Rip Over IP Protocol - A groundbreaking application that revolutionizes virtual smoking through advanced networking protocols, enabling distributed inhalation technology.",
+        "is_private": false,
+        "is_fork": false,
+        "primary_language": "TypeScript",
+        "primary_language_color": "#3178c6",
+        "stargazer_count": 0,
+        "fork_count": 0,
+        "pushed_at": "2025-08-26T22:46:01+00:00",
+        "languages": [
+          {
+            "name": "TypeScript",
+            "color": "#3178c6",
+            "size": 483163
+          },
+          {
+            "name": "JavaScript",
+            "color": "#f1e05a",
+            "size": 245
+          }
+        ],
+        "commit_contributions": 0,
+        "issue_contributions": 0,
+        "pull_request_contributions": 0,
+        "review_contributions": 0
+      },
+      {
+        "id": "R_kgDOPkzLdw",
+        "name": "mudussy",
+        "name_with_owner": "mojomast/mudussy",
+        "owner_login": "mojomast",
+        "url": "https://github.com/mojomast/mudussy",
+        "description": "Modular TypeScript/NestJS MUD engine with plugin architecture, real-time multiplayer (Socket.IO + Telnet), content-driven world/NPCs, branching dialogue sub-prompt, and web SPA client.",
+        "is_private": false,
+        "is_fork": false,
+        "primary_language": "TypeScript",
+        "primary_language_color": "#3178c6",
+        "stargazer_count": 3,
+        "fork_count": 0,
+        "pushed_at": "2025-08-26T22:43:03+00:00",
+        "languages": [
+          {
+            "name": "TypeScript",
+            "color": "#3178c6",
+            "size": 719564
+          },
+          {
+            "name": "JavaScript",
+            "color": "#f1e05a",
+            "size": 359345
+          },
+          {
+            "name": "Shell",
+            "color": "#89e051",
+            "size": 12796
+          },
+          {
+            "name": "HTML",
+            "color": "#e34c26",
+            "size": 6180
+          },
+          {
+            "name": "Dockerfile",
+            "color": "#384d54",
+            "size": 1637
+          }
+        ],
+        "commit_contributions": 0,
+        "issue_contributions": 0,
+        "pull_request_contributions": 0,
+        "review_contributions": 0
+      },
+      {
+        "id": "R_kgDOOhcRaQ",
+        "name": "tcg2",
+        "name_with_owner": "mojomast/tcg2",
+        "owner_login": "mojomast",
+        "url": "https://github.com/mojomast/tcg2",
+        "description": null,
+        "is_private": false,
+        "is_fork": false,
+        "primary_language": "TypeScript",
+        "primary_language_color": "#3178c6",
+        "stargazer_count": 0,
+        "fork_count": 0,
+        "pushed_at": "2025-08-22T14:49:11+00:00",
+        "languages": [
+          {
+            "name": "TypeScript",
+            "color": "#3178c6",
+            "size": 628056
+          },
+          {
+            "name": "JavaScript",
+            "color": "#f1e05a",
+            "size": 183497
+          },
+          {
+            "name": "CSS",
+            "color": "#663399",
+            "size": 20495
+          },
+          {
+            "name": "HTML",
+            "color": "#e34c26",
+            "size": 11593
+          }
+        ],
+        "commit_contributions": 0,
+        "issue_contributions": 0,
+        "pull_request_contributions": 0,
+        "review_contributions": 0
+      },
+      {
+        "id": "R_kgDOPiIaOQ",
+        "name": "xcancelussybot",
+        "name_with_owner": "mojomast/xcancelussybot",
+        "owner_login": "mojomast",
+        "url": "https://github.com/mojomast/xcancelussybot",
+        "description": "\ud83d\ude80 Discord bot that automatically converts x.com links to xcancel.com",
+        "is_private": false,
+        "is_fork": false,
+        "primary_language": "JavaScript",
+        "primary_language_color": "#f1e05a",
+        "stargazer_count": 3,
+        "fork_count": 1,
+        "pushed_at": "2025-08-22T04:38:25+00:00",
+        "languages": [
+          {
+            "name": "JavaScript",
+            "color": "#f1e05a",
+            "size": 72731
+          }
+        ],
+        "commit_contributions": 0,
+        "issue_contributions": 0,
+        "pull_request_contributions": 0,
+        "review_contributions": 0
+      },
+      {
+        "id": "R_kgDOO9gYow",
+        "name": "365cspadminussy",
+        "name_with_owner": "mojomast/365cspadminussy",
+        "owner_login": "mojomast",
+        "url": "https://github.com/mojomast/365cspadminussy",
+        "description": "WARNING: This project is in development. A comprehensive PowerShell-based management toolkit designed for Microsoft CSP partners to efficiently administer and audit customer tenants through GDAP relationships.",
+        "is_private": false,
+        "is_fork": false,
+        "primary_language": "PowerShell",
+        "primary_language_color": "#012456",
+        "stargazer_count": 0,
+        "fork_count": 0,
+        "pushed_at": "2025-06-18T02:01:57+00:00",
+        "languages": [
+          {
+            "name": "PowerShell",
+            "color": "#012456",
+            "size": 255414
+          }
+        ],
+        "commit_contributions": 0,
+        "issue_contributions": 0,
+        "pull_request_contributions": 0,
+        "review_contributions": 0
+      },
+      {
+        "id": "R_kgDOO475qQ",
+        "name": "BackupUSSY",
+        "name_with_owner": "mojomast/BackupUSSY",
+        "owner_login": "mojomast",
+        "url": "https://github.com/mojomast/BackupUSSY",
+        "description": "\ud83d\udea7 Experimental project \u2013 no stable release. Not production-ready. BackupUSSY is a comprehensive LTO tape archive solution designed for Windows environments. This tool focuses on archival (non-rotating) backups with support for writing to one or two tapes per archive job, ensuring your critical data is preserved with enterprise-grade reliability.",
+        "is_private": false,
+        "is_fork": false,
+        "primary_language": "Python",
+        "primary_language_color": "#3572A5",
+        "stargazer_count": 3,
+        "fork_count": 0,
+        "pushed_at": "2025-06-12T21:43:46+00:00",
+        "languages": [
+          {
+            "name": "Python",
+            "color": "#3572A5",
+            "size": 969067
+          },
+          {
+            "name": "Shell",
+            "color": "#89e051",
+            "size": 2335
+          },
+          {
+            "name": "Batchfile",
+            "color": "#C1F12E",
+            "size": 432
+          }
+        ],
+        "commit_contributions": 0,
+        "issue_contributions": 0,
+        "pull_request_contributions": 0,
+        "review_contributions": 0
+      },
+      {
+        "id": "R_kgDOOf1s9w",
+        "name": "nhlclicker2",
+        "name_with_owner": "mojomast/nhlclicker2",
+        "owner_login": "mojomast",
+        "url": "https://github.com/mojomast/nhlclicker2",
+        "description": null,
+        "is_private": false,
+        "is_fork": false,
+        "primary_language": "TypeScript",
+        "primary_language_color": "#3178c6",
+        "stargazer_count": 0,
+        "fork_count": 0,
+        "pushed_at": "2025-04-25T21:59:16+00:00",
+        "languages": [
+          {
+            "name": "TypeScript",
+            "color": "#3178c6",
+            "size": 314444
+          },
+          {
+            "name": "MDX",
+            "color": "#fcb32c",
+            "size": 11360
+          },
+          {
+            "name": "CSS",
+            "color": "#663399",
+            "size": 9099
+          },
+          {
+            "name": "JavaScript",
+            "color": "#f1e05a",
+            "size": 1613
+          },
+          {
+            "name": "HTML",
+            "color": "#e34c26",
+            "size": 383
+          }
+        ],
+        "commit_contributions": 0,
+        "issue_contributions": 0,
+        "pull_request_contributions": 0,
+        "review_contributions": 0
+      },
+      {
+        "id": "R_kgDOOWPjFA",
+        "name": "PGaudussy",
+        "name_with_owner": "mojomast/PGaudussy",
+        "owner_login": "mojomast",
+        "url": "https://github.com/mojomast/PGaudussy",
+        "description": null,
+        "is_private": false,
+        "is_fork": false,
+        "primary_language": "Python",
+        "primary_language_color": "#3572A5",
+        "stargazer_count": 0,
+        "fork_count": 0,
+        "pushed_at": "2025-04-09T13:15:35+00:00",
+        "languages": [
+          {
+            "name": "Python",
+            "color": "#3572A5",
+            "size": 206859
+          },
+          {
+            "name": "HTML",
+            "color": "#e34c26",
+            "size": 21592
+          },
+          {
+            "name": "Shell",
+            "color": "#89e051",
+            "size": 5768
+          },
+          {
+            "name": "Batchfile",
+            "color": "#C1F12E",
+            "size": 2913
+          }
+        ],
+        "commit_contributions": 0,
+        "issue_contributions": 0,
+        "pull_request_contributions": 0,
+        "review_contributions": 0
+      }
+    ],
+    "commits": [
+      {
+        "repo_name_with_owner": "mojomast/openclawssy",
+        "sha": "e7c5a2f7ef5caa8a36844cf31cdb77ef4e4d34b8",
+        "message": "Optimize ChatStore initialization in Engine (#1)",
+        "committed_at": "2026-02-18T12:44:51+00:00",
+        "url": "https://github.com/mojomast/openclawssy/commit/e7c5a2f7ef5caa8a36844cf31cdb77ef4e4d34b8",
+        "additions": 87,
+        "deletions": 12
+      },
+      {
+        "repo_name_with_owner": "mojomast/openclawssy",
+        "sha": "eb80caf7f2da9d34b6bf34d5d3ef28b1a80ce142",
+        "message": "feat(test): add unit tests for CanonicalCapability (#2)",
+        "committed_at": "2026-02-18T12:44:54+00:00",
+        "url": "https://github.com/mojomast/openclawssy/commit/eb80caf7f2da9d34b6bf34d5d3ef28b1a80ce142",
+        "additions": 68,
+        "deletions": 0
+      },
+      {
+        "repo_name_with_owner": "mojomast/openclawssy",
+        "sha": "beb4dd391cf7a6b54f7d83f135361642efd4bbca",
+        "message": "feat(test): add error path tests for WriteAtomic (#3)",
+        "committed_at": "2026-02-18T12:44:57+00:00",
+        "url": "https://github.com/mojomast/openclawssy/commit/beb4dd391cf7a6b54f7d83f135361642efd4bbca",
+        "additions": 74,
+        "deletions": 0
+      },
+      {
+        "repo_name_with_owner": "mojomast/openclawssy",
+        "sha": "79244200bc757fdf9566d92add46bcaa088a7572",
+        "message": "test: add tests for LoadGrants and SaveGrants (#4)",
+        "committed_at": "2026-02-18T12:45:00+00:00",
+        "url": "https://github.com/mojomast/openclawssy/commit/79244200bc757fdf9566d92add46bcaa088a7572",
+        "additions": 154,
+        "deletions": 0
+      },
+      {
+        "repo_name_with_owner": "mojomast/openclawssy",
+        "sha": "afc829c049acd6a97b5fb633a8d79e0e81220903",
+        "message": "Lock down shell execution by default (#5)",
+        "committed_at": "2026-02-18T12:45:03+00:00",
+        "url": "https://github.com/mojomast/openclawssy/commit/afc829c049acd6a97b5fb633a8d79e0e81220903",
+        "additions": 44,
+        "deletions": 11
+      },
+      {
+        "repo_name_with_owner": "mojomast/openclawssy",
+        "sha": "57433c0db5e2d5f9ae053b94bd85ede6e3241380",
+        "message": "test: Add unit tests for EnsureWorkspace (#7)",
+        "committed_at": "2026-02-18T12:45:06+00:00",
+        "url": "https://github.com/mojomast/openclawssy/commit/57433c0db5e2d5f9ae053b94bd85ede6e3241380",
+        "additions": 76,
+        "deletions": 0
+      },
+      {
+        "repo_name_with_owner": "mojomast/openclawssy",
+        "sha": "1fcf76fbcb623638f20eb10dc4e5a0736717a572",
+        "message": "perf(tools): optimize code.search to stream files (#8)",
+        "committed_at": "2026-02-18T12:45:09+00:00",
+        "url": "https://github.com/mojomast/openclawssy/commit/1fcf76fbcb623638f20eb10dc4e5a0736717a572",
+        "additions": 67,
+        "deletions": 6
+      },
+      {
+        "repo_name_with_owner": "mojomast/openclawssy",
+        "sha": "60ef4eb4f2caa4d40a58f243f9986a6dc25b80c5",
+        "message": "Optimize scheduler job execution by batching file I/O updates (#9)",
+        "committed_at": "2026-02-18T12:45:12+00:00",
+        "url": "https://github.com/mojomast/openclawssy/commit/60ef4eb4f2caa4d40a58f243f9986a6dc25b80c5",
+        "additions": 90,
+        "deletions": 1
+      },
+      {
+        "repo_name_with_owner": "mojomast/openclawssy",
+        "sha": "f1a70cd7a0c7e5a6756074d26bf8f1b66ba23756",
+        "message": "Add unit tests for internal/secrets/store.go (#10)",
+        "committed_at": "2026-02-18T12:45:15+00:00",
+        "url": "https://github.com/mojomast/openclawssy/commit/f1a70cd7a0c7e5a6756074d26bf8f1b66ba23756",
+        "additions": 409,
+        "deletions": 0
+      },
+      {
+        "repo_name_with_owner": "mojomast/openclawssy",
+        "sha": "d695c5a561cdb200c31dccfb10f0250a7f978e6e",
+        "message": "test: add unit tests for RedactString and RedactValue (#11)",
+        "committed_at": "2026-02-18T12:45:18+00:00",
+        "url": "https://github.com/mojomast/openclawssy/commit/d695c5a561cdb200c31dccfb10f0250a7f978e6e",
+        "additions": 140,
+        "deletions": 0
+      },
+      {
+        "repo_name_with_owner": "mojomast/openclawssy",
+        "sha": "90a703609874df53855dc0c48b79c3fb2b9a16c9",
+        "message": "feat(toolparse): improve JSON extraction reliability with stack-based state machine (#12)",
+        "committed_at": "2026-02-18T12:45:22+00:00",
+        "url": "https://github.com/mojomast/openclawssy/commit/90a703609874df53855dc0c48b79c3fb2b9a16c9",
+        "additions": 141,
+        "deletions": 7
+      },
+      {
+        "repo_name_with_owner": "mojomast/openclawssy",
+        "sha": "d14364577e205cde20dceb15d2acbc4b6fc9a13c",
+        "message": "Remove unused normalizeInt function (#13)",
+        "committed_at": "2026-02-18T12:45:25+00:00",
+        "url": "https://github.com/mojomast/openclawssy/commit/d14364577e205cde20dceb15d2acbc4b6fc9a13c",
+        "additions": 0,
+        "deletions": 6
+      },
+      {
+        "repo_name_with_owner": "mojomast/openclawssy",
+        "sha": "e5b6fa1d81db5879d2ff8800104eff6932e71bf7",
+        "message": "Refactor `httpRequest` into smaller functions (#15)",
+        "committed_at": "2026-02-18T12:45:28+00:00",
+        "url": "https://github.com/mojomast/openclawssy/commit/e5b6fa1d81db5879d2ff8800104eff6932e71bf7",
+        "additions": 102,
+        "deletions": 75
+      },
+      {
+        "repo_name_with_owner": "mojomast/openclawssy",
+        "sha": "d83b972756a235f3e75702c76bde81886640c052",
+        "message": "Optimize ReadRecentMessages using ReverseScanner (#17)",
+        "committed_at": "2026-02-18T12:45:31+00:00",
+        "url": "https://github.com/mojomast/openclawssy/commit/d83b972756a235f3e75702c76bde81886640c052",
+        "additions": 382,
+        "deletions": 8
+      },
+      {
+        "repo_name_with_owner": "mojomast/openclawssy",
+        "sha": "5455d3bef0042d6001d0767e6ac8f84c2840591b",
+        "message": "Refactor fsEdit to use specific handler functions (#19)",
+        "committed_at": "2026-02-18T12:45:33+00:00",
+        "url": "https://github.com/mojomast/openclawssy/commit/5455d3bef0042d6001d0767e6ac8f84c2840591b",
+        "additions": 66,
+        "deletions": 53
+      },
+      {
+        "repo_name_with_owner": "mojomast/openclawssy",
+        "sha": "f316d845e6fc965f74737fe43f2479a78033f518",
+        "message": "Refactor duplicated pagination logic into a helper function (#22)",
+        "committed_at": "2026-02-18T12:45:38+00:00",
+        "url": "https://github.com/mojomast/openclawssy/commit/f316d845e6fc965f74737fe43f2479a78033f518",
+        "additions": 43,
+        "deletions": 63
+      },
+      {
+        "repo_name_with_owner": "mojomast/openclawssy",
+        "sha": "e670a263b07a780f5c11270b236ba5611a0c4d24",
+        "message": "fix(security): prevent auth bypass via path traversal in dashboard routes (#23)",
+        "committed_at": "2026-02-18T12:45:41+00:00",
+        "url": "https://github.com/mojomast/openclawssy/commit/e670a263b07a780f5c11270b236ba5611a0c4d24",
+        "additions": 28,
+        "deletions": 1
+      },
+      {
+        "repo_name_with_owner": "mojomast/openclawssy",
+        "sha": "3b4ab5e1ff3658e3dcf053a132d345c148e20e0e",
+        "message": "Refactor `Runner.Run` to use `runState` for better maintainability (#24)",
+        "committed_at": "2026-02-18T12:45:44+00:00",
+        "url": "https://github.com/mojomast/openclawssy/commit/3b4ab5e1ff3658e3dcf053a132d345c148e20e0e",
+        "additions": 337,
+        "deletions": 291
+      },
+      {
+        "repo_name_with_owner": "mojomast/openclawssy",
+        "sha": "e97ebe31fef3b64bff3f59013a04fc5b3a7bb5e6",
+        "message": "Refactor metricsGet to improve code health (#25)",
+        "committed_at": "2026-02-18T12:45:47+00:00",
+        "url": "https://github.com/mojomast/openclawssy/commit/e97ebe31fef3b64bff3f59013a04fc5b3a7bb5e6",
+        "additions": 105,
+        "deletions": 89
+      },
+      {
+        "repo_name_with_owner": "mojomast/openclawssy",
+        "sha": "9abaf5ab434974cbd1c76969275a50a3b98d104a",
+        "message": "Refactor atomic file writing logic into internal/fsutil (#27)",
+        "committed_at": "2026-02-18T12:45:51+00:00",
+        "url": "https://github.com/mojomast/openclawssy/commit/9abaf5ab434974cbd1c76969275a50a3b98d104a",
+        "additions": 153,
+        "deletions": 279
+      },
+      {
+        "repo_name_with_owner": "mojomast/openclawssy",
+        "sha": "eb5ba1afc4592c778e1053ed4904289e11e07d17",
+        "message": "Refactor tools path resolution to shared helper (#26)",
+        "committed_at": "2026-02-18T12:52:43+00:00",
+        "url": "https://github.com/mojomast/openclawssy/commit/eb5ba1afc4592c778e1053ed4904289e11e07d17",
+        "additions": 40,
+        "deletions": 116
+      },
+      {
+        "repo_name_with_owner": "mojomast/openclawssy",
+        "sha": "15e484fa4babee5d8bdd81b49595722865c2a45d",
+        "message": "perf(chatstore): optimize ListSessions with stat-based cache (#20)",
+        "committed_at": "2026-02-18T12:55:18+00:00",
+        "url": "https://github.com/mojomast/openclawssy/commit/15e484fa4babee5d8bdd81b49595722865c2a45d",
+        "additions": 87,
+        "deletions": 15
+      },
+      {
+        "repo_name_with_owner": "mojomast/openclawssy",
+        "sha": "d8f25693ff9e9562c74b3c33baa14dd5abe42c4f",
+        "message": "Merge pull request #32 from mojomast/split/pr28-pathguard-symlink",
+        "committed_at": "2026-02-19T01:40:47+00:00",
+        "url": "https://github.com/mojomast/openclawssy/commit/d8f25693ff9e9562c74b3c33baa14dd5abe42c4f",
+        "additions": 41,
+        "deletions": 0
+      },
+      {
+        "repo_name_with_owner": "mojomast/openclawssy",
+        "sha": "0c3cf6010d7dc352681167423f0e08d82e6f2559",
+        "message": "Merge pull request #31 from mojomast/split/pr28-shell-allowlist",
+        "committed_at": "2026-02-19T01:40:49+00:00",
+        "url": "https://github.com/mojomast/openclawssy/commit/0c3cf6010d7dc352681167423f0e08d82e6f2559",
+        "additions": 26,
+        "deletions": 9
+      },
+      {
+        "repo_name_with_owner": "mojomast/openclawssy",
+        "sha": "e3dd25cab3bd4c78f57b56df3c03cb8ff9f61cbf",
+        "message": "Merge pull request #33 from mojomast/split/pr28-scheduler-cache",
+        "committed_at": "2026-02-19T01:40:52+00:00",
+        "url": "https://github.com/mojomast/openclawssy/commit/e3dd25cab3bd4c78f57b56df3c03cb8ff9f61cbf",
+        "additions": 147,
+        "deletions": 14
+      },
+      {
+        "repo_name_with_owner": "mojomast/openclawssy",
+        "sha": "5f9d0cc72ea9e72e9b6b48a91923de20e84a6776",
+        "message": "Merge pull request #30 from mojomast/split/pr28-dashboard-ui",
+        "committed_at": "2026-02-19T01:40:55+00:00",
+        "url": "https://github.com/mojomast/openclawssy/commit/5f9d0cc72ea9e72e9b6b48a91923de20e84a6776",
+        "additions": 290,
+        "deletions": 158
+      },
+      {
+        "repo_name_with_owner": "mojomast/openclawssy",
+        "sha": "ab01b5c632540bb98fa2c1fbd68993f8350af416",
+        "message": "Merge pull request #34 from mojomast/split/pr28-streaming-runtime",
+        "committed_at": "2026-02-19T01:54:15+00:00",
+        "url": "https://github.com/mojomast/openclawssy/commit/ab01b5c632540bb98fa2c1fbd68993f8350af416",
+        "additions": 1847,
+        "deletions": 56
+      },
+      {
+        "repo_name_with_owner": "mojomast/openclawssy",
+        "sha": "5e02a10552cb215d93858f83cc8af725271916c7",
+        "message": "Merge pull request #35 from mojomast/fix-dashboard-memory-and-agents-14586044430137210303",
+        "committed_at": "2026-02-19T12:24:49+00:00",
+        "url": "https://github.com/mojomast/openclawssy/commit/5e02a10552cb215d93858f83cc8af725271916c7",
+        "additions": 131,
+        "deletions": 0
+      },
+      {
+        "repo_name_with_owner": "mojomast/openclawssy",
+        "sha": "3b2a01e155332e76f80818dcc3ac2f545696a750",
+        "message": "Merge pull request #37 from belohnung/docker-rework",
+        "committed_at": "2026-02-24T04:00:53+00:00",
+        "url": "https://github.com/mojomast/openclawssy/commit/3b2a01e155332e76f80818dcc3ac2f545696a750",
+        "additions": 469,
+        "deletions": 264
+      },
+      {
+        "repo_name_with_owner": "mojomast/openclawssy",
+        "sha": "c53ba688d1488189b7577548978fb656d5e9eec6",
+        "message": "Merge pull request #40 from mojomast/feature/outofboxexperience",
+        "committed_at": "2026-02-24T06:25:30+00:00",
+        "url": "https://github.com/mojomast/openclawssy/commit/c53ba688d1488189b7577548978fb656d5e9eec6",
+        "additions": 394,
+        "deletions": 59
+      },
+      {
+        "repo_name_with_owner": "mojomast/openclawssy",
+        "sha": "bc29f791bd064f46543dd55639685db87ba12af8",
+        "message": "Merge pull request #41 from mojomast/feature/telegram-integration",
+        "committed_at": "2026-02-24T23:13:11+00:00",
+        "url": "https://github.com/mojomast/openclawssy/commit/bc29f791bd064f46543dd55639685db87ba12af8",
+        "additions": 821,
+        "deletions": 209
+      },
+      {
+        "repo_name_with_owner": "mojomast/ragussy",
+        "sha": "5e87f2a6805a738bf1221df0c685cfa3e2207def",
+        "message": "Merge pull request #9 from mojomast/integration/master-ragussy-sync",
+        "committed_at": "2026-03-05T01:48:38+00:00",
+        "url": "https://github.com/mojomast/ragussy/commit/5e87f2a6805a738bf1221df0c685cfa3e2207def",
+        "additions": 8864,
+        "deletions": 21736
+      },
+      {
+        "repo_name_with_owner": "mojomast/ragussy",
+        "sha": "04bf0c2e032d5d09c69eac2b8d7481ec008d1b1f",
+        "message": "Merge pull request #10 from mojomast/feat/reintegrate-discord-bot",
+        "committed_at": "2026-03-05T02:17:31+00:00",
+        "url": "https://github.com/mojomast/ragussy/commit/04bf0c2e032d5d09c69eac2b8d7481ec008d1b1f",
+        "additions": 2637,
+        "deletions": 0
+      },
+      {
+        "repo_name_with_owner": "mojomast/openclawssy",
+        "sha": "3d25b4e2ff6b0a4b1966f703d8bbf1931f44ba06",
+        "message": "Merge pull request #42 from mojomast/feat/operator-grade-harness",
+        "committed_at": "2026-03-15T12:21:16+00:00",
+        "url": "https://github.com/mojomast/openclawssy/commit/3d25b4e2ff6b0a4b1966f703d8bbf1931f44ba06",
+        "additions": 53266,
+        "deletions": 18769
+      }
+    ],
+    "pull_requests": [
+      {
+        "repo_name_with_owner": "mojomast/openclawssy",
+        "repo_is_private": false,
+        "number": 43,
+        "title": "Feat/operator grade harness",
+        "created_at": "2026-03-17T02:39:28+00:00",
+        "url": "https://github.com/mojomast/openclawssy/pull/43",
+        "state": "CLOSED",
+        "merged_at": null,
+        "additions": 14745,
+        "deletions": 2009
+      },
+      {
+        "repo_name_with_owner": "mojomast/openclawssy",
+        "repo_is_private": false,
+        "number": 42,
+        "title": "Feat/operator grade harness",
+        "created_at": "2026-03-15T11:46:55+00:00",
+        "url": "https://github.com/mojomast/openclawssy/pull/42",
+        "state": "MERGED",
+        "merged_at": "2026-03-15T12:21:17+00:00",
+        "additions": 53266,
+        "deletions": 18769
+      },
+      {
+        "repo_name_with_owner": "mojomast/ragussy",
+        "repo_is_private": false,
+        "number": 10,
+        "title": "reintegrate discord bot with model lab proxy compatibility",
+        "created_at": "2026-03-05T02:17:26+00:00",
+        "url": "https://github.com/mojomast/ragussy/pull/10",
+        "state": "MERGED",
+        "merged_at": "2026-03-05T02:17:31+00:00",
+        "additions": 2637,
+        "deletions": 0
+      },
+      {
+        "repo_name_with_owner": "mojomast/ragussy",
+        "repo_is_private": false,
+        "number": 9,
+        "title": "sync master to active ragussy model lab runtime",
+        "created_at": "2026-03-05T01:48:29+00:00",
+        "url": "https://github.com/mojomast/ragussy/pull/9",
+        "state": "MERGED",
+        "merged_at": "2026-03-05T01:48:38+00:00",
+        "additions": 8864,
+        "deletions": 21736
+      },
+      {
+        "repo_name_with_owner": "mojomast/openclawssy",
+        "repo_is_private": false,
+        "number": 40,
+        "title": "Feature/outofboxexperience",
+        "created_at": "2026-02-24T06:25:15+00:00",
+        "url": "https://github.com/mojomast/openclawssy/pull/40",
+        "state": "MERGED",
+        "merged_at": "2026-02-24T06:25:32+00:00",
+        "additions": 394,
+        "deletions": 59
+      },
+      {
+        "repo_name_with_owner": "clawdeckio/clawdeck",
+        "repo_is_private": false,
+        "number": 39,
+        "title": "fleet(B0-B8): Multi-agent OpenClaw orchestration",
+        "created_at": "2026-02-23T01:38:26+00:00",
+        "url": "https://github.com/clawdeckio/clawdeck/pull/39",
+        "state": "OPEN",
+        "merged_at": null,
+        "additions": 4468,
+        "deletions": 86
+      },
+      {
+        "repo_name_with_owner": "mojomast/uberclawcontrol",
+        "repo_is_private": false,
+        "number": 1,
+        "title": "fleet(B0-B8): Multi-agent OpenClaw orchestration",
+        "created_at": "2026-02-23T01:37:28+00:00",
+        "url": "https://github.com/mojomast/uberclawcontrol/pull/1",
+        "state": "OPEN",
+        "merged_at": null,
+        "additions": 4468,
+        "deletions": 86
+      },
+      {
+        "repo_name_with_owner": "RooCodeInc/Roo-Code",
+        "repo_is_private": false,
+        "number": 11679,
+        "title": "feat(cli): add openai-codex oauth onboarding and auth flows",
+        "created_at": "2026-02-22T16:27:18+00:00",
+        "url": "https://github.com/RooCodeInc/Roo-Code/pull/11679",
+        "state": "OPEN",
+        "merged_at": null,
+        "additions": 1635,
+        "deletions": 141
+      },
+      {
+        "repo_name_with_owner": "mojomast/openclawssy",
+        "repo_is_private": false,
+        "number": 35,
+        "title": "Add Memory settings to dashboard and fix agents tab crash",
+        "created_at": "2026-02-19T05:33:50+00:00",
+        "url": "https://github.com/mojomast/openclawssy/pull/35",
+        "state": "MERGED",
+        "merged_at": "2026-02-19T12:24:50+00:00",
+        "additions": 131,
+        "deletions": 0
+      },
+      {
+        "repo_name_with_owner": "mojomast/openclawssy",
+        "repo_is_private": false,
+        "number": 34,
+        "title": "runtime: stream run events and harden tool loop behavior",
+        "created_at": "2026-02-19T01:48:47+00:00",
+        "url": "https://github.com/mojomast/openclawssy/pull/34",
+        "state": "MERGED",
+        "merged_at": "2026-02-19T01:54:15+00:00",
+        "additions": 1847,
+        "deletions": 56
+      },
+      {
+        "repo_name_with_owner": "mojomast/openclawssy",
+        "repo_is_private": false,
+        "number": 33,
+        "title": "perf: cache scheduler store reload checks",
+        "created_at": "2026-02-19T01:38:46+00:00",
+        "url": "https://github.com/mojomast/openclawssy/pull/33",
+        "state": "MERGED",
+        "merged_at": "2026-02-19T01:40:52+00:00",
+        "additions": 147,
+        "deletions": 14
+      },
+      {
+        "repo_name_with_owner": "mojomast/openclawssy",
+        "repo_is_private": false,
+        "number": 32,
+        "title": "security: block symlink escape on workspace writes",
+        "created_at": "2026-02-19T01:38:31+00:00",
+        "url": "https://github.com/mojomast/openclawssy/pull/32",
+        "state": "MERGED",
+        "merged_at": "2026-02-19T01:40:47+00:00",
+        "additions": 41,
+        "deletions": 0
+      },
+      {
+        "repo_name_with_owner": "mojomast/openclawssy",
+        "repo_is_private": false,
+        "number": 31,
+        "title": "security: fail closed for shell.exec allowlist",
+        "created_at": "2026-02-19T01:38:18+00:00",
+        "url": "https://github.com/mojomast/openclawssy/pull/31",
+        "state": "MERGED",
+        "merged_at": "2026-02-19T01:40:49+00:00",
+        "additions": 26,
+        "deletions": 9
+      },
+      {
+        "repo_name_with_owner": "mojomast/openclawssy",
+        "repo_is_private": false,
+        "number": 30,
+        "title": "ui: split dashboard dark mode and scanability improvements",
+        "created_at": "2026-02-19T01:38:04+00:00",
+        "url": "https://github.com/mojomast/openclawssy/pull/30",
+        "state": "MERGED",
+        "merged_at": "2026-02-19T01:40:55+00:00",
+        "additions": 290,
+        "deletions": 158
+      },
+      {
+        "repo_name_with_owner": "mojomast/openclawssy",
+        "repo_is_private": false,
+        "number": 27,
+        "title": "Refactor atomic file writing logic into internal/fsutil",
+        "created_at": "2026-02-18T06:19:35+00:00",
+        "url": "https://github.com/mojomast/openclawssy/pull/27",
+        "state": "MERGED",
+        "merged_at": "2026-02-18T12:45:51+00:00",
+        "additions": 153,
+        "deletions": 279
+      },
+      {
+        "repo_name_with_owner": "mojomast/openclawssy",
+        "repo_is_private": false,
+        "number": 26,
+        "title": "Refactor tools path resolution to shared helper",
+        "created_at": "2026-02-18T06:15:22+00:00",
+        "url": "https://github.com/mojomast/openclawssy/pull/26",
+        "state": "MERGED",
+        "merged_at": "2026-02-18T12:52:43+00:00",
+        "additions": 40,
+        "deletions": 116
+      },
+      {
+        "repo_name_with_owner": "mojomast/openclawssy",
+        "repo_is_private": false,
+        "number": 25,
+        "title": "\ud83e\uddf9 Refactor metricsGet to improve code health",
+        "created_at": "2026-02-18T06:14:37+00:00",
+        "url": "https://github.com/mojomast/openclawssy/pull/25",
+        "state": "MERGED",
+        "merged_at": "2026-02-18T12:45:47+00:00",
+        "additions": 105,
+        "deletions": 89
+      },
+      {
+        "repo_name_with_owner": "mojomast/openclawssy",
+        "repo_is_private": false,
+        "number": 24,
+        "title": "\ud83e\uddf9 Refactor Agent Runner Run Method",
+        "created_at": "2026-02-18T06:14:36+00:00",
+        "url": "https://github.com/mojomast/openclawssy/pull/24",
+        "state": "MERGED",
+        "merged_at": "2026-02-18T12:45:44+00:00",
+        "additions": 337,
+        "deletions": 291
+      },
+      {
+        "repo_name_with_owner": "mojomast/openclawssy",
+        "repo_is_private": false,
+        "number": 23,
+        "title": "Fix authentication bypass via path traversal in dashboard routes",
+        "created_at": "2026-02-18T06:14:30+00:00",
+        "url": "https://github.com/mojomast/openclawssy/pull/23",
+        "state": "MERGED",
+        "merged_at": "2026-02-18T12:45:41+00:00",
+        "additions": 28,
+        "deletions": 1
+      },
+      {
+        "repo_name_with_owner": "mojomast/openclawssy",
+        "repo_is_private": false,
+        "number": 22,
+        "title": "\ud83e\uddf9 Refactor duplicated pagination logic into helper function",
+        "created_at": "2026-02-18T06:12:59+00:00",
+        "url": "https://github.com/mojomast/openclawssy/pull/22",
+        "state": "MERGED",
+        "merged_at": "2026-02-18T12:45:38+00:00",
+        "additions": 43,
+        "deletions": 63
+      },
+      {
+        "repo_name_with_owner": "mojomast/openclawssy",
+        "repo_is_private": false,
+        "number": 21,
+        "title": "\ud83e\uddf9 Refactor duplicate integer parsing logic in internal/tools",
+        "created_at": "2026-02-18T06:12:58+00:00",
+        "url": "https://github.com/mojomast/openclawssy/pull/21",
+        "state": "CLOSED",
+        "merged_at": null,
+        "additions": 225,
+        "deletions": 70
+      },
+      {
+        "repo_name_with_owner": "mojomast/openclawssy",
+        "repo_is_private": false,
+        "number": 20,
+        "title": "\u26a1 Optimize ListSessions with in-memory cache",
+        "created_at": "2026-02-18T06:12:38+00:00",
+        "url": "https://github.com/mojomast/openclawssy/pull/20",
+        "state": "MERGED",
+        "merged_at": "2026-02-18T12:55:19+00:00",
+        "additions": 87,
+        "deletions": 15
+      },
+      {
+        "repo_name_with_owner": "mojomast/openclawssy",
+        "repo_is_private": false,
+        "number": 19,
+        "title": "\ud83e\uddf9 Refactor fsEdit to use specific handlers",
+        "created_at": "2026-02-18T06:11:58+00:00",
+        "url": "https://github.com/mojomast/openclawssy/pull/19",
+        "state": "MERGED",
+        "merged_at": "2026-02-18T12:45:34+00:00",
+        "additions": 66,
+        "deletions": 53
+      },
+      {
+        "repo_name_with_owner": "mojomast/openclawssy",
+        "repo_is_private": false,
+        "number": 18,
+        "title": "\ud83d\udd12 Fix potential authentication bypass via path traversal",
+        "created_at": "2026-02-18T06:11:21+00:00",
+        "url": "https://github.com/mojomast/openclawssy/pull/18",
+        "state": "CLOSED",
+        "merged_at": null,
+        "additions": 53,
+        "deletions": 1
+      },
+      {
+        "repo_name_with_owner": "mojomast/openclawssy",
+        "repo_is_private": false,
+        "number": 17,
+        "title": "\u26a1 Optimize ReadRecentMessages with ReverseScanner",
+        "created_at": "2026-02-18T06:11:01+00:00",
+        "url": "https://github.com/mojomast/openclawssy/pull/17",
+        "state": "MERGED",
+        "merged_at": "2026-02-18T12:45:31+00:00",
+        "additions": 382,
+        "deletions": 8
+      },
+      {
+        "repo_name_with_owner": "mojomast/openclawssy",
+        "repo_is_private": false,
+        "number": 16,
+        "title": "\u26a1 Optimize ReadRecentMessages with ReverseScanner",
+        "created_at": "2026-02-18T06:10:31+00:00",
+        "url": "https://github.com/mojomast/openclawssy/pull/16",
+        "state": "CLOSED",
+        "merged_at": null,
+        "additions": 299,
+        "deletions": 11
+      },
+      {
+        "repo_name_with_owner": "mojomast/openclawssy",
+        "repo_is_private": false,
+        "number": 15,
+        "title": "Refactor httpRequest in network_tools.go",
+        "created_at": "2026-02-18T06:10:31+00:00",
+        "url": "https://github.com/mojomast/openclawssy/pull/15",
+        "state": "MERGED",
+        "merged_at": "2026-02-18T12:45:28+00:00",
+        "additions": 102,
+        "deletions": 75
+      },
+      {
+        "repo_name_with_owner": "mojomast/openclawssy",
+        "repo_is_private": false,
+        "number": 14,
+        "title": "\u26a1 Optimize ReadRecentMessages to use backward file reading",
+        "created_at": "2026-02-18T06:09:01+00:00",
+        "url": "https://github.com/mojomast/openclawssy/pull/14",
+        "state": "CLOSED",
+        "merged_at": null,
+        "additions": 271,
+        "deletions": 23
+      },
+      {
+        "repo_name_with_owner": "mojomast/openclawssy",
+        "repo_is_private": false,
+        "number": 13,
+        "title": "\ud83e\uddf9 Remove dead code: normalizeInt",
+        "created_at": "2026-02-18T06:08:10+00:00",
+        "url": "https://github.com/mojomast/openclawssy/pull/13",
+        "state": "MERGED",
+        "merged_at": "2026-02-18T12:45:25+00:00",
+        "additions": 0,
+        "deletions": 6
+      },
+      {
+        "repo_name_with_owner": "mojomast/openclawssy",
+        "repo_is_private": false,
+        "number": 12,
+        "title": "\ud83e\uddea Improve JSON extraction testing and reliability",
+        "created_at": "2026-02-18T06:05:57+00:00",
+        "url": "https://github.com/mojomast/openclawssy/pull/12",
+        "state": "MERGED",
+        "merged_at": "2026-02-18T12:45:22+00:00",
+        "additions": 141,
+        "deletions": 7
+      },
+      {
+        "repo_name_with_owner": "mojomast/openclawssy",
+        "repo_is_private": false,
+        "number": 11,
+        "title": "Add unit tests for RedactString and RedactValue",
+        "created_at": "2026-02-18T06:05:32+00:00",
+        "url": "https://github.com/mojomast/openclawssy/pull/11",
+        "state": "MERGED",
+        "merged_at": "2026-02-18T12:45:19+00:00",
+        "additions": 140,
+        "deletions": 0
+      },
+      {
+        "repo_name_with_owner": "mojomast/openclawssy",
+        "repo_is_private": false,
+        "number": 10,
+        "title": "Add unit tests for Secrets Store encryption and persistence",
+        "created_at": "2026-02-18T06:05:14+00:00",
+        "url": "https://github.com/mojomast/openclawssy/pull/10",
+        "state": "MERGED",
+        "merged_at": "2026-02-18T12:45:15+00:00",
+        "additions": 409,
+        "deletions": 0
+      },
+      {
+        "repo_name_with_owner": "mojomast/openclawssy",
+        "repo_is_private": false,
+        "number": 9,
+        "title": "\u26a1 Optimize scheduler job execution with batch I/O updates",
+        "created_at": "2026-02-18T06:04:52+00:00",
+        "url": "https://github.com/mojomast/openclawssy/pull/9",
+        "state": "MERGED",
+        "merged_at": "2026-02-18T12:45:12+00:00",
+        "additions": 90,
+        "deletions": 1
+      },
+      {
+        "repo_name_with_owner": "mojomast/openclawssy",
+        "repo_is_private": false,
+        "number": 8,
+        "title": "\u26a1 Optimize code.search memory usage",
+        "created_at": "2026-02-18T06:04:38+00:00",
+        "url": "https://github.com/mojomast/openclawssy/pull/8",
+        "state": "MERGED",
+        "merged_at": "2026-02-18T12:45:09+00:00",
+        "additions": 67,
+        "deletions": 6
+      },
+      {
+        "repo_name_with_owner": "mojomast/openclawssy",
+        "repo_is_private": false,
+        "number": 7,
+        "title": "test: Add unit tests for EnsureWorkspace",
+        "created_at": "2026-02-18T06:03:51+00:00",
+        "url": "https://github.com/mojomast/openclawssy/pull/7",
+        "state": "MERGED",
+        "merged_at": "2026-02-18T12:45:06+00:00",
+        "additions": 76,
+        "deletions": 0
+      },
+      {
+        "repo_name_with_owner": "mojomast/openclawssy",
+        "repo_is_private": false,
+        "number": 6,
+        "title": "\ud83e\uddea Improve JSON extraction testing",
+        "created_at": "2026-02-18T06:03:47+00:00",
+        "url": "https://github.com/mojomast/openclawssy/pull/6",
+        "state": "CLOSED",
+        "merged_at": null,
+        "additions": 172,
+        "deletions": 0
+      },
+      {
+        "repo_name_with_owner": "mojomast/openclawssy",
+        "repo_is_private": false,
+        "number": 5,
+        "title": "Fix insecure default in shell execution",
+        "created_at": "2026-02-18T06:03:18+00:00",
+        "url": "https://github.com/mojomast/openclawssy/pull/5",
+        "state": "MERGED",
+        "merged_at": "2026-02-18T12:45:03+00:00",
+        "additions": 44,
+        "deletions": 11
+      },
+      {
+        "repo_name_with_owner": "mojomast/openclawssy",
+        "repo_is_private": false,
+        "number": 4,
+        "title": "test: add tests for LoadGrants and SaveGrants",
+        "created_at": "2026-02-18T06:02:58+00:00",
+        "url": "https://github.com/mojomast/openclawssy/pull/4",
+        "state": "MERGED",
+        "merged_at": "2026-02-18T12:45:00+00:00",
+        "additions": 154,
+        "deletions": 0
+      },
+      {
+        "repo_name_with_owner": "mojomast/openclawssy",
+        "repo_is_private": false,
+        "number": 3,
+        "title": "Add error path tests for WriteAtomic",
+        "created_at": "2026-02-18T06:02:49+00:00",
+        "url": "https://github.com/mojomast/openclawssy/pull/3",
+        "state": "MERGED",
+        "merged_at": "2026-02-18T12:44:57+00:00",
+        "additions": 74,
+        "deletions": 0
+      },
+      {
+        "repo_name_with_owner": "mojomast/openclawssy",
+        "repo_is_private": false,
+        "number": 2,
+        "title": "\ud83e\uddea Add unit tests for CanonicalCapability",
+        "created_at": "2026-02-18T06:02:22+00:00",
+        "url": "https://github.com/mojomast/openclawssy/pull/2",
+        "state": "MERGED",
+        "merged_at": "2026-02-18T12:44:55+00:00",
+        "additions": 68,
+        "deletions": 0
+      },
+      {
+        "repo_name_with_owner": "mojomast/openclawssy",
+        "repo_is_private": false,
+        "number": 1,
+        "title": "Optimize ChatStore initialization in Engine",
+        "created_at": "2026-02-18T05:59:36+00:00",
+        "url": "https://github.com/mojomast/openclawssy/pull/1",
+        "state": "MERGED",
+        "merged_at": "2026-02-18T12:44:52+00:00",
+        "additions": 87,
+        "deletions": 12
+      }
+    ],
+    "issues": [
+      {
+        "repo_name_with_owner": "RooCodeInc/Roo-Code",
+        "repo_is_private": false,
+        "number": 11705,
+        "title": "[EXPERIMENTAL][ENHANCEMENT] Evaluate and prototype OpenTUI as alternative CLI renderer",
+        "created_at": "2026-02-22T18:07:06+00:00",
+        "url": "https://github.com/RooCodeInc/Roo-Code/issues/11705",
+        "state": "OPEN"
+      },
+      {
+        "repo_name_with_owner": "RooCodeInc/Roo-Code",
+        "repo_is_private": false,
+        "number": 11704,
+        "title": "[ENHANCEMENT] OpenTUI migration T024: Implement cancel/interrupt flow and command wiring",
+        "created_at": "2026-02-22T18:01:24+00:00",
+        "url": "https://github.com/RooCodeInc/Roo-Code/issues/11704",
+        "state": "CLOSED"
+      },
+      {
+        "repo_name_with_owner": "RooCodeInc/Roo-Code",
+        "repo_is_private": false,
+        "number": 11703,
+        "title": "[ENHANCEMENT] OpenTUI migration T023: Build multiline composer input with submit keybinding parity (`Enter` / modified enter behavior)",
+        "created_at": "2026-02-22T18:01:22+00:00",
+        "url": "https://github.com/RooCodeInc/Roo-Code/issues/11703",
+        "state": "CLOSED"
+      },
+      {
+        "repo_name_with_owner": "RooCodeInc/Roo-Code",
+        "repo_is_private": false,
+        "number": 11702,
+        "title": "[ENHANCEMENT] OpenTUI migration T022: Implement basic scroll viewport + auto-follow on streaming output",
+        "created_at": "2026-02-22T18:01:21+00:00",
+        "url": "https://github.com/RooCodeInc/Roo-Code/issues/11702",
+        "state": "CLOSED"
+      },
+      {
+        "repo_name_with_owner": "RooCodeInc/Roo-Code",
+        "repo_is_private": false,
+        "number": 11701,
+        "title": "[ENHANCEMENT] OpenTUI migration T021: Implement message list rendering (assistant/user/tool) with streaming append behavior",
+        "created_at": "2026-02-22T18:01:20+00:00",
+        "url": "https://github.com/RooCodeInc/Roo-Code/issues/11701",
+        "state": "CLOSED"
+      },
+      {
+        "repo_name_with_owner": "RooCodeInc/Roo-Code",
+        "repo_is_private": false,
+        "number": 11700,
+        "title": "[ENHANCEMENT] OpenTUI migration T020: CI workflow branch for OpenTUI tests and artifact checks",
+        "created_at": "2026-02-22T18:01:19+00:00",
+        "url": "https://github.com/RooCodeInc/Roo-Code/issues/11700",
+        "state": "CLOSED"
+      },
+      {
+        "repo_name_with_owner": "RooCodeInc/Roo-Code",
+        "repo_is_private": false,
+        "number": 11699,
+        "title": "[ENHANCEMENT] OpenTUI migration T019: Create golden fixture streams from existing JSON event emitter for deterministic UI tests",
+        "created_at": "2026-02-22T18:01:18+00:00",
+        "url": "https://github.com/RooCodeInc/Roo-Code/issues/11699",
+        "state": "CLOSED"
+      },
+      {
+        "repo_name_with_owner": "RooCodeInc/Roo-Code",
+        "repo_is_private": false,
+        "number": 11698,
+        "title": "[ENHANCEMENT] OpenTUI migration T018: Establish OpenTUI snapshot/unit test harness and fixture setup",
+        "created_at": "2026-02-22T18:01:17+00:00",
+        "url": "https://github.com/RooCodeInc/Roo-Code/issues/11698",
+        "state": "CLOSED"
+      },
+      {
+        "repo_name_with_owner": "RooCodeInc/Roo-Code",
+        "repo_is_private": false,
+        "number": 11697,
+        "title": "[ENHANCEMENT] OpenTUI migration T017: Add logging/debug toggles (`ROO_OPENTUI_DEBUG`) with non-invasive output behavior",
+        "created_at": "2026-02-22T18:01:15+00:00",
+        "url": "https://github.com/RooCodeInc/Roo-Code/issues/11697",
+        "state": "CLOSED"
+      },
+      {
+        "repo_name_with_owner": "RooCodeInc/Roo-Code",
+        "repo_is_private": false,
+        "number": 11696,
+        "title": "[ENHANCEMENT] OpenTUI migration T016: Wire lifecycle hooks (`start/stop`, cleanup, signals) for OpenTUI renderer",
+        "created_at": "2026-02-22T18:01:14+00:00",
+        "url": "https://github.com/RooCodeInc/Roo-Code/issues/11696",
+        "state": "CLOSED"
+      },
+      {
+        "repo_name_with_owner": "RooCodeInc/Roo-Code",
+        "repo_is_private": false,
+        "number": 11695,
+        "title": "[ENHANCEMENT] OpenTUI migration T015: Ensure print/json modes remain untouched and covered by regression tests",
+        "created_at": "2026-02-22T18:01:12+00:00",
+        "url": "https://github.com/RooCodeInc/Roo-Code/issues/11695",
+        "state": "CLOSED"
+      },
+      {
+        "repo_name_with_owner": "RooCodeInc/Roo-Code",
+        "repo_is_private": false,
+        "number": 11694,
+        "title": "[ENHANCEMENT] OpenTUI migration T014: Add dual-UI flag (`--ui ink/opentui`) to command path in `commands/cli/run.ts`",
+        "created_at": "2026-02-22T18:01:11+00:00",
+        "url": "https://github.com/RooCodeInc/Roo-Code/issues/11694",
+        "state": "CLOSED"
+      },
+      {
+        "repo_name_with_owner": "RooCodeInc/Roo-Code",
+        "repo_is_private": false,
+        "number": 11693,
+        "title": "[ENHANCEMENT] OpenTUI migration T013: Implement store layer for OpenTUI (`zustand` reuse or equivalent)",
+        "created_at": "2026-02-22T18:01:10+00:00",
+        "url": "https://github.com/RooCodeInc/Roo-Code/issues/11693",
+        "state": "CLOSED"
+      },
+      {
+        "repo_name_with_owner": "RooCodeInc/Roo-Code",
+        "repo_is_private": false,
+        "number": 11692,
+        "title": "[ENHANCEMENT] OpenTUI migration T012: Build adapter from `ExtensionClient` events -> VM store (`apps/cli/src/opentui/adapters/clientAdapter.ts`)",
+        "created_at": "2026-02-22T18:01:09+00:00",
+        "url": "https://github.com/RooCodeInc/Roo-Code/issues/11692",
+        "state": "CLOSED"
+      },
+      {
+        "repo_name_with_owner": "RooCodeInc/Roo-Code",
+        "repo_is_private": false,
+        "number": 11691,
+        "title": "[ENHANCEMENT] OpenTUI migration T011: Create UI view-model contracts (`TaskVM`, `MessageVM`, `PromptVM`, `StatusVM`) under `apps/cli/src/opentui/vm`",
+        "created_at": "2026-02-22T18:01:08+00:00",
+        "url": "https://github.com/RooCodeInc/Roo-Code/issues/11691",
+        "state": "CLOSED"
+      },
+      {
+        "repo_name_with_owner": "RooCodeInc/Roo-Code",
+        "repo_is_private": false,
+        "number": 11690,
+        "title": "[ENHANCEMENT] OpenTUI migration T010: Create new UI root `apps/cli/src/opentui/App.tsx` and renderer bootstrap",
+        "created_at": "2026-02-22T18:01:07+00:00",
+        "url": "https://github.com/RooCodeInc/Roo-Code/issues/11690",
+        "state": "CLOSED"
+      },
+      {
+        "repo_name_with_owner": "RooCodeInc/Roo-Code",
+        "repo_is_private": false,
+        "number": 11689,
+        "title": "[ENHANCEMENT] OpenTUI migration T009: Add OpenTUI dependencies and scaffolding package boundaries in `apps/cli`",
+        "created_at": "2026-02-22T18:01:06+00:00",
+        "url": "https://github.com/RooCodeInc/Roo-Code/issues/11689",
+        "state": "CLOSED"
+      },
+      {
+        "repo_name_with_owner": "RooCodeInc/Roo-Code",
+        "repo_is_private": false,
+        "number": 11688,
+        "title": "[ENHANCEMENT] OpenTUI migration T008: Produce migration implementation plan issue set (epics + labels + dependencies)",
+        "created_at": "2026-02-22T18:01:04+00:00",
+        "url": "https://github.com/RooCodeInc/Roo-Code/issues/11688",
+        "state": "CLOSED"
+      },
+      {
+        "repo_name_with_owner": "RooCodeInc/Roo-Code",
+        "repo_is_private": false,
+        "number": 11687,
+        "title": "[ENHANCEMENT] OpenTUI migration T007: Define compatibility terminal matrix (iTerm2, Terminal.app, GNOME Terminal, Windows Terminal, tmux)",
+        "created_at": "2026-02-22T18:01:03+00:00",
+        "url": "https://github.com/RooCodeInc/Roo-Code/issues/11687",
+        "state": "CLOSED"
+      },
+      {
+        "repo_name_with_owner": "RooCodeInc/Roo-Code",
+        "repo_is_private": false,
+        "number": 11686,
+        "title": "[ENHANCEMENT] OpenTUI migration T006: Instrument current CLI UX timings (input latency, render cadence, startup) for benchmark baseline",
+        "created_at": "2026-02-22T18:01:02+00:00",
+        "url": "https://github.com/RooCodeInc/Roo-Code/issues/11686",
+        "state": "CLOSED"
+      },
+      {
+        "repo_name_with_owner": "RooCodeInc/Roo-Code",
+        "repo_is_private": false,
+        "number": 11685,
+        "title": "[ENHANCEMENT] OpenTUI migration T005: Define non-goals for MVP (what parity is deferred)",
+        "created_at": "2026-02-22T18:01:01+00:00",
+        "url": "https://github.com/RooCodeInc/Roo-Code/issues/11685",
+        "state": "CLOSED"
+      },
+      {
+        "repo_name_with_owner": "RooCodeInc/Roo-Code",
+        "repo_is_private": false,
+        "number": 11684,
+        "title": "[ENHANCEMENT] OpenTUI migration T004: Decide target runtime strategy and write ADR `docs/adr/cli-opentui-runtime.md`",
+        "created_at": "2026-02-22T18:00:59+00:00",
+        "url": "https://github.com/RooCodeInc/Roo-Code/issues/11684",
+        "state": "CLOSED"
+      },
+      {
+        "repo_name_with_owner": "RooCodeInc/Roo-Code",
+        "repo_is_private": false,
+        "number": 11683,
+        "title": "[ENHANCEMENT] OpenTUI migration T003: Validate OpenTUI runtime constraints for this repo (Bun-only path vs Node fallback)",
+        "created_at": "2026-02-22T18:00:58+00:00",
+        "url": "https://github.com/RooCodeInc/Roo-Code/issues/11683",
+        "state": "CLOSED"
+      },
+      {
+        "repo_name_with_owner": "RooCodeInc/Roo-Code",
+        "repo_is_private": false,
+        "number": 11682,
+        "title": "[ENHANCEMENT] OpenTUI migration T002: Build feature parity matrix Ink -> OpenTUI primitives/components",
+        "created_at": "2026-02-22T18:00:57+00:00",
+        "url": "https://github.com/RooCodeInc/Roo-Code/issues/11682",
+        "state": "CLOSED"
+      },
+      {
+        "repo_name_with_owner": "RooCodeInc/Roo-Code",
+        "repo_is_private": false,
+        "number": 11681,
+        "title": "[ENHANCEMENT] OpenTUI migration T001: Baseline current Ink UI capabilities inventory (`messages`, `input`, `scroll`, `pickers`, `hotkeys`, `onboarding`) from `apps/cli/src/ui`",
+        "created_at": "2026-02-22T18:00:56+00:00",
+        "url": "https://github.com/RooCodeInc/Roo-Code/issues/11681",
+        "state": "CLOSED"
+      },
+      {
+        "repo_name_with_owner": "RooCodeInc/Roo-Code",
+        "repo_is_private": false,
+        "number": 11676,
+        "title": "[ENHANCEMENT] Improve provider ingestion onboarding and add OpenAI OAuth",
+        "created_at": "2026-02-22T14:37:43+00:00",
+        "url": "https://github.com/RooCodeInc/Roo-Code/issues/11676",
+        "state": "OPEN"
+      }
+    ],
+    "contribution_days": [
+      {
+        "day": "2026-02-17",
+        "count": 0,
+        "weekday": 2,
+        "color": "#ebedf0"
+      },
+      {
+        "day": "2026-02-18",
+        "count": 56,
+        "weekday": 3,
+        "color": "#216e39"
+      },
+      {
+        "day": "2026-02-19",
+        "count": 3,
+        "weekday": 4,
+        "color": "#9be9a8"
+      },
+      {
+        "day": "2026-02-20",
+        "count": 0,
+        "weekday": 5,
+        "color": "#ebedf0"
+      },
+      {
+        "day": "2026-02-21",
+        "count": 1,
+        "weekday": 6,
+        "color": "#9be9a8"
+      },
+      {
+        "day": "2026-02-22",
+        "count": 31,
+        "weekday": 0,
+        "color": "#216e39"
+      },
+      {
+        "day": "2026-02-23",
+        "count": 1,
+        "weekday": 1,
+        "color": "#9be9a8"
+      },
+      {
+        "day": "2026-02-24",
+        "count": 4,
+        "weekday": 2,
+        "color": "#9be9a8"
+      },
+      {
+        "day": "2026-02-25",
+        "count": 0,
+        "weekday": 3,
+        "color": "#ebedf0"
+      },
+      {
+        "day": "2026-02-26",
+        "count": 1,
+        "weekday": 4,
+        "color": "#9be9a8"
+      },
+      {
+        "day": "2026-02-27",
+        "count": 0,
+        "weekday": 5,
+        "color": "#ebedf0"
+      },
+      {
+        "day": "2026-02-28",
+        "count": 0,
+        "weekday": 6,
+        "color": "#ebedf0"
+      },
+      {
+        "day": "2026-03-01",
+        "count": 0,
+        "weekday": 0,
+        "color": "#ebedf0"
+      },
+      {
+        "day": "2026-03-02",
+        "count": 0,
+        "weekday": 1,
+        "color": "#ebedf0"
+      },
+      {
+        "day": "2026-03-03",
+        "count": 0,
+        "weekday": 2,
+        "color": "#ebedf0"
+      },
+      {
+        "day": "2026-03-04",
+        "count": 6,
+        "weekday": 3,
+        "color": "#9be9a8"
+      },
+      {
+        "day": "2026-03-05",
+        "count": 0,
+        "weekday": 4,
+        "color": "#ebedf0"
+      },
+      {
+        "day": "2026-03-06",
+        "count": 3,
+        "weekday": 5,
+        "color": "#9be9a8"
+      },
+      {
+        "day": "2026-03-07",
+        "count": 1,
+        "weekday": 6,
+        "color": "#9be9a8"
+      },
+      {
+        "day": "2026-03-08",
+        "count": 0,
+        "weekday": 0,
+        "color": "#ebedf0"
+      },
+      {
+        "day": "2026-03-09",
+        "count": 1,
+        "weekday": 1,
+        "color": "#9be9a8"
+      },
+      {
+        "day": "2026-03-10",
+        "count": 1,
+        "weekday": 2,
+        "color": "#9be9a8"
+      },
+      {
+        "day": "2026-03-11",
+        "count": 2,
+        "weekday": 3,
+        "color": "#9be9a8"
+      },
+      {
+        "day": "2026-03-12",
+        "count": 0,
+        "weekday": 4,
+        "color": "#ebedf0"
+      },
+      {
+        "day": "2026-03-13",
+        "count": 1,
+        "weekday": 5,
+        "color": "#9be9a8"
+      },
+      {
+        "day": "2026-03-14",
+        "count": 0,
+        "weekday": 6,
+        "color": "#ebedf0"
+      },
+      {
+        "day": "2026-03-15",
+        "count": 2,
+        "weekday": 0,
+        "color": "#9be9a8"
+      },
+      {
+        "day": "2026-03-16",
+        "count": 1,
+        "weekday": 1,
+        "color": "#9be9a8"
+      },
+      {
+        "day": "2026-03-17",
+        "count": 0,
+        "weekday": 2,
+        "color": "#ebedf0"
+      },
+      {
+        "day": "2026-03-18",
+        "count": 1,
+        "weekday": 3,
+        "color": "#9be9a8"
+      }
+    ],
+    "warnings": [
+      {
+        "code": "restricted-contributions",
+        "message": "Some private contributions are only available as aggregate counts.",
+        "level": "warning",
+        "details": "GitHub reported 3 restricted contributions in the selected window."
+      }
+    ],
+    "total_commit_contributions": 32,
+    "total_issue_contributions": 26,
+    "total_pull_request_contributions": 41,
+    "total_pull_request_review_contributions": 0,
+    "pull_requests_total": 41,
+    "pull_requests_merged_total": 32,
+    "issues_total": 26,
+    "restricted_contributions_count": 3
+  },
+  "report": {
+    "meta": {
+      "title": "GitHub Activity Report",
+      "subtitle": "A contribution snapshot for @mojomast",
+      "subject": {
+        "login": "mojomast",
+        "display_name": "Kyle Durepos",
+        "avatar_url": "https://avatars.githubusercontent.com/u/76818041?u=fb0c8d9fb783940fbbe5c2f63c3f5cc36b89e426&v=4",
+        "profile_url": "https://github.com/mojomast"
+      },
+      "period": {
+        "label": "2026-02-17 to 2026-03-18",
+        "start": "2026-02-17",
+        "end": "2026-03-18",
+        "timezone": "UTC",
+        "days": 30
+      },
+      "generated_at": "2026-03-18T17:16:35+00:00",
+      "generator": {
+        "name": "ghstats",
+        "version": "0.1.0"
+      }
+    },
+    "stats_cards": [
+      {
+        "id": "commits",
+        "label": "Total commits",
+        "value": "32",
+        "raw_value": 32,
+        "unit": "commits",
+        "delta": {
+          "value": null,
+          "label": null,
+          "direction": null
+        },
+        "accent": "teal",
+        "icon": null
+      },
+      {
+        "id": "avg-commits",
+        "label": "Avg commits/day",
+        "value": "1.07",
+        "raw_value": 1.07,
+        "unit": null,
+        "delta": {
+          "value": null,
+          "label": null,
+          "direction": null
+        },
+        "accent": "amber",
+        "icon": null
+      },
+      {
+        "id": "loc-added",
+        "label": "Lines added",
+        "value": "71626",
+        "raw_value": 71626,
+        "unit": "lines",
+        "delta": {
+          "value": null,
+          "label": null,
+          "direction": null
+        },
+        "accent": "green",
+        "icon": null
+      },
+      {
+        "id": "loc-deleted",
+        "label": "Lines deleted",
+        "value": "42307",
+        "raw_value": 42307,
+        "unit": "lines",
+        "delta": {
+          "value": null,
+          "label": null,
+          "direction": null
+        },
+        "accent": "red",
+        "icon": null
+      },
+      {
+        "id": "prs",
+        "label": "PRs opened / merged",
+        "value": "41 / 32",
+        "raw_value": "41 / 32",
+        "unit": null,
+        "delta": {
+          "value": null,
+          "label": null,
+          "direction": null
+        },
+        "accent": "slate",
+        "icon": null
+      },
+      {
+        "id": "issues",
+        "label": "Issues opened",
+        "value": "26",
+        "raw_value": 26,
+        "unit": "issues",
+        "delta": {
+          "value": null,
+          "label": null,
+          "direction": null
+        },
+        "accent": "blue",
+        "icon": null
+      },
+      {
+        "id": "repos",
+        "label": "Repos contributed to",
+        "value": "74",
+        "raw_value": 74,
+        "unit": "repos",
+        "delta": {
+          "value": null,
+          "label": null,
+          "direction": null
+        },
+        "accent": "violet",
+        "icon": null
+      },
+      {
+        "id": "streak",
+        "label": "Current / longest streak",
+        "value": "0 / 2",
+        "raw_value": "0 / 2",
+        "unit": "days",
+        "delta": {
+          "value": null,
+          "label": null,
+          "direction": null
+        },
+        "accent": "orange",
+        "icon": null
+      }
+    ],
+    "chart_datasets": {
+      "commits_timeline": {
+        "title": "Commits per Day",
+        "labels": [
+          "2026-02-17",
+          "2026-02-18",
+          "2026-02-19",
+          "2026-02-20",
+          "2026-02-21",
+          "2026-02-22",
+          "2026-02-23",
+          "2026-02-24",
+          "2026-02-25",
+          "2026-02-26",
+          "2026-02-27",
+          "2026-02-28",
+          "2026-03-01",
+          "2026-03-02",
+          "2026-03-03",
+          "2026-03-04",
+          "2026-03-05",
+          "2026-03-06",
+          "2026-03-07",
+          "2026-03-08",
+          "2026-03-09",
+          "2026-03-10",
+          "2026-03-11",
+          "2026-03-12",
+          "2026-03-13",
+          "2026-03-14",
+          "2026-03-15",
+          "2026-03-16",
+          "2026-03-17",
+          "2026-03-18"
+        ],
+        "series": [
+          {
+            "id": "commits",
+            "label": "Commits",
+            "values": [
+              0,
+              22,
+              6,
+              0,
+              0,
+              0,
+              0,
+              3,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              2,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0
+            ],
+            "color": "#0f766e"
+          }
+        ]
+      },
+      "loc_timeline": {
+        "title": "Lines Added vs Deleted",
+        "labels": [
+          "2026-02-17",
+          "2026-02-18",
+          "2026-02-19",
+          "2026-02-20",
+          "2026-02-21",
+          "2026-02-22",
+          "2026-02-23",
+          "2026-02-24",
+          "2026-02-25",
+          "2026-02-26",
+          "2026-02-27",
+          "2026-02-28",
+          "2026-03-01",
+          "2026-03-02",
+          "2026-03-03",
+          "2026-03-04",
+          "2026-03-05",
+          "2026-03-06",
+          "2026-03-07",
+          "2026-03-08",
+          "2026-03-09",
+          "2026-03-10",
+          "2026-03-11",
+          "2026-03-12",
+          "2026-03-13",
+          "2026-03-14",
+          "2026-03-15",
+          "2026-03-16",
+          "2026-03-17",
+          "2026-03-18"
+        ],
+        "series": [
+          {
+            "id": "additions",
+            "label": "Added",
+            "values": [
+              0,
+              2693,
+              2482,
+              0,
+              0,
+              0,
+              0,
+              1684,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              11501,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              53266,
+              0,
+              0,
+              0
+            ],
+            "color": "#16a34a"
+          },
+          {
+            "id": "deletions",
+            "label": "Deleted",
+            "values": [
+              0,
+              1033,
+              237,
+              0,
+              0,
+              0,
+              0,
+              532,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              21736,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              18769,
+              0,
+              0,
+              0
+            ],
+            "color": "#dc2626"
+          }
+        ]
+      },
+      "weekday_hours": {
+        "title": "Activity by Weekday and Hour",
+        "x_labels": [
+          "00:00",
+          "01:00",
+          "02:00",
+          "03:00",
+          "04:00",
+          "05:00",
+          "06:00",
+          "07:00",
+          "08:00",
+          "09:00",
+          "10:00",
+          "11:00",
+          "12:00",
+          "13:00",
+          "14:00",
+          "15:00",
+          "16:00",
+          "17:00",
+          "18:00",
+          "19:00",
+          "20:00",
+          "21:00",
+          "22:00",
+          "23:00"
+        ],
+        "y_labels": [
+          "Mon",
+          "Tue",
+          "Wed",
+          "Thu",
+          "Fri",
+          "Sat",
+          "Sun"
+        ],
+        "matrix": [
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            22,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            6,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "min": 0,
+        "max": 22
+      },
+      "languages": {
+        "title": "Top Languages",
+        "labels": [
+          "TypeScript",
+          "Python",
+          "PHP",
+          "MDX",
+          "JavaScript",
+          "Go",
+          "HTML",
+          "Shell"
+        ],
+        "values": [
+          24995363,
+          23403657,
+          6824137,
+          6787707,
+          4785637,
+          4525589,
+          1796748,
+          1319448
+        ],
+        "colors": [
+          "#3178c6",
+          "#3572A5",
+          "#4F5D95",
+          "#fcb32c",
+          "#f1e05a",
+          "#00ADD8",
+          "#e34c26",
+          "#89e051"
+        ]
+      }
+    },
+    "heatmap": {
+      "title": "Contribution Calendar",
+      "weeks": [
+        {
+          "label": "2026-02-17",
+          "days": [
+            {
+              "date": "2026-02-17",
+              "count": 0,
+              "level": 0,
+              "tooltip": "2026-02-17: 0 contributions"
+            },
+            {
+              "date": "2026-02-18",
+              "count": 56,
+              "level": 4,
+              "tooltip": "2026-02-18: 56 contributions"
+            },
+            {
+              "date": "2026-02-19",
+              "count": 3,
+              "level": 0,
+              "tooltip": "2026-02-19: 3 contributions"
+            },
+            {
+              "date": "2026-02-20",
+              "count": 0,
+              "level": 0,
+              "tooltip": "2026-02-20: 0 contributions"
+            },
+            {
+              "date": "2026-02-21",
+              "count": 1,
+              "level": 0,
+              "tooltip": "2026-02-21: 1 contributions"
+            },
+            {
+              "date": "2026-02-22",
+              "count": 31,
+              "level": 2,
+              "tooltip": "2026-02-22: 31 contributions"
+            },
+            {
+              "date": "2026-02-23",
+              "count": 1,
+              "level": 0,
+              "tooltip": "2026-02-23: 1 contributions"
+            }
+          ]
+        },
+        {
+          "label": "2026-02-24",
+          "days": [
+            {
+              "date": "2026-02-24",
+              "count": 4,
+              "level": 0,
+              "tooltip": "2026-02-24: 4 contributions"
+            },
+            {
+              "date": "2026-02-25",
+              "count": 0,
+              "level": 0,
+              "tooltip": "2026-02-25: 0 contributions"
+            },
+            {
+              "date": "2026-02-26",
+              "count": 1,
+              "level": 0,
+              "tooltip": "2026-02-26: 1 contributions"
+            },
+            {
+              "date": "2026-02-27",
+              "count": 0,
+              "level": 0,
+              "tooltip": "2026-02-27: 0 contributions"
+            },
+            {
+              "date": "2026-02-28",
+              "count": 0,
+              "level": 0,
+              "tooltip": "2026-02-28: 0 contributions"
+            },
+            {
+              "date": "2026-03-01",
+              "count": 0,
+              "level": 0,
+              "tooltip": "2026-03-01: 0 contributions"
+            },
+            {
+              "date": "2026-03-02",
+              "count": 0,
+              "level": 0,
+              "tooltip": "2026-03-02: 0 contributions"
+            }
+          ]
+        },
+        {
+          "label": "2026-03-03",
+          "days": [
+            {
+              "date": "2026-03-03",
+              "count": 0,
+              "level": 0,
+              "tooltip": "2026-03-03: 0 contributions"
+            },
+            {
+              "date": "2026-03-04",
+              "count": 6,
+              "level": 0,
+              "tooltip": "2026-03-04: 6 contributions"
+            },
+            {
+              "date": "2026-03-05",
+              "count": 0,
+              "level": 0,
+              "tooltip": "2026-03-05: 0 contributions"
+            },
+            {
+              "date": "2026-03-06",
+              "count": 3,
+              "level": 0,
+              "tooltip": "2026-03-06: 3 contributions"
+            },
+            {
+              "date": "2026-03-07",
+              "count": 1,
+              "level": 0,
+              "tooltip": "2026-03-07: 1 contributions"
+            },
+            {
+              "date": "2026-03-08",
+              "count": 0,
+              "level": 0,
+              "tooltip": "2026-03-08: 0 contributions"
+            },
+            {
+              "date": "2026-03-09",
+              "count": 1,
+              "level": 0,
+              "tooltip": "2026-03-09: 1 contributions"
+            }
+          ]
+        },
+        {
+          "label": "2026-03-10",
+          "days": [
+            {
+              "date": "2026-03-10",
+              "count": 1,
+              "level": 0,
+              "tooltip": "2026-03-10: 1 contributions"
+            },
+            {
+              "date": "2026-03-11",
+              "count": 2,
+              "level": 0,
+              "tooltip": "2026-03-11: 2 contributions"
+            },
+            {
+              "date": "2026-03-12",
+              "count": 0,
+              "level": 0,
+              "tooltip": "2026-03-12: 0 contributions"
+            },
+            {
+              "date": "2026-03-13",
+              "count": 1,
+              "level": 0,
+              "tooltip": "2026-03-13: 1 contributions"
+            },
+            {
+              "date": "2026-03-14",
+              "count": 0,
+              "level": 0,
+              "tooltip": "2026-03-14: 0 contributions"
+            },
+            {
+              "date": "2026-03-15",
+              "count": 2,
+              "level": 0,
+              "tooltip": "2026-03-15: 2 contributions"
+            },
+            {
+              "date": "2026-03-16",
+              "count": 1,
+              "level": 0,
+              "tooltip": "2026-03-16: 1 contributions"
+            }
+          ]
+        },
+        {
+          "label": "2026-03-17",
+          "days": [
+            {
+              "date": "2026-03-17",
+              "count": 0,
+              "level": 0,
+              "tooltip": "2026-03-17: 0 contributions"
+            },
+            {
+              "date": "2026-03-18",
+              "count": 1,
+              "level": 0,
+              "tooltip": "2026-03-18: 1 contributions"
+            },
+            {
+              "date": "",
+              "count": 0,
+              "level": 0,
+              "tooltip": "No data"
+            },
+            {
+              "date": "",
+              "count": 0,
+              "level": 0,
+              "tooltip": "No data"
+            },
+            {
+              "date": "",
+              "count": 0,
+              "level": 0,
+              "tooltip": "No data"
+            },
+            {
+              "date": "",
+              "count": 0,
+              "level": 0,
+              "tooltip": "No data"
+            },
+            {
+              "date": "",
+              "count": 0,
+              "level": 0,
+              "tooltip": "No data"
+            }
+          ]
+        }
+      ],
+      "total": 116,
+      "streak": {
+        "current": 0,
+        "longest": 2
+      }
+    },
+    "language_slices": [
+      {
+        "name": "TypeScript",
+        "value": 24995363,
+        "percent": 32.45,
+        "color": "#3178c6",
+        "repo_count": 33
+      },
+      {
+        "name": "Python",
+        "value": 23403657,
+        "percent": 30.38,
+        "color": "#3572A5",
+        "repo_count": 36
+      },
+      {
+        "name": "PHP",
+        "value": 6824137,
+        "percent": 8.86,
+        "color": "#4F5D95",
+        "repo_count": 1
+      },
+      {
+        "name": "MDX",
+        "value": 6787707,
+        "percent": 8.81,
+        "color": "#fcb32c",
+        "repo_count": 3
+      },
+      {
+        "name": "JavaScript",
+        "value": 4785637,
+        "percent": 6.21,
+        "color": "#f1e05a",
+        "repo_count": 42
+      },
+      {
+        "name": "Go",
+        "value": 4525589,
+        "percent": 5.87,
+        "color": "#00ADD8",
+        "repo_count": 6
+      },
+      {
+        "name": "HTML",
+        "value": 1796748,
+        "percent": 2.33,
+        "color": "#e34c26",
+        "repo_count": 30
+      },
+      {
+        "name": "Shell",
+        "value": 1319448,
+        "percent": 1.71,
+        "color": "#89e051",
+        "repo_count": 23
+      }
+    ],
+    "repo_insights": [
+      {
+        "name": "openclawssy",
+        "full_name": "mojomast/openclawssy",
+        "url": "https://github.com/mojomast/openclawssy",
+        "description": "PROTOTYPE IN DEVELOPMENT: experimental AI harness/runtime with major rough edges. Do NOT use in production; honestly most people should not use this (or OpenClaw) yet.",
+        "primary_language": "Go",
+        "stars": 4,
+        "forks": 2,
+        "activity": {
+          "commits": 30,
+          "pull_requests": 36,
+          "issues": 0,
+          "reviews": 0
+        },
+        "highlights": [
+          "30 commit contributions",
+          "36 pull requests opened"
+        ],
+        "health": {
+          "last_active_at": "2026-03-17T20:13:46+00:00",
+          "opened": 0,
+          "merged_prs": 36
+        }
+      },
+      {
+        "name": "ragussy",
+        "full_name": "mojomast/ragussy",
+        "url": "https://github.com/mojomast/ragussy",
+        "description": "A universal RAG chatbot with full management UI. Point it at your markdown docs and get an AI-powered Q&A system with complete control over configuration, documents, and vector storage.",
+        "primary_language": "TypeScript",
+        "stars": 1,
+        "forks": 0,
+        "activity": {
+          "commits": 2,
+          "pull_requests": 2,
+          "issues": 0,
+          "reviews": 0
+        },
+        "highlights": [
+          "2 commit contributions",
+          "2 pull requests opened"
+        ],
+        "health": {
+          "last_active_at": "2026-03-05T02:17:31+00:00",
+          "opened": 0,
+          "merged_prs": 2
+        }
+      },
+      {
+        "name": "Roo-Code",
+        "full_name": "RooCodeInc/Roo-Code",
+        "url": "https://github.com/RooCodeInc/Roo-Code",
+        "description": "Roo Code gives you a whole dev team of AI agents in your code editor.",
+        "primary_language": "TypeScript",
+        "stars": 22725,
+        "forks": 2914,
+        "activity": {
+          "commits": 0,
+          "pull_requests": 1,
+          "issues": 26,
+          "reviews": 0
+        },
+        "highlights": [
+          "1 pull requests opened"
+        ],
+        "health": {
+          "last_active_at": "2026-03-18T14:50:04+00:00",
+          "opened": 26,
+          "merged_prs": 1
+        }
+      },
+      {
+        "name": "clawdeck",
+        "full_name": "clawdeckio/clawdeck",
+        "url": "https://github.com/clawdeckio/clawdeck",
+        "description": "Open source mission control for your OpenClaw agents \ud83e\udd9e",
+        "primary_language": "HTML",
+        "stars": 319,
+        "forks": 59,
+        "activity": {
+          "commits": 0,
+          "pull_requests": 1,
+          "issues": 0,
+          "reviews": 0
+        },
+        "highlights": [
+          "1 pull requests opened"
+        ],
+        "health": {
+          "last_active_at": "2026-02-27T06:35:32+00:00",
+          "opened": 0,
+          "merged_prs": 1
+        }
+      },
+      {
+        "name": "uberclawcontrol",
+        "full_name": "mojomast/uberclawcontrol",
+        "url": "https://github.com/mojomast/uberclawcontrol",
+        "description": "Open source mission control for your OpenClaw agents \ud83e\udd9e",
+        "primary_language": "HTML",
+        "stars": 1,
+        "forks": 0,
+        "activity": {
+          "commits": 0,
+          "pull_requests": 1,
+          "issues": 0,
+          "reviews": 0
+        },
+        "highlights": [
+          "1 pull requests opened",
+          "Forked project"
+        ],
+        "health": {
+          "last_active_at": "2026-02-23T01:36:56+00:00",
+          "opened": 0,
+          "merged_prs": 1
+        }
+      },
+      {
+        "name": "LLM-API-Key-Proxy",
+        "full_name": "Mirrowel/LLM-API-Key-Proxy",
+        "url": "https://github.com/Mirrowel/LLM-API-Key-Proxy",
+        "description": "Universal LLM Gateway: One API, every LLM. OpenAI/Anthropic-compatible endpoints with multi-provider translation and intelligent load-balancing.",
+        "primary_language": "Python",
+        "stars": 428,
+        "forks": 77,
+        "activity": {
+          "commits": 0,
+          "pull_requests": 0,
+          "issues": 0,
+          "reviews": 0
+        },
+        "highlights": [],
+        "health": {
+          "last_active_at": "2026-03-16T21:32:56+00:00",
+          "opened": 0,
+          "merged_prs": 0
+        }
+      },
+      {
+        "name": "devussy",
+        "full_name": "mojomast/devussy",
+        "url": "https://github.com/mojomast/devussy",
+        "description": "Devussy \u2014 interview to DevPlan. Multi\u2011stage AI planning pipeline with live progress. Generated devplans can be used with any agent by asking them to read handoff and resume development. circular development go brrrrrrrrrrrr!",
+        "primary_language": "Python",
+        "stars": 19,
+        "forks": 2,
+        "activity": {
+          "commits": 0,
+          "pull_requests": 0,
+          "issues": 0,
+          "reviews": 0
+        },
+        "highlights": [],
+        "health": {
+          "last_active_at": "2025-11-28T05:01:34+00:00",
+          "opened": 0,
+          "merged_prs": 0
+        }
+      },
+      {
+        "name": "swarmussy",
+        "full_name": "mojomast/swarmussy",
+        "url": "https://github.com/mojomast/swarmussy",
+        "description": "Experimental multi-agent orchestration framework for collaborative software development. Implements an intelligent agent swarm for distributed development workflows, paired with an in-progress Python terminal UI dashboard for real-time visualization.",
+        "primary_language": "Python",
+        "stars": 4,
+        "forks": 1,
+        "activity": {
+          "commits": 0,
+          "pull_requests": 0,
+          "issues": 0,
+          "reviews": 0
+        },
+        "highlights": [],
+        "health": {
+          "last_active_at": "2025-12-12T04:12:36+00:00",
+          "opened": 0,
+          "merged_prs": 0
+        }
+      }
+    ],
+    "highlights": [
+      {
+        "kind": "trend",
+        "title": "Most active weekday",
+        "text": "Wed is your busiest commit day.",
+        "value": "Wed"
+      },
+      {
+        "kind": "trend",
+        "title": "Most active hour",
+        "text": "Peak coding time lands around 12:00 UTC.",
+        "value": "12:00"
+      },
+      {
+        "kind": "streak",
+        "title": "Longest streak",
+        "text": "You sustained a 2-day commit streak.",
+        "value": "2"
+      },
+      {
+        "kind": "milestone",
+        "title": "Most productive day",
+        "text": "2026-02-18 led the chart with 22 commits.",
+        "value": "22"
+      },
+      {
+        "kind": "note",
+        "title": "Average commit size",
+        "text": "Your average detailed commit changed 3350.97 lines.",
+        "value": "3350.97"
+      },
+      {
+        "kind": "note",
+        "title": "Weekday vs weekend ratio",
+        "text": "Weekday activity outweighs weekend commits by 33.0:1.",
+        "value": "33.0"
+      },
+      {
+        "kind": "repo",
+        "title": "Largest commit",
+        "text": "mojomast/openclawssy had the largest detailed commit at 72035 changed lines.",
+        "value": "72035"
+      },
+      {
+        "kind": "milestone",
+        "title": "Highest code churn",
+        "text": "2026-03-15 moved 72035 lines.",
+        "value": "72035"
+      }
+    ],
+    "warnings": [
+      {
+        "code": "restricted-contributions",
+        "message": "Some private contributions are only available as aggregate counts.",
+        "level": "warning",
+        "details": "GitHub reported 3 restricted contributions in the selected window."
+      }
+    ]
+  }
+}
