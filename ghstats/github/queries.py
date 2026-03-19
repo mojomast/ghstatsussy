@@ -5,6 +5,7 @@ VIEWER_OVERVIEW_QUERY = """
 query ViewerOverview($from: DateTime!, $to: DateTime!, $repoFirst: Int!) {
   viewer {
     login
+    email
     name
     url
     avatarUrl
@@ -38,6 +39,7 @@ query ViewerOverview($from: DateTime!, $to: DateTime!, $repoFirst: Int!) {
           stargazerCount
           forkCount
           pushedAt
+          defaultBranchRef { name }
           owner { login }
           primaryLanguage { name color }
         }
@@ -55,6 +57,7 @@ query ViewerOverview($from: DateTime!, $to: DateTime!, $repoFirst: Int!) {
           stargazerCount
           forkCount
           pushedAt
+          defaultBranchRef { name }
           owner { login }
           primaryLanguage { name color }
         }
@@ -72,6 +75,7 @@ query ViewerOverview($from: DateTime!, $to: DateTime!, $repoFirst: Int!) {
           stargazerCount
           forkCount
           pushedAt
+          defaultBranchRef { name }
           owner { login }
           primaryLanguage { name color }
         }
@@ -89,6 +93,7 @@ query ViewerOverview($from: DateTime!, $to: DateTime!, $repoFirst: Int!) {
           stargazerCount
           forkCount
           pushedAt
+          defaultBranchRef { name }
           owner { login }
           primaryLanguage { name color }
         }
@@ -111,6 +116,48 @@ query ViewerOverview($from: DateTime!, $to: DateTime!, $repoFirst: Int!) {
         stargazerCount
         forkCount
         pushedAt
+        defaultBranchRef { name }
+        owner { login }
+        primaryLanguage { name color }
+        languages(first: 6, orderBy: {field: SIZE, direction: DESC}) {
+          totalSize
+          edges {
+            size
+            node { name color }
+          }
+        }
+      }
+    }
+  }
+  rateLimit {
+    cost
+    remaining
+    resetAt
+  }
+}
+""".strip()
+
+
+VIEWER_REPOSITORIES_QUERY = """
+query ViewerRepositories($first: Int!, $after: String) {
+  viewer {
+    repositories(first: $first, after: $after, orderBy: {field: PUSHED_AT, direction: DESC}) {
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
+      nodes {
+        id
+        name
+        nameWithOwner
+        url
+        description
+        isPrivate
+        isFork
+        stargazerCount
+        forkCount
+        pushedAt
+        defaultBranchRef { name }
         owner { login }
         primaryLanguage { name color }
         languages(first: 6, orderBy: {field: SIZE, direction: DESC}) {
@@ -147,6 +194,7 @@ query RepositoryDetails($ids: [ID!]!) {
       stargazerCount
       forkCount
       pushedAt
+      defaultBranchRef { name }
       owner { login }
       primaryLanguage { name color }
       languages(first: 6, orderBy: {field: SIZE, direction: DESC}) {
@@ -270,6 +318,6 @@ def build_issue_search_query(login: str, start_date: str, end_date: str) -> str:
 
 def build_merged_pr_search_query(login: str, start_date: str, end_date: str) -> str:
     return (
-        f"author:{login} is:pr is:merged archived:false created:{start_date}..{end_date} "
-        "sort:created-desc"
+        f"author:{login} is:pr is:merged archived:false merged:{start_date}..{end_date} "
+        "sort:updated-desc"
     )

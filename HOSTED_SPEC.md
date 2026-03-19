@@ -100,6 +100,14 @@ The hosted layer adds:
 - currently processes queued jobs in-process for the web path, but also includes a worker loop for separation
 - keeps refresh simple for now; queue-based workers can come later
 
+## Data Coverage Notes
+
+- canonical summary cards still inherit some GitHub attribution semantics, especially for `totalCommitContributions`
+- detailed commit scans now broaden coverage by matching both author and committer identities, including common GitHub noreply aliases
+- detailed commit scans now enumerate repository branches instead of assuming the default branch is the only source of relevant commits
+- repository discovery should paginate through pushed repositories so newer repos are not silently dropped after the first page
+- when configured scan caps or API limits prevent exhaustive coverage, the product should warn rather than imply exact completeness
+
 ## Frontend Preview Mode
 
 The app also supports a preview-only mode for isolated frontend work:

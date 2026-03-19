@@ -35,6 +35,7 @@ class RepoActivity:
     stargazer_count: int = 0
     fork_count: int = 0
     pushed_at: datetime | None = None
+    default_branch: str | None = None
     languages: list[RepoLanguage] = field(default_factory=list)
     commit_contributions: int = 0
     issue_contributions: int = 0
@@ -57,6 +58,9 @@ class CommitActivity:
     message: str
     committed_at: datetime
     url: str
+    authored_at: datetime | None = None
+    author_login: str | None = None
+    committer_login: str | None = None
     additions: int = 0
     deletions: int = 0
 
@@ -131,6 +135,8 @@ class ActivityDataset:
     pull_requests_merged_total: int = 0
     issues_total: int = 0
     restricted_contributions_count: int = 0
+    repo_scan_has_next_page: bool = False
+    repos_scanned_for_commits: int = 0
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)

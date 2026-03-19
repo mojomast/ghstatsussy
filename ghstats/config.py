@@ -49,6 +49,8 @@ class RuntimeConfig:
     include_private: bool = False
     repo_page_size: int = 100
     max_repos_for_commit_scan: int = 1000
+    branch_page_size: int = 100
+    max_branch_pages_per_repo: int = 2
     max_commit_pages_per_repo: int = 50
     max_commit_details: int = 5000
     search_page_size: int = 100

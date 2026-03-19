@@ -191,7 +191,16 @@ Replace the host with your production URL when you deploy it.
 - server validation rejects invalid template keys, invalid windows, overlong public expiry, and unsafe private/public combinations
 - report, job, and detail routes now use stricter typed identifiers on the server side
 - **Robust Error Handling**: The background worker now gracefully skips completely empty git repositories instead of throwing an API conflict error and failing the job.
-- **Comprehensive API Coverage**: Increased artificial API fetch bounds (e.g. scanning up to 1,000 repositories and pulling 5,000 detailed commits) to provide near-exhaustive GitHub statistics without rate-limiting penalties, thanks to background job processing.
+- **Broader Commit Coverage**: Detailed commit scans now walk repository branches, match both author and committer identities, and recognize GitHub noreply aliases so agent-assisted and harness-assisted commits are less likely to disappear from short windows.
+- **Broader Repository Coverage**: Viewer repository discovery now paginates beyond the first GraphQL page so newer repositories are less likely to be omitted from long-window reports.
+- **Smarter Retry Behavior**: The GitHub client now backs off on `403`/`429` rate-limit responses in addition to transient `5xx` errors.
+
+### Coverage caveats
+
+- the top-level `Total commits` card still reflects GitHub's own attributed commit contribution count, which may differ from the detailed per-commit scan for rebased, bot-authored, or otherwise reattributed work
+- detailed commit charts and streaks now use commit time (`committer.date`) rather than author time to better reflect when work actually landed
+- repository cards now favor recently active repositories so fresh work is easier to see in long windows like `365d`
+- very large accounts can still hit configured safety caps for branches, repositories, and detailed commits; when that happens the report surfaces warnings instead of silently pretending coverage is complete
 
 ### Behavioral Insights & Fun Facts
 

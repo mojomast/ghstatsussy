@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from collections import Counter, defaultdict
 from datetime import date
+from typing import cast
 
 from ghstats.models.activity import ActivityDataset
 from ghstats.utils.timeparse import iter_dates
@@ -43,17 +44,20 @@ def language_breakdown(dataset: ActivityDataset) -> list[dict[str, int | float |
     totals: dict[str, dict[str, int | str | None]] = {}
     for repo in dataset.repos:
         for language in repo.languages:
-            bucket = totals.setdefault(
-                language.name,
-                {"value": 0, "color": language.color or "#6b7280", "repo_count": 0},
-            )
-            bucket["value"] = int(bucket["value"]) + language.size
-            bucket["repo_count"] = int(bucket["repo_count"]) + 1
+            if language.name not in totals:
+                totals[language.name] = {
+                    "value": 0,
+                    "color": language.color or "#6b7280",
+                    "repo_count": 0,
+                }
+            bucket = totals[language.name]
+            bucket["value"] = cast(int, bucket["value"]) + language.size
+            bucket["repo_count"] = cast(int, bucket["repo_count"]) + 1
 
-    total_size = sum(int(item["value"]) for item in totals.values()) or 1
+    total_size = sum(cast(int, item["value"]) for item in totals.values()) or 1
     items = []
     for name, item in totals.items():
-        value = int(item["value"])
+        value = cast(int, item["value"])
         items.append(
             {
                 "name": name,
@@ -67,9 +71,16 @@ def language_breakdown(dataset: ActivityDataset) -> list[dict[str, int | float |
 
 
 def top_repositories(dataset: ActivityDataset, limit: int = 8) -> list[dict[str, object]]:
+    detailed_commit_counts = Counter(commit.repo_name_with_owner for commit in dataset.commits)
     repos = sorted(
         dataset.repos,
-        key=lambda repo: (repo.commit_contributions, repo.total_contributions(), repo.stargazer_count),
+        key=lambda repo: (
+            repo.pushed_at.timestamp() if repo.pushed_at else 0.0,
+            detailed_commit_counts.get(repo.name_with_owner, 0),
+            repo.commit_contributions,
+            repo.total_contributions(),
+            repo.stargazer_count,
+        ),
         reverse=True,
     )
     items = []
@@ -84,7 +95,7 @@ def top_repositories(dataset: ActivityDataset, limit: int = 8) -> list[dict[str,
                 "stars": repo.stargazer_count,
                 "forks": repo.fork_count,
                 "activity": {
-                    "commits": repo.commit_contributions,
+                    "commits": max(repo.commit_contributions, detailed_commit_counts.get(repo.name_with_owner, 0)),
                     "pull_requests": repo.pull_request_contributions,
                     "issues": repo.issue_contributions,
                     "reviews": repo.review_contributions,

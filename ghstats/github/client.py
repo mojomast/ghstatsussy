@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from datetime import datetime
+from email.utils import parseaddr
 from time import sleep
 from typing import Any
 
@@ -42,6 +43,7 @@ class GitHubClient:
             timeout=config.timeout_seconds,
             headers=self._build_headers(),
         )
+        self._viewer_email_candidates: set[str] = set()
 
     def close(self) -> None:
         self._client.close()
@@ -74,6 +76,11 @@ class GitHubClient:
             try:
                 response = self._client.request(method, url, **kwargs)
                 self._record_rate_limit_headers(response)
+                if response.status_code in {403, 429} and attempt < self.config.retry_attempts:
+                    wait_seconds = self._rate_limit_backoff_seconds(response)
+                    if wait_seconds > 0:
+                        sleep(wait_seconds)
+                        continue
                 if response.status_code in {502, 503, 504} and attempt < self.config.retry_attempts:
                     sleep(0.5 * attempt)
                     continue
@@ -146,6 +153,7 @@ class GitHubClient:
             url=overview["url"],
             avatar_url=overview.get("avatarUrl"),
         )
+        self._viewer_email_candidates = self._build_viewer_email_candidates(overview)
         dataset = ActivityDataset(
             viewer=viewer,
             start_at=start_at,
@@ -186,6 +194,10 @@ class GitHubClient:
                 repo = self._repo_from_node(node)
                 repo_index[repo.id] = repo
             repo.languages = self._languages_from_node(node.get("languages"))
+        repo_has_next_page = bool(overview["repositories"]["pageInfo"].get("hasNextPage"))
+        dataset.repo_scan_has_next_page = repo_has_next_page
+        if repo_has_next_page:
+            self._merge_viewer_repositories(repo_index, dataset, overview["repositories"]["pageInfo"].get("endCursor"))
 
         calendar = overview["contributionsCollection"]["contributionCalendar"]
         dataset.contribution_days = self._calendar_days(calendar["weeks"])
@@ -231,6 +243,7 @@ class GitHubClient:
             stargazer_count=node.get("stargazerCount", 0),
             fork_count=node.get("forkCount", 0),
             pushed_at=parse_github_datetime(node.get("pushedAt")),
+            default_branch=(node.get("defaultBranchRef") or {}).get("name"),
             languages=self._languages_from_node(node.get("languages")),
         )
 
@@ -248,6 +261,66 @@ class GitHubClient:
                 )
             )
         return items
+
+    def _merge_viewer_repositories(
+        self,
+        repo_index: dict[str, RepoActivity],
+        dataset: ActivityDataset,
+        after: str | None,
+    ) -> None:
+        cursor = after
+        while cursor:
+            payload = self.graphql(
+                queries.VIEWER_REPOSITORIES_QUERY,
+                {
+                    "first": self.config.repo_page_size,
+                    "after": cursor,
+                },
+            )["viewer"]["repositories"]
+            for node in payload["nodes"]:
+                repo = repo_index.get(node["id"])
+                if repo is None:
+                    repo = self._repo_from_node(node)
+                    repo_index[repo.id] = repo
+                repo.languages = self._languages_from_node(node.get("languages"))
+            if not payload["pageInfo"].get("hasNextPage"):
+                dataset.repo_scan_has_next_page = False
+                break
+            cursor = payload["pageInfo"].get("endCursor")
+            if not cursor:
+                dataset.repo_scan_has_next_page = True
+                break
+        else:
+            dataset.repo_scan_has_next_page = False
+
+    def _build_viewer_email_candidates(self, overview: dict[str, Any]) -> set[str]:
+        login = overview["login"].strip().lower()
+        candidates = {login}
+        candidate_fields = [overview.get("email")]
+        for value in candidate_fields:
+            self._add_email_candidate(candidates, value)
+        noreply_aliases = {
+            f"{login}@users.noreply.github.com",
+            f"+{login}@users.noreply.github.com",
+        }
+        candidates.update(noreply_aliases)
+        return candidates
+
+    def _add_email_candidate(self, candidates: set[str], value: str | None) -> None:
+        if not value:
+            return
+        email = parseaddr(value)[1].strip().lower()
+        if email:
+            candidates.add(email)
+
+    def _rate_limit_backoff_seconds(self, response: httpx.Response) -> float:
+        retry_after = response.headers.get("retry-after")
+        if retry_after and retry_after.isdigit():
+            return max(float(retry_after), 0.0)
+        if self._rate_limit.remaining == 0 and self._rate_limit.reset_at and self._rate_limit.reset_at.isdigit():
+            reset_at = int(self._rate_limit.reset_at)
+            return max(reset_at - int(datetime.now().timestamp()) + 1, 0)
+        return 0.5
 
     def _calendar_days(self, weeks: list[dict[str, Any]]) -> list[ContributionDay]:
         days: list[ContributionDay] = []
@@ -381,13 +454,17 @@ class GitHubClient:
     def _populate_commit_activity(self, dataset: ActivityDataset) -> None:
         commits: list[CommitActivity] = []
         selected_repos = dataset.repos[: self.config.max_repos_for_commit_scan]
+        dataset.repos_scanned_for_commits = len(selected_repos)
         for repo in selected_repos:
             if repo.is_private and not dataset.include_private:
                 continue
             commits.extend(self._fetch_repo_commits(repo, dataset.viewer.login, dataset.start_at, dataset.end_at))
             if len(commits) >= self.config.max_commit_details:
                 break
-        dataset.commits = sorted(commits, key=lambda item: item.committed_at)
+        deduped: dict[str, CommitActivity] = {}
+        for commit in commits:
+            deduped[commit.sha] = commit
+        dataset.commits = sorted(deduped.values(), key=lambda item: item.committed_at)
 
     def _fetch_repo_commits(
         self,
@@ -400,47 +477,115 @@ class GitHubClient:
         repo_name = repo.name
         items: list[CommitActivity] = []
 
-        for page in range(1, self.config.max_commit_pages_per_repo + 1):
-            try:
-                payload = self.rest_get(
-                    f"/repos/{owner}/{repo_name}/commits",
-                    params={
-                        "author": login,
+        seen_shas: set[str] = set()
+        for ref_name in self._iter_repo_refs(repo):
+            for page in range(1, self.config.max_commit_pages_per_repo + 1):
+                try:
+                    params = {
                         "since": start_at.isoformat(),
                         "until": end_at.isoformat(),
                         "per_page": 100,
                         "page": page,
-                    },
-                )
-            except GitHubApiError as e:
-                if "empty" in str(e).lower() or "not found" in str(e).lower():
+                    }
+                    if ref_name:
+                        params["sha"] = ref_name
+                    payload = self.rest_get(
+                        f"/repos/{owner}/{repo_name}/commits",
+                        params=params,
+                    )
+                except GitHubApiError as e:
+                    if "empty" in str(e).lower() or "not found" in str(e).lower():
+                        break
+                    raise
+                if not payload:
                     break
-                raise
+                for summary in payload:
+                    if len(items) >= self.config.max_commit_details:
+                        return items
+                    sha = summary["sha"]
+                    if sha in seen_shas:
+                        continue
+                    detail = self.rest_get(f"/repos/{owner}/{repo_name}/commits/{sha}")
+                    if not self._is_viewer_commit(detail, login):
+                        continue
+                    committed_at = parse_github_datetime((detail.get("commit") or {}).get("committer", {}).get("date"))
+                    if committed_at is None:
+                        continue
+                    authored_at = parse_github_datetime((detail.get("commit") or {}).get("author", {}).get("date"))
+                    stats = detail.get("stats") or {}
+                    author = detail.get("author") or {}
+                    committer = detail.get("committer") or {}
+                    seen_shas.add(sha)
+                    items.append(
+                        CommitActivity(
+                            repo_name_with_owner=repo.name_with_owner,
+                            sha=sha,
+                            message=detail["commit"]["message"].splitlines()[0],
+                            committed_at=committed_at,
+                            url=detail.get("html_url", repo.url),
+                            authored_at=authored_at,
+                            author_login=author.get("login"),
+                            committer_login=committer.get("login"),
+                            additions=stats.get("additions", 0),
+                            deletions=stats.get("deletions", 0),
+                        )
+                    )
+                if len(payload) < 100:
+                    break
+        return items
+
+    def _iter_repo_refs(self, repo: RepoActivity) -> list[str | None]:
+        refs: list[str | None] = []
+        if repo.default_branch:
+            refs.append(repo.default_branch)
+
+        owner = repo.owner_login
+        repo_name = repo.name
+        seen = {ref for ref in refs if ref}
+        for page in range(1, self.config.max_branch_pages_per_repo + 1):
+            payload = self.rest_get(
+                f"/repos/{owner}/{repo_name}/branches",
+                params={
+                    "per_page": self.config.branch_page_size,
+                    "page": page,
+                },
+            )
             if not payload:
                 break
-            for summary in payload:
-                if len(items) >= self.config.max_commit_details:
-                    return items
-                sha = summary["sha"]
-                detail = self.rest_get(f"/repos/{owner}/{repo_name}/commits/{sha}")
-                committed_at = parse_github_datetime(detail["commit"]["author"]["date"])
-                if committed_at is None:
-                    continue
-                stats = detail.get("stats") or {}
-                items.append(
-                    CommitActivity(
-                        repo_name_with_owner=repo.name_with_owner,
-                        sha=sha,
-                        message=detail["commit"]["message"].splitlines()[0],
-                        committed_at=committed_at,
-                        url=detail.get("html_url", repo.url),
-                        additions=stats.get("additions", 0),
-                        deletions=stats.get("deletions", 0),
-                    )
-                )
-            if len(payload) < 100:
+            for branch in payload:
+                name = (branch.get("name") or "").strip()
+                if name and name not in seen:
+                    refs.append(name)
+                    seen.add(name)
+            if len(payload) < self.config.branch_page_size:
                 break
-        return items
+        return refs or [None]
+
+    def _is_viewer_commit(self, detail: dict[str, Any], login: str) -> bool:
+        login_lower = login.strip().lower()
+        author = detail.get("author") or {}
+        committer = detail.get("committer") or {}
+        commit_meta = detail.get("commit") or {}
+        author_meta = commit_meta.get("author") or {}
+        committer_meta = commit_meta.get("committer") or {}
+        candidates = {
+            (author.get("login") or "").strip().lower(),
+            (committer.get("login") or "").strip().lower(),
+        }
+        if login_lower in candidates:
+            return True
+
+        emails = {
+            parseaddr(author_meta.get("email") or "")[1].strip().lower(),
+            parseaddr(committer_meta.get("email") or "")[1].strip().lower(),
+        }
+        emails.discard("")
+        return any(self._email_matches_viewer(email, login_lower) for email in emails)
+
+    def _email_matches_viewer(self, email: str, login_lower: str) -> bool:
+        if email in self._viewer_email_candidates:
+            return True
+        return email.endswith(f"+{login_lower}@users.noreply.github.com")
 
     def _append_warnings(self, dataset: ActivityDataset) -> None:
         if dataset.restricted_contributions_count:
@@ -459,7 +604,7 @@ class GitHubClient:
                 WarningNotice(
                     code="commit-scan-empty",
                     message="No detailed commit stats were collected for the selected window.",
-                    details="Commit totals may still appear from the contribution calendar.",
+                    details="Overall contribution totals may still appear from GitHub's contribution calendar even when detailed commit scan coverage is empty.",
                     level="info",
                 )
             )
@@ -472,6 +617,15 @@ class GitHubClient:
                         f"Up to {self.config.max_commit_details} commit details were fetched across "
                         f"{self.config.max_repos_for_commit_scan} repositories."
                     ),
+                    level="info",
+                )
+            )
+        if dataset.repo_scan_has_next_page:
+            dataset.warnings.append(
+                WarningNotice(
+                    code="repo-discovery-truncated",
+                    message="Repository discovery was truncated before all pushed repositories were scanned.",
+                    details="The report may overrepresent older or higher-volume repositories when GitHub repository pagination is not fully exhausted.",
                     level="info",
                 )
             )
