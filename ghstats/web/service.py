@@ -10,7 +10,7 @@ from ghstats.export.service import ReportExportService, serialize_export
 from ghstats.render.html import render_report_html
 from ghstats.web.config import WebAppSettings
 from ghstats.web.crypto import TokenCipher
-from ghstats.web.models import Report, ReportExport, ReportSnapshot, User
+from ghstats.web.models import Report, ReportExport, ReportJob, ReportSnapshot, User
 from ghstats.web.queue import enqueue_report_job
 
 
@@ -71,6 +71,31 @@ class HostedReportService:
             .limit(100)
             .all()
         )
+
+    def get_queue_metrics(self, user: User) -> dict[str, int | str | None]:
+        reports = self.list_reports_for_user(user)
+        jobs = (
+            self.session.query(ReportJob)
+            .join(Report, Report.id == ReportJob.report_id)
+            .filter(Report.user_id == user.id)
+            .all()
+        )
+        queued_reports = sum(1 for report in reports if report.status == "queued")
+        running_reports = sum(1 for report in reports if report.status == "running")
+        ready_reports = sum(1 for report in reports if report.status == "ready")
+        queued_jobs = sum(1 for job in jobs if job.status == "queued")
+        running_jobs = sum(1 for job in jobs if job.status == "running")
+        queued_export_jobs = sum(1 for job in jobs if job.status == "queued" and job.job_type.startswith("export:"))
+        latest_job = max(jobs, key=lambda item: item.created_at, default=None)
+        return {
+            "queued_reports": queued_reports,
+            "running_reports": running_reports,
+            "ready_reports": ready_reports,
+            "queued_jobs": queued_jobs,
+            "running_jobs": running_jobs,
+            "queued_export_jobs": queued_export_jobs,
+            "latest_job_status": latest_job.status if latest_job is not None else None,
+        }
 
     def get_report_for_user(self, user: User, report_id: str) -> Report | None:
         return (

@@ -875,6 +875,16 @@
                 <strong>/r/&lt;slug&gt;</strong>
                 <div class="muted">Stable links for specific report identities.</div>
               </div>
+              <div class="insight">
+                <div class="muted">Queue load</div>
+                <strong>{{ queue_metrics.queued_jobs }} queued / {{ queue_metrics.running_jobs }} running</strong>
+                <div class="muted">{{ queue_metrics.queued_export_jobs }} export jobs waiting. Latest state: {{ queue_metrics.latest_job_status or 'idle' }}.</div>
+              </div>
+              <div class="insight">
+                <div class="muted">Your snapshots</div>
+                <strong>{{ queue_metrics.ready_reports }} ready / {{ queue_metrics.queued_reports + queue_metrics.running_reports }} in flight</strong>
+                <div class="muted">Queued reports: {{ queue_metrics.queued_reports }}. Running reports: {{ queue_metrics.running_reports }}.</div>
+              </div>
             </div>
 
             <div class="report-list">

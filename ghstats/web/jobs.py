@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 from datetime import datetime, timedelta, timezone
 
+from sqlalchemy import update
 from sqlalchemy.orm import Session
 
 from ghstats.config import RuntimeConfig, StaticTokenProvider
@@ -20,12 +21,27 @@ def utcnow() -> datetime:
 
 def process_next_job(settings: WebAppSettings, session: Session) -> ReportJob | None:
     recover_stale_jobs(settings, session)
-    job = (
-        session.query(ReportJob)
-        .filter(ReportJob.status == "queued")
-        .order_by(ReportJob.created_at.asc())
-        .first()
-    )
+    job: ReportJob | None = None
+    for _ in range(5):
+        candidate = (
+            session.query(ReportJob)
+            .filter(ReportJob.status == "queued")
+            .order_by(ReportJob.created_at.asc())
+            .first()
+        )
+        if candidate is None:
+            return None
+
+        claim_time = utcnow()
+        claimed = session.execute(
+            update(ReportJob)
+            .where(ReportJob.id == candidate.id, ReportJob.status == "queued")
+            .values(status="running", attempts=ReportJob.attempts + 1, started_at=claim_time)
+        )
+        session.commit()
+        if claimed.rowcount == 1:
+            job = session.get(ReportJob, candidate.id)
+            break
     if job is None:
         return None
 
@@ -47,9 +63,6 @@ def process_next_job(settings: WebAppSettings, session: Session) -> ReportJob | 
         return job
 
     try:
-        job.status = "running"
-        job.attempts += 1
-        job.started_at = utcnow()
         if not job.job_type.startswith("export:"):
             report.status = "running"
             report.error_message = None

@@ -25,3 +25,15 @@ services:
     environment:
       - DATABASE_URL=sqlite:////app/web_artifacts/ghstatsussy-prod.db
       - REPORT_STORAGE_DIR=/app/web_artifacts
+
+  worker2:
+    build: .
+    command: python -m ghstats.web.worker
+    restart: unless-stopped
+    volumes:
+      - ./web_artifacts:/app/web_artifacts
+    env_file:
+      - .env
+    environment:
+      - DATABASE_URL=sqlite:////app/web_artifacts/ghstatsussy-prod.db
+      - REPORT_STORAGE_DIR=/app/web_artifacts
