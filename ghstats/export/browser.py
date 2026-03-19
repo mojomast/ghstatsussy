@@ -18,6 +18,7 @@ except ImportError:  # pragma: no cover - handled by runtime check
 
 
 MAX_PNG_HEIGHT = 16000
+MAX_SINGLE_PAGE_PDF_HEIGHT = 18000
 
 
 class ExportRenderError(RuntimeError):
@@ -37,14 +38,28 @@ def render_pdf(
         avatar_source_url=avatar_source_url,
         avatar_data_url=resolved_avatar_data_url,
     )
+
+    def capture(page: Any) -> bytes:
+        dimensions = _measure_page_dimensions(page)
+        width = dimensions["width"]
+        height = dimensions["height"]
+        if height > MAX_SINGLE_PAGE_PDF_HEIGHT:
+            raise ExportRenderError(
+                f"Report is too tall for a single-page PDF export ({height}px). Please use PNG or HTML instead."
+            )
+        return page.pdf(
+            width=f"{width}px",
+            height=f"{height}px",
+            print_background=True,
+            margin={"top": "0px", "right": "0px", "bottom": "0px", "left": "0px"},
+            prefer_css_page_size=False,
+        )
+
     return _with_page(
         prepared,
         timeout_ms=timeout_ms,
-        callback=lambda page: page.pdf(
-            format="A4",
-            print_background=True,
-            margin={"top": "14mm", "right": "12mm", "bottom": "14mm", "left": "12mm"},
-        ),
+        callback=capture,
+        freeze_for_capture=True,
     )
 
 
@@ -71,7 +86,7 @@ def render_png(
             )
         return page.screenshot(full_page=True, type="png")
 
-    return _with_page(prepared, timeout_ms=timeout_ms, callback=capture)
+    return _with_page(prepared, timeout_ms=timeout_ms, callback=capture, freeze_for_capture=True)
 
 
 def freeze_standalone_html(
@@ -115,7 +130,13 @@ def ensure_playwright_available() -> None:
         )
 
 
-def _with_page(html_document: str, *, timeout_ms: int, callback: Any) -> Any:
+def _with_page(
+    html_document: str,
+    *,
+    timeout_ms: int,
+    callback: Any,
+    freeze_for_capture: bool = False,
+) -> Any:
     ensure_playwright_available()
     playwright_factory = _playwright_factory()
     try:
@@ -126,11 +147,45 @@ def _with_page(html_document: str, *, timeout_ms: int, callback: Any) -> Any:
             page.emulate_media(media="screen")
             page.wait_for_load_state("networkidle", timeout=timeout_ms)
             page.wait_for_timeout(750)
+            if freeze_for_capture:
+                _freeze_page_for_capture(page)
             result = callback(page)
             browser.close()
             return result
     except PlaywrightTimeoutError as error:
         raise ExportRenderError("Timed out while rendering export artifact.") from error
+
+
+def _freeze_page_for_capture(page: Any) -> None:
+    page.evaluate(_FREEZE_EXPORT_SCRIPT)
+    page.wait_for_timeout(120)
+
+
+def _measure_page_dimensions(page: Any) -> dict[str, int]:
+    raw = page.evaluate(
+        """() => {
+        const body = document.body;
+        const doc = document.documentElement;
+        return {
+          width: Math.max(
+            Math.ceil(doc.scrollWidth || 0),
+            Math.ceil(body ? body.scrollWidth || 0 : 0),
+            Math.ceil(doc.clientWidth || 0),
+            800,
+          ),
+          height: Math.max(
+            Math.ceil(doc.scrollHeight || 0),
+            Math.ceil(body ? body.scrollHeight || 0 : 0),
+            Math.ceil(doc.clientHeight || 0),
+            600,
+          ),
+        };
+      }"""
+    )
+    return {
+        "width": max(int(raw.get("width", 0)), 800),
+        "height": max(int(raw.get("height", 0)), 600),
+    }
 
 
 def _replace_chart_cdn(html_document: str) -> str:
@@ -283,8 +338,6 @@ _FREEZE_EXPORT_SCRIPT = r"""
       const ctx = canvas.getContext('2d');
       if (!ctx) return;
       ctx.clearRect(0, 0, width, height);
-      ctx.fillStyle = '#ffffff';
-      ctx.fillRect(0, 0, width, height);
       if (spec.type === 'line') drawLine(ctx, width, height, spec.data);
       if (spec.type === 'bar') drawBar(ctx, width, height, spec.data);
       if (spec.type === 'pie') drawPie(ctx, width, height, spec.data);
