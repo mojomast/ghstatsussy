@@ -8,6 +8,7 @@ from fastapi import Depends, FastAPI, Form, HTTPException, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+from pydantic import ValidationError
 from sqlalchemy.orm import Session, sessionmaker
 from starlette.middleware.trustedhost import TrustedHostMiddleware
 from starlette.middleware.sessions import SessionMiddleware
@@ -23,7 +24,7 @@ from ghstats.web.github_oauth import (
 )
 from ghstats.web.jobs import process_next_job
 from ghstats.web.models import Report, User
-from ghstats.web.schemas import ReportCreatePayload, ReportTemplateKey, ReportVisibility
+from ghstats.web.schemas import ReportCreatePayload
 from ghstats.web.service import HostedReportService, serialize_report
 from ghstats.render.templates import REPORT_TEMPLATES
 from ghstats.render.themes import get_theme
@@ -31,6 +32,10 @@ from ghstats.render.themes import get_theme
 
 TEMPLATE_DIR = Path(__file__).resolve().parent.parent / "templates"
 templates = Jinja2Templates(directory=str(TEMPLATE_DIR))
+PREVIEW_READY_REPORT_ID = "11111111-1111-1111-1111-111111111111"
+PREVIEW_RUNNING_REPORT_ID = "22222222-2222-2222-2222-222222222222"
+PREVIEW_READY_JOB_ID = "33333333-3333-3333-3333-333333333333"
+PREVIEW_RUNNING_JOB_ID = "44444444-4444-4444-4444-444444444444"
 
 
 def create_app(settings: WebAppSettings | None = None) -> FastAPI:
@@ -42,12 +47,16 @@ def create_app(settings: WebAppSettings | None = None) -> FastAPI:
     app = FastAPI(title=web_settings.app_name)
     app.add_middleware(
         TrustedHostMiddleware,
-        allowed_hosts=[
-            "ghstats.ussyco.de",
-            f"*.{web_settings.ghstats_subdomain_base}",
-            "127.0.0.1",
-            "localhost",
-        ],
+        allowed_hosts=(
+            ["*"]
+            if web_settings.preview_mode
+            else [
+                "ghstats.ussyco.de",
+                f"*.{web_settings.ghstats_subdomain_base}",
+                "127.0.0.1",
+                "localhost",
+            ]
+        ),
     )
     app.add_middleware(
         SessionMiddleware,
@@ -70,9 +79,12 @@ def create_app(settings: WebAppSettings | None = None) -> FastAPI:
 
     @app.get("/gallery", response_class=HTMLResponse)
     def gallery(request: Request, user: User | None = Depends(optional_user)) -> HTMLResponse:
-        with session_factory() as session:
-            service = HostedReportService(web_settings, session)
-            reports = [serialize_report(report, web_settings) for report in service.list_public_reports()]
+        if web_settings.preview_mode:
+            reports = [report for report in _build_preview_reports(web_settings) if report["visibility"] == "public"]
+        else:
+            with session_factory() as session:
+                service = HostedReportService(web_settings, session)
+                reports = [serialize_report(report, web_settings) for report in service.list_public_reports()]
         return templates.TemplateResponse(
             request,
             "web/gallery.html.j2",
@@ -87,7 +99,7 @@ def create_app(settings: WebAppSettings | None = None) -> FastAPI:
     def home(request: Request, user: User | None = Depends(optional_user)) -> HTMLResponse | RedirectResponse:
         if _is_report_host(request, web_settings):
             return _render_subdomain_report(request, web_settings, session_factory, user, report_path="")
-        if user is not None:
+        if user is not None and not web_settings.preview_mode:
             return RedirectResponse(url="/dashboard", status_code=302)
         return templates.TemplateResponse(
             request,
@@ -140,26 +152,9 @@ def create_app(settings: WebAppSettings | None = None) -> FastAPI:
 
     @app.get("/dashboard", response_class=HTMLResponse)
     def dashboard(request: Request, user: User = Depends(require_user)) -> HTMLResponse:
-        with session_factory() as session:
-            db_user = session.get(User, user.id)
-            if db_user is None:
-                raise HTTPException(status_code=404, detail="User not found")
-            service = HostedReportService(web_settings, session)
-            reports = [serialize_report(report, web_settings) for report in service.list_reports_for_user(db_user)]
-        return templates.TemplateResponse(
-            request,
-            "web/dashboard.html.j2",
-            {
-                "settings": web_settings,
-                "user": db_user,
-                "reports": reports,
-                "allow_sample_reports": web_settings.allow_sample_reports,
-                "report_templates": REPORT_TEMPLATES,
-                "get_report_theme": get_theme,
-            },
-        )
+        return _render_dashboard(request, web_settings, session_factory, user.id)
 
-    @app.post("/dashboard/reports")
+    @app.post("/dashboard/reports", response_model=None)
     def dashboard_create_report(
         request: Request,
         since_spec: str = Form("30d"),
@@ -171,39 +166,89 @@ def create_app(settings: WebAppSettings | None = None) -> FastAPI:
         template_key: str = Form("default"),
         sample_data: str | None = Form(None),
         user: User = Depends(require_user),
-    ) -> RedirectResponse:
-        payload = ReportCreatePayload(
+    ) -> HTMLResponse | RedirectResponse:
+        if web_settings.preview_mode:
+            return RedirectResponse(url=f"/dashboard/reports/{PREVIEW_RUNNING_REPORT_ID}", status_code=302)
+
+        form_values = _report_form_values(
             since_spec=since_spec,
-            title=title or None,
-            include_private=include_private == "true",
-            visibility=ReportVisibility(visibility),
-            sample_data=sample_data == "true",
-            store_metadata=store_metadata == "true",
+            title=title,
+            include_private=include_private,
+            visibility=visibility,
             expires_in_days=expires_in_days,
-            template_key=ReportTemplateKey(template_key),
+            store_metadata=store_metadata,
+            template_key=template_key,
+            sample_data=sample_data,
         )
+        try:
+            payload = ReportCreatePayload.model_validate(
+                {
+                    "since_spec": since_spec,
+                    "title": title or None,
+                    "include_private": include_private == "true",
+                    "visibility": visibility,
+                    "sample_data": sample_data == "true",
+                    "store_metadata": store_metadata == "true",
+                    "expires_in_days": expires_in_days,
+                    "template_key": template_key,
+                }
+            )
+        except ValidationError as error:
+            return _render_dashboard(
+                request,
+                web_settings,
+                session_factory,
+                user.id,
+                status_code=400,
+                form_error=_validation_message(error),
+                form_values=form_values,
+            )
+
         with session_factory() as session:
             db_user = session.get(User, user.id)
             if db_user is None:
                 raise HTTPException(status_code=404, detail="User not found")
             service = HostedReportService(web_settings, session)
-            report = service.queue_report(
-                user=db_user,
-                since_spec=payload.since_spec,
-                title=payload.title,
-                include_private=payload.include_private,
-                visibility=payload.visibility,
-                store_metadata=payload.store_metadata,
-                expires_in_days=payload.expires_in_days,
-                template_key=payload.template_key,
-                sample_data=payload.sample_data,
-            )
+            try:
+                report = service.queue_report(
+                    user=db_user,
+                    since_spec=payload.since_spec,
+                    title=payload.title,
+                    include_private=payload.include_private,
+                    visibility=payload.visibility,
+                    store_metadata=payload.store_metadata,
+                    expires_in_days=payload.expires_in_days,
+                    template_key=payload.template_key,
+                    sample_data=payload.sample_data,
+                )
+            except ValueError as error:
+                session.rollback()
+                return _render_dashboard(
+                    request,
+                    web_settings,
+                    session_factory,
+                    user.id,
+                    status_code=400,
+                    form_error=str(error),
+                    form_values=form_values,
+                )
             if web_settings.process_jobs_inline:
                 process_next_job(web_settings, session)
         return RedirectResponse(url=f"/dashboard/reports/{report.id}", status_code=302)
 
     @app.get("/dashboard/reports/{report_id}", response_class=HTMLResponse)
     def dashboard_report_detail(request: Request, report_id: UUID, user: User = Depends(require_user)) -> HTMLResponse:
+        if web_settings.preview_mode:
+            report_data, snapshot = _preview_report_detail(web_settings, str(report_id))
+            return templates.TemplateResponse(
+                request,
+                "web/report_detail.html.j2",
+                {
+                    "settings": web_settings,
+                    "report": report_data,
+                    "snapshot": snapshot,
+                },
+            )
         with session_factory() as session:
             db_user = session.get(User, user.id)
             if db_user is None:
@@ -251,17 +296,21 @@ def create_app(settings: WebAppSettings | None = None) -> FastAPI:
             if db_user is None:
                 raise HTTPException(status_code=404, detail="User not found")
             service = HostedReportService(web_settings, session)
-            report = service.queue_report(
-                user=db_user,
-                since_spec=payload.since_spec,
-                title=payload.title,
-                include_private=payload.include_private,
-                visibility=payload.visibility,
-                store_metadata=payload.store_metadata,
-                expires_in_days=payload.expires_in_days,
-                template_key=payload.template_key,
-                sample_data=payload.sample_data,
-            )
+            try:
+                report = service.queue_report(
+                    user=db_user,
+                    since_spec=payload.since_spec,
+                    title=payload.title,
+                    include_private=payload.include_private,
+                    visibility=payload.visibility,
+                    store_metadata=payload.store_metadata,
+                    expires_in_days=payload.expires_in_days,
+                    template_key=payload.template_key,
+                    sample_data=payload.sample_data,
+                )
+            except ValueError as error:
+                session.rollback()
+                raise HTTPException(status_code=400, detail=str(error)) from error
             if web_settings.process_jobs_inline:
                 process_next_job(web_settings, session)
             return serialize_report(report, web_settings)
@@ -286,6 +335,8 @@ def create_app(settings: WebAppSettings | None = None) -> FastAPI:
         report_id: UUID,
         user: User = Depends(require_user),
     ) -> RedirectResponse:
+        if web_settings.preview_mode:
+            return RedirectResponse(url=f"/dashboard/reports/{report_id}", status_code=302)
         with session_factory() as session:
             db_user = session.get(User, user.id)
             if db_user is None:
@@ -352,6 +403,17 @@ def create_app(settings: WebAppSettings | None = None) -> FastAPI:
 
     @app.get("/dashboard/reports/{report_id}/progress", response_class=HTMLResponse)
     def dashboard_report_progress_partial(report_id: UUID, request: Request, user: User = Depends(require_user)) -> HTMLResponse:
+        if web_settings.preview_mode:
+            report_data, _ = _preview_report_detail(web_settings, str(report_id))
+            progress_percent, current_step, total_steps = _job_progress(str(report_data["status"]))
+            context = {
+                "report": report_data,
+                "job": _preview_job(report_data),
+                "progress_percent": progress_percent,
+                "current_step": current_step,
+                "total_steps": total_steps,
+            }
+            return templates.TemplateResponse(request, "web/_report_progress.html.j2", context)
         with session_factory() as session:
             db_user = session.get(User, user.id)
             if db_user is None:
@@ -392,6 +454,9 @@ def create_app(settings: WebAppSettings | None = None) -> FastAPI:
 
 
 def optional_user(request: Request) -> User | None:
+    settings: WebAppSettings = request.app.state.settings
+    if settings.preview_mode:
+        return _preview_user(settings)
     user_id = request.session.get("user_id")
     if not user_id:
         return None
@@ -413,6 +478,191 @@ def ensure_oauth_configured(settings: WebAppSettings) -> None:
             status_code=500,
             detail="GitHub OAuth is not configured. Set GITHUB_CLIENT_ID and GITHUB_CLIENT_SECRET.",
         )
+
+
+def _render_dashboard(
+    request: Request,
+    settings: WebAppSettings,
+    session_factory: sessionmaker[Session],
+    user_id: str,
+    *,
+    status_code: int = 200,
+    form_error: str | None = None,
+    form_values: dict[str, object] | None = None,
+) -> HTMLResponse:
+    if settings.preview_mode and user_id == "preview-user":
+        preview_user = _preview_user(settings)
+        context = {
+            "settings": settings,
+            "user": preview_user,
+            "reports": _build_preview_reports(settings),
+            "allow_sample_reports": True,
+            "report_templates": REPORT_TEMPLATES,
+            "get_report_theme": get_theme,
+            "form_error": form_error,
+            "form_values": _merged_report_form_values(settings, form_values),
+        }
+        return templates.TemplateResponse(request, "web/dashboard.html.j2", context, status_code=status_code)
+
+    with session_factory() as session:
+        db_user = session.get(User, user_id)
+        if db_user is None:
+            raise HTTPException(status_code=404, detail="User not found")
+        service = HostedReportService(settings, session)
+        reports = [serialize_report(report, settings) for report in service.list_reports_for_user(db_user)]
+        context = {
+            "settings": settings,
+            "user": db_user,
+            "reports": reports,
+            "allow_sample_reports": settings.allow_sample_reports,
+            "report_templates": REPORT_TEMPLATES,
+            "get_report_theme": get_theme,
+            "form_error": form_error,
+            "form_values": _merged_report_form_values(settings, form_values),
+        }
+    return templates.TemplateResponse(request, "web/dashboard.html.j2", context, status_code=status_code)
+
+
+def _merged_report_form_values(
+    settings: WebAppSettings,
+    form_values: dict[str, object] | None,
+) -> dict[str, object]:
+    default_expiry = settings.default_report_expiry_days
+    if settings.default_visibility == "public":
+        default_expiry = min(default_expiry, 30)
+    values = {
+        "since_spec": "30d",
+        "title": "",
+        "include_private": False,
+        "visibility": settings.default_visibility,
+        "expires_in_days": str(default_expiry),
+        "store_metadata": False,
+        "template_key": REPORT_TEMPLATES[0].key,
+        "sample_data": False,
+    }
+    if form_values:
+        values.update(form_values)
+    return values
+
+
+def _report_form_values(
+    *,
+    since_spec: str,
+    title: str,
+    include_private: str | None,
+    visibility: str,
+    expires_in_days: int,
+    store_metadata: str | None,
+    template_key: str,
+    sample_data: str | None,
+) -> dict[str, object]:
+    return {
+        "since_spec": since_spec,
+        "title": title,
+        "include_private": include_private == "true",
+        "visibility": visibility,
+        "expires_in_days": str(expires_in_days),
+        "store_metadata": store_metadata == "true",
+        "template_key": template_key,
+        "sample_data": sample_data == "true",
+    }
+
+
+def _validation_message(error: ValidationError) -> str:
+    errors = error.errors(include_url=False)
+    if not errors:
+        return "Invalid report settings."
+    message = str(errors[0].get("msg", "Invalid report settings."))
+    prefix = "Value error, "
+    if message.startswith(prefix):
+        return message[len(prefix):]
+    return message
+
+
+def _build_preview_reports(settings: WebAppSettings) -> list[dict[str, object]]:
+    base_url = settings.app_base_url.rstrip("/")
+    login = settings.preview_user_login
+    return [
+        {
+            "id": PREVIEW_READY_REPORT_ID,
+            "slug": "preview-ready-report",
+            "title": "Release Drift / Last 30d",
+            "since_spec": "30d",
+            "visibility": "public",
+            "include_private": False,
+            "status": "ready",
+            "generated_at": "2026-03-18T20:45:00+00:00",
+            "share_url": f"{base_url}/r/preview-ready-report",
+            "host_url": f"https://{login}.preview.local/",
+            "store_metadata": True,
+            "template_key": "orbital",
+            "latest_job_id": PREVIEW_READY_JOB_ID,
+            "expires_at": "2026-04-17T20:45:00+00:00",
+            "user": {"login": login, "avatar_url": None},
+        },
+        {
+            "id": PREVIEW_RUNNING_REPORT_ID,
+            "slug": "preview-running-report",
+            "title": "Gallery Pulse / Last 90d",
+            "since_spec": "90d",
+            "visibility": "unlisted",
+            "include_private": False,
+            "status": "running",
+            "generated_at": None,
+            "share_url": f"{base_url}/r/preview-running-report",
+            "host_url": None,
+            "store_metadata": False,
+            "template_key": "gallery",
+            "latest_job_id": PREVIEW_RUNNING_JOB_ID,
+            "expires_at": "2026-04-30T19:00:00+00:00",
+            "user": {"login": login, "avatar_url": None},
+        },
+    ]
+
+
+def _preview_report_detail(settings: WebAppSettings, report_id: str) -> tuple[dict[str, object], dict[str, object] | None]:
+    reports = {report["id"]: report for report in _build_preview_reports(settings)}
+    report = reports.get(report_id)
+    if report is None:
+        raise HTTPException(status_code=404, detail="Report not found")
+
+    snapshot: dict[str, object] | None = None
+    if report["status"] == "ready":
+        snapshot = {"version": int(3)}
+    return report, snapshot
+
+
+def _preview_job(report: dict[str, object]) -> dict[str, object] | None:
+    status = str(report["status"])
+    if status == "ready":
+        return {
+            "id": PREVIEW_READY_JOB_ID,
+            "status": "succeeded",
+            "created_at": "2026-03-18T20:30:00+00:00",
+            "started_at": "2026-03-18T20:31:00+00:00",
+            "finished_at": "2026-03-18T20:45:00+00:00",
+        }
+    if status == "running":
+        return {
+            "id": PREVIEW_RUNNING_JOB_ID,
+            "status": "running",
+            "created_at": "2026-03-18T21:00:00+00:00",
+            "started_at": "2026-03-18T21:01:00+00:00",
+            "finished_at": None,
+        }
+    return None
+
+
+def _preview_user(settings: WebAppSettings) -> User:
+    user = User(github_user_id=0, login=settings.preview_user_login, access_token_encrypted="preview-token")
+    user.id = "preview-user"
+    user.name = settings.preview_user_name
+    user.avatar_url = None
+    user.profile_url = None
+    user.email = None
+    user.store_metadata_opt_in = False
+    user.can_use_public_subdomain = True
+    return user
 
 
 def _none_or_str(value: object | None) -> str | None:

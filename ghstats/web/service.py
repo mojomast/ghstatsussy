@@ -160,7 +160,9 @@ class HostedReportService:
         return f"https://{report.username_slug}.{base}/"
 
     def read_snapshot_html(self, snapshot: ReportSnapshot) -> str:
-        return Path(snapshot.html_path).read_text(encoding="utf-8")
+        # Resolve legacy absolute paths to the current storage dir
+        snapshot_dir = self.settings.report_storage_dir / snapshot.report.slug / f"v{snapshot.version}"
+        return (snapshot_dir / "report.html").read_text(encoding="utf-8")
 
     def _generate_slug(self) -> str:
         while True:

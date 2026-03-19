@@ -259,6 +259,20 @@
         background: rgba(255, 255, 255, 0.03);
       }
 
+      .form-error {
+        margin-top: 14px;
+        padding: 13px 14px;
+        border-radius: 14px;
+        border: 1px solid rgba(255, 133, 115, 0.32);
+        background: rgba(255, 133, 115, 0.1);
+        color: #ffd2cb;
+      }
+
+      .field-hint {
+        margin-top: 8px;
+        font-size: 0.92rem;
+      }
+
       .template-picker {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -713,28 +727,33 @@
           <span class="eyebrow">Generate</span>
           <h2 style="margin-top: 12px;">Launch a new snapshot</h2>
           <p class="muted" style="margin-top: 10px;">Pick your time window, decide how public it should be, and choose whether you want metadata retained for future reruns.</p>
+          {% if form_error %}
+          <div id="formError" class="form-error" role="alert">{{ form_error }}</div>
+          {% else %}
+          <div id="formError" class="form-error" role="alert" hidden></div>
+          {% endif %}
 
           <form id="reportForm" method="post" action="/dashboard/reports">
             <div class="field">
               <label for="since_spec">Time window</label>
               <select id="since_spec" name="since_spec">
-                <option value="7d">7 days</option>
-                <option value="30d" selected>30 days</option>
-                <option value="90d">90 days</option>
-                <option value="180d">180 days</option>
-                <option value="365d">365 days</option>
+                <option value="7d" {% if form_values.since_spec == '7d' %}selected{% endif %}>7 days</option>
+                <option value="30d" {% if form_values.since_spec == '30d' %}selected{% endif %}>30 days</option>
+                <option value="90d" {% if form_values.since_spec == '90d' %}selected{% endif %}>90 days</option>
+                <option value="180d" {% if form_values.since_spec == '180d' %}selected{% endif %}>180 days</option>
+                <option value="365d" {% if form_values.since_spec == '365d' %}selected{% endif %}>365 days</option>
               </select>
             </div>
             <div class="field">
               <label for="title">Report title</label>
-              <input id="title" name="title" maxlength="120" placeholder="GitHub Activity / Last 30d" />
+              <input id="title" name="title" maxlength="120" placeholder="GitHub Activity / Last 30d" value="{{ form_values.title }}" />
             </div>
             <div class="field">
               <label for="visibility">Visibility</label>
               <select id="visibility" name="visibility">
-                <option value="unlisted">unlisted - Link sharing only</option>
-                <option value="public">public - Appears on your subdomain & public gallery</option>
-                <option value="private">private - Only you can view while logged in</option>
+                <option value="unlisted" {% if form_values.visibility == 'unlisted' %}selected{% endif %}>unlisted - Link sharing only</option>
+                <option value="public" {% if form_values.visibility == 'public' %}selected{% endif %}>public - Appears on your subdomain & public gallery</option>
+                <option value="private" {% if form_values.visibility == 'private' %}selected{% endif %}>private - Only you can view while logged in</option>
               </select>
             </div>
             <div class="field">
@@ -743,7 +762,7 @@
                 {% for template in report_templates %}
                 {% set theme = get_report_theme(template.key) %}
                 <label class="template-option">
-                  <input type="radio" name="template_key" value="{{ template.key }}" {% if loop.first %}checked{% endif %} />
+                  <input type="radio" name="template_key" value="{{ template.key }}" {% if form_values.template_key == template.key %}checked{% endif %} />
                   <span class="template-card">
                     <span class="template-preview"
                       style="--preview-bg: {{ theme.background_css }}; --preview-overlay: {{ theme.overlay_css }}; --preview-overlay-opacity: {{ theme.overlay_opacity }}; --preview-ink: {{ theme.ink }}; --preview-line: {{ theme.line }}; --preview-panel: {{ theme.panel_strong }}; --preview-accent: {{ theme.accent }}; --preview-accent-2: {{ theme.accent_2 }}; --preview-accent-3: {{ theme.accent_3 }};">
@@ -799,26 +818,27 @@
             </div>
             <div class="field">
               <label>Include private activity</label>
-              <label class="checkbox-row"><input id="include_private" name="include_private" type="checkbox" value="true" /> <span>allowed, but the report must remain private if this is enabled</span></label>
+              <label class="checkbox-row"><input id="include_private" name="include_private" type="checkbox" value="true" {% if form_values.include_private %}checked{% endif %} /> <span>allowed, but the report must remain private if this is enabled</span></label>
             </div>
             <div class="field">
               <label for="expires_in_days">Expiry in days</label>
               <select id="expires_in_days" name="expires_in_days">
-                <option value="7">7 days</option>
-                <option value="14" selected>14 days</option>
-                <option value="30">30 days</option>
-                <option value="60">60 days</option>
-                <option value="90">90 days</option>
+                <option value="7" {% if form_values.expires_in_days == '7' %}selected{% endif %}>7 days</option>
+                <option value="14" {% if form_values.expires_in_days == '14' %}selected{% endif %}>14 days</option>
+                <option value="30" {% if form_values.expires_in_days == '30' %}selected{% endif %}>30 days</option>
+                <option value="60" {% if form_values.expires_in_days == '60' %}selected{% endif %}>60 days</option>
+                <option value="90" {% if form_values.expires_in_days == '90' %}selected{% endif %}>90 days</option>
               </select>
+              <p id="expiryPolicyHint" class="muted field-hint">Public reports can last up to 30 days.</p>
             </div>
             <div class="field">
               <label>Store metadata</label>
-              <label class="checkbox-row"><input id="store_metadata" name="store_metadata" type="checkbox" value="true" /> <span>opt in if you want JSON/context retained for history and easier reruns</span></label>
+              <label class="checkbox-row"><input id="store_metadata" name="store_metadata" type="checkbox" value="true" {% if form_values.store_metadata %}checked{% endif %} /> <span>opt in if you want JSON/context retained for history and easier reruns</span></label>
             </div>
             {% if allow_sample_reports %}
             <div class="field">
               <label>Use sample data</label>
-              <label class="checkbox-row"><input id="sample_data" name="sample_data" type="checkbox" value="true" /> <span>demo mode without touching your real GitHub activity</span></label>
+              <label class="checkbox-row"><input id="sample_data" name="sample_data" type="checkbox" value="true" {% if form_values.sample_data %}checked{% endif %} /> <span>demo mode without touching your real GitHub activity</span></label>
             </div>
             {% endif %}
             <div class="form-actions">
@@ -904,9 +924,55 @@
       const form = document.getElementById('reportForm');
       const overlay = document.getElementById('submitOverlay');
       const submitButton = document.getElementById('submitButton');
+      const visibilityField = document.getElementById('visibility');
+      const expiryField = document.getElementById('expires_in_days');
+      const errorBox = document.getElementById('formError');
+      const expiryPolicyHint = document.getElementById('expiryPolicyHint');
 
-      if (form && overlay && submitButton) {
-        form.addEventListener('submit', () => {
+      if (form && overlay && submitButton && visibilityField && expiryField) {
+        const syncExpiryPolicy = () => {
+          const isPublic = visibilityField.value === 'public';
+
+          for (const option of expiryField.options) {
+            const days = Number(option.value);
+            const allowed = !isPublic || days <= 30;
+            option.disabled = !allowed;
+            option.hidden = !allowed;
+          }
+
+          if (isPublic && Number(expiryField.value) > 30) {
+            expiryField.value = '30';
+          }
+
+          if (expiryPolicyHint) {
+            expiryPolicyHint.hidden = !isPublic;
+          }
+        };
+
+        const showError = (message) => {
+          if (!errorBox) {
+            return;
+          }
+          errorBox.textContent = message;
+          errorBox.hidden = false;
+        };
+
+        visibilityField.addEventListener('change', syncExpiryPolicy);
+        expiryField.addEventListener('change', () => {
+          if (errorBox) {
+            errorBox.hidden = true;
+          }
+        });
+        syncExpiryPolicy();
+
+        form.addEventListener('submit', (event) => {
+          if (visibilityField.value === 'public' && Number(expiryField.value) > 30) {
+            event.preventDefault();
+            showError('Public reports must expire within 30 days.');
+            expiryField.focus();
+            return;
+          }
+
           document.body.classList.add('is-submitting');
           overlay.hidden = false;
           submitButton.disabled = true;

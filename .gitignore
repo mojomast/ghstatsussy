@@ -3,6 +3,8 @@ __pycache__/
 *.pyc
 .DS_Store
 web_artifacts/
+preview_artifacts/
+.env
 examples/live_report*.html
 examples/live_report*.json
 examples/*_preview.html

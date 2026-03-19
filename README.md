@@ -169,6 +169,7 @@ Replace the host with your production URL when you deploy it.
 
 - hosted report creation now uses fixed dropdowns for time window, visibility, and expiry wherever practical
 - the dashboard template chooser is now a visual picker with palette chips, style badges, and stronger dark-mode form contrast
+- invalid public-expiry submissions now stay on the dashboard with a clear inline validation message instead of surfacing a 500 error
 - title input is length-limited and normalized server-side
 - server validation rejects invalid template keys, invalid windows, overlong public expiry, and unsafe private/public combinations
 - report, job, and detail routes now use stricter typed identifiers on the server side
@@ -199,6 +200,19 @@ Users can choose from 10 incredibly unique, structurally diverse report themes. 
 - `signalroom`: Glowing green phosphorescent hacker terminal with scanlines.
 - `tapearchive`: Industrial, modular tape reel and index card interface.
 - `default`: Polished, frosted-glass modern dashboard.
+
+### Frontend Preview Docker Stack
+
+For frontend work, use the isolated preview stack instead of the production compose project:
+
+```bash
+docker compose -f docker-compose.preview.yml up -d --build
+```
+
+- serves a preview-only app on `http://127.0.0.1:8011`
+- enables `PREVIEW_MODE=1` so dashboard/report pages render with seeded sample content and no GitHub auth
+- keeps its own SQLite database and artifacts under `./preview_artifacts`
+- does not touch the production `web` / `worker` containers or `./web_artifacts`
 
 ## Docker Deployment (Production)
 

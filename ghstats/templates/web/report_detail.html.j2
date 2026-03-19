@@ -369,6 +369,7 @@
           flex-direction: column;
         }
       }
+
     </style>
     {% if report.status in ['queued', 'running'] %}
     <meta http-equiv="refresh" content="8" />
@@ -387,7 +388,7 @@
         </div>
 
         <div class="actions" style="margin-top: 18px;">
-          <span class="chip {{ report.status }}" id="statusBadge">{{ report.status }}</span>
+          <span class="chip {{ report.status }}">{{ report.status }}</span>
           <span class="chip">{{ report.since_spec }}</span>
           <span class="chip">{{ report.visibility }}</span>
           <span class="chip">template {{ report.template_key }}</span>

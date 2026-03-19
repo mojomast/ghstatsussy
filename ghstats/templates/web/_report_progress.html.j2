@@ -18,7 +18,7 @@
       <span class="progress-scan"></span>
     </div>
     <div class="progress-meta">
-      <span class="chip {{ status }}" id="statusBadge">{{ status }}</span>
+      <span class="chip {{ status }}">{{ status }}</span>
       {% if job and job.started_at %}<span class="muted">Started {{ job.started_at }}</span>{% elif job %}<span class="muted">Queued {{ job.created_at }}</span>{% endif %}
       {% if job and job.finished_at %}<span class="muted">Finished {{ job.finished_at }}</span>{% endif %}
       {% if job %}<span class="muted">Job {{ job.id[:8] }}</span>{% endif %}

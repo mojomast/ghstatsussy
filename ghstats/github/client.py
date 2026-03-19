@@ -401,16 +401,21 @@ class GitHubClient:
         items: list[CommitActivity] = []
 
         for page in range(1, self.config.max_commit_pages_per_repo + 1):
-            payload = self.rest_get(
-                f"/repos/{owner}/{repo_name}/commits",
-                params={
-                    "author": login,
-                    "since": start_at.isoformat(),
-                    "until": end_at.isoformat(),
-                    "per_page": 100,
-                    "page": page,
-                },
-            )
+            try:
+                payload = self.rest_get(
+                    f"/repos/{owner}/{repo_name}/commits",
+                    params={
+                        "author": login,
+                        "since": start_at.isoformat(),
+                        "until": end_at.isoformat(),
+                        "per_page": 100,
+                        "page": page,
+                    },
+                )
+            except GitHubApiError as e:
+                if "empty" in str(e).lower() or "not found" in str(e).lower():
+                    break
+                raise
             if not payload:
                 break
             for summary in payload:

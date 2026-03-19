@@ -100,6 +100,15 @@ The hosted layer adds:
 - currently processes queued jobs in-process for the web path, but also includes a worker loop for separation
 - keeps refresh simple for now; queue-based workers can come later
 
+## Frontend Preview Mode
+
+The app also supports a preview-only mode for isolated frontend work:
+
+- enabled with `PREVIEW_MODE=1`
+- bypasses GitHub auth by returning a synthetic preview user from the existing session dependency
+- seeds dashboard and report detail pages with deterministic sample report data
+- intended for non-production Docker stacks only
+
 ## Future Evolution
 
 - dedicated background workers for large report runs
