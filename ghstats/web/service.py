@@ -216,6 +216,7 @@ def serialize_report(report: Report, settings: WebAppSettings) -> dict[str, obje
         "host_url": host_url,
         "store_metadata": report.store_metadata,
         "template_key": report.template_key,
+        "presentation_config": report.presentation_config,
         "latest_job_id": report.latest_job_id,
         "expires_at": report.expires_at.isoformat() if report.expires_at else None,
         "user": {
