@@ -1,6 +1,176 @@
 {% extends "report_base.html.j2" %}
 {% block theme_css %}
 <style>
-/* CSS is largely handled by the theme definition in themes.py */
+  :root {
+    --ink: #000; --muted: #000;
+  }
+/* BRUTALISM - RADICAL STRUCTURAL OVERRIDES */
+body {
+    font-family: 'Impact', 'Arial Black', sans-serif;
+    background: #ff0055;
+    color: #111;
+    margin: 0;
+    padding: 0;
+    border: 20px solid #000;
+    box-sizing: border-box;
+    min-height: 100vh;
+    text-transform: uppercase;
+}
+
+.shell {
+    width: 100%;
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 60px;
+}
+
+.hero {
+    background: #00ff00;
+    border: 12px solid #000;
+    padding: 10vw 5vw;
+    box-shadow: 25px 25px 0px #000;
+    transform: rotate(-2deg);
+    position: relative;
+    z-index: 10;
+    text-align: center;
+}
+
+.eyebrow {
+    font-size: clamp(1.5rem, 4vw, 3rem);
+    background: #000;
+    color: #ff0055 !important;
+    padding: 15px 30px;
+    display: inline-block;
+    border: 6px solid #fff;
+    box-shadow: -10px -10px 0 #fff, 10px 10px 0 #000;
+    transform: rotate(4deg);
+    letter-spacing: 5px;
+    margin-bottom: 40px;
+}
+
+h1 {
+    font-size: clamp(4rem, 15vw, 12rem);
+    line-height: 0.8;
+    font-weight: 900;
+    letter-spacing: -0.08em;
+    margin: 0;
+    color: #fff;
+    -webkit-text-stroke: 4px #000;
+    text-shadow: 15px 15px 0px #000;
+    word-wrap: break-word;
+}
+
+.panel, .chart-card {
+    border: 12px solid #000 !important;
+    border-radius: 0 !important;
+    background: #ffff00;
+    padding: 40px;
+    box-shadow: 20px 20px 0 #000, 40px 40px 0 rgba(0,0,0,0.3) !important;
+    position: relative;
+    transition: all 0.2s ease-out;
+}
+
+.panel:nth-child(even) { background: #00ffff; transform: rotate(1.5deg); }
+.panel:nth-child(odd) { background: #ff00ff; transform: rotate(-1.5deg); }
+
+.panel:hover, .chart-card:hover {
+    transform: translate(-10px, -10px) scale(1.02) rotate(0deg);
+    box-shadow: 30px 30px 0 #000, 60px 60px 0 rgba(0,0,0,0.4) !important;
+    z-index: 50;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 40px;
+}
+
+.hero-stat {
+    background: #fff;
+    border: 10px solid #000;
+    padding: 30px;
+    box-shadow: 15px 15px 0 #000;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    border-radius: 0 !important;
+}
+
+.hero-stat .stat-label {
+    font-size: 2rem;
+    background: #000;
+    color: #fff;
+    padding: 10px 20px;
+    margin-bottom: 20px;
+    box-shadow: 5px 5px 0 #ff0055;
+}
+
+.hero-stat .stat-val {
+    font-size: 7rem;
+    line-height: 1;
+    color: #00ff00;
+    text-shadow: 6px 6px 0 #000;
+    -webkit-text-stroke: 3px #000;
+}
+
+.charts-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 60px;
+}
+
+.facts-grid, .repo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 40px;
+}
+
+.repo-card, .fact {
+    border: 10px solid #000;
+    background: #fff;
+    box-shadow: 15px 15px 0 #000;
+    border-radius: 0;
+    padding: 30px;
+    position: relative;
+}
+
+.repo-card::before {
+    content: '';
+    position: absolute;
+    top: -15px; left: -15px; right: -15px; bottom: -15px;
+    border: 6px dashed #000;
+    pointer-events: none;
+}
+
+.section-head {
+    background: #000;
+    color: #00ff00;
+    padding: 40px;
+    margin: -40px -40px 40px -40px;
+    font-size: 4rem;
+    letter-spacing: -3px;
+    border-bottom: 12px solid #fff;
+    text-align: right;
+    -webkit-text-stroke: 1px #fff;
+}
+
+.section-head * { color: #00ff00 !important; }
+
+.chip {
+    background: #fff;
+    color: #000 !important;
+    border: 6px solid #000;
+    box-shadow: 6px 6px 0 #ff0055;
+    border-radius: 0;
+    font-size: 1.5rem;
+    padding: 10px 20px;
+    font-weight: 900;
+    display: inline-block;
+    margin: 5px;
+}
 </style>
 {% endblock %}

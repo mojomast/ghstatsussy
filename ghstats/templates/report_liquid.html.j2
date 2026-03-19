@@ -1,6 +1,69 @@
 {% extends "report_base.html.j2" %}
 {% block theme_css %}
 <style>
-/* CSS is largely handled by the theme definition in themes.py */
+  :root {
+    --ink: #222222; --muted: #666666;
+    --liquid-bg: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    --liquid-glass: rgba(255, 255, 255, 0.05);
+  }
+  @keyframes morph {
+    0% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+    50% { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; }
+    100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+  }
+  @keyframes flow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+  .hero, .panel, .chart-card, .stat-card, .repo-card, .fact, .warning, .mini-panel, .profile-card, .hero-stat {
+    background: var(--liquid-glass);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px 0 rgba(0, 194, 255, 0.15), inset 0 4px 18px rgba(255, 255, 255, 0.05);
+    animation: morph 8s ease-in-out infinite both alternate;
+    transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::after, .panel::after, .chart-card::after {
+    content: "";
+    position: absolute;
+    top: -50%; left: -50%; width: 200%; height: 200%;
+    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.03), transparent);
+    transform: rotate(45deg);
+    animation: flow 6s linear infinite;
+    pointer-events: none;
+  }
+  .panel:hover, .chart-card:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 12px 40px 0 rgba(0, 194, 255, 0.3), inset 0 4px 18px rgba(255, 255, 255, 0.1);
+  }
+  .shell { display: flex; flex-direction: column; gap: 24px; }
+  .stats-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 24px; }
+  .stat-card {
+    flex: 1 1 200px;
+    animation: morph 6s ease-in-out infinite alternate-reverse;
+    aspect-ratio: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 20px;
+  }
+  .chip, .eyebrow {
+    border-radius: 999px;
+    background: linear-gradient(270deg, #4facfe, #00f2fe);
+    background-size: 200% 200%;
+    animation: flow 3s ease infinite;
+    color: #fff;
+    border: none;
+  }
+  .hero {
+    padding: 48px;
+    background: linear-gradient(135deg, rgba(79, 172, 254, 0.15), rgba(0, 242, 254, 0.15));
+  }
 </style>
 {% endblock %}

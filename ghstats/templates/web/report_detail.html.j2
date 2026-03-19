@@ -435,26 +435,26 @@
             <div>
               <label class="step-label" style="display:block; margin-bottom: 8px;">Theme</label>
               <select id="themeSelect" style="width: 100%; padding: 10px; border-radius: 8px; background: rgba(255,255,255,0.05); color: white; border: 1px solid var(--line);">
-                <option value="default" {% if report.template_key == 'default' %}selected{% endif %}>Default</option>
-                <option value="ledger" {% if report.template_key == 'ledger' %}selected{% endif %}>Ledger</option>
-                <option value="transit" {% if report.template_key == 'transit' %}selected{% endif %}>Transit</option>
-                <option value="archive" {% if report.template_key == 'archive' %}selected{% endif %}>Archive</option>
-                <option value="scrapbook" {% if report.template_key == 'scrapbook' %}selected{% endif %}>Scrapbook</option>
-                <option value="orbital" {% if report.template_key == 'orbital' %}selected{% endif %}>Orbital</option>
-                <option value="fieldnotes" {% if report.template_key == 'fieldnotes' %}selected{% endif %}>Fieldnotes</option>
-                <option value="signalroom" {% if report.template_key == 'signalroom' %}selected{% endif %}>Signalroom</option>
-                <option value="gallery" {% if report.template_key == 'gallery' %}selected{% endif %}>Gallery</option>
-                <option value="tapearchive" {% if report.template_key == 'tapearchive' %}selected{% endif %}>Tapearchive</option>
-                <option value="cyberpunk" {% if report.template_key == 'cyberpunk' %}selected{% endif %}>Cyberpunk</option>
-                <option value="glassmorphism" {% if report.template_key == 'glassmorphism' %}selected{% endif %}>Glassmorphism</option>
-                <option value="brutalism" {% if report.template_key == 'brutalism' %}selected{% endif %}>Brutalism</option>
-                <option value="retro_os" {% if report.template_key == 'retro_os' %}selected{% endif %}>Retro OS</option>
-                <option value="holo" {% if report.template_key == 'holo' %}selected{% endif %}>Holo</option>
-                <option value="synthwave" {% if report.template_key == 'synthwave' %}selected{% endif %}>Synthwave</option>
-                <option value="paper" {% if report.template_key == 'paper' %}selected{% endif %}>Paper</option>
-                <option value="monochrome" {% if report.template_key == 'monochrome' %}selected{% endif %}>Monochrome</option>
-                <option value="matrix" {% if report.template_key == 'matrix' %}selected{% endif %}>Matrix</option>
-                <option value="liquid" {% if report.template_key == 'liquid' %}selected{% endif %}>Liquid</option>
+                <option value="default" style="background: #1a1b26; color: white;" {% if report.template_key == 'default' %}selected{% endif %}>Default</option>
+                <option value="ledger" style="background: #1a1b26; color: white;" {% if report.template_key == 'ledger' %}selected{% endif %}>Ledger</option>
+                <option value="transit" style="background: #1a1b26; color: white;" {% if report.template_key == 'transit' %}selected{% endif %}>Transit</option>
+                <option value="archive" style="background: #1a1b26; color: white;" {% if report.template_key == 'archive' %}selected{% endif %}>Archive</option>
+                <option value="scrapbook" style="background: #1a1b26; color: white;" {% if report.template_key == 'scrapbook' %}selected{% endif %}>Scrapbook</option>
+                <option value="orbital" style="background: #1a1b26; color: white;" {% if report.template_key == 'orbital' %}selected{% endif %}>Orbital</option>
+                <option value="fieldnotes" style="background: #1a1b26; color: white;" {% if report.template_key == 'fieldnotes' %}selected{% endif %}>Fieldnotes</option>
+                <option value="signalroom" style="background: #1a1b26; color: white;" {% if report.template_key == 'signalroom' %}selected{% endif %}>Signalroom</option>
+                <option value="gallery" style="background: #1a1b26; color: white;" {% if report.template_key == 'gallery' %}selected{% endif %}>Gallery</option>
+                <option value="tapearchive" style="background: #1a1b26; color: white;" {% if report.template_key == 'tapearchive' %}selected{% endif %}>Tapearchive</option>
+                <option value="cyberpunk" style="background: #1a1b26; color: white;" {% if report.template_key == 'cyberpunk' %}selected{% endif %}>Cyberpunk</option>
+                <option value="glassmorphism" style="background: #1a1b26; color: white;" {% if report.template_key == 'glassmorphism' %}selected{% endif %}>Glassmorphism</option>
+                <option value="brutalism" style="background: #1a1b26; color: white;" {% if report.template_key == 'brutalism' %}selected{% endif %}>Brutalism</option>
+                <option value="retro_os" style="background: #1a1b26; color: white;" {% if report.template_key == 'retro_os' %}selected{% endif %}>Retro OS</option>
+                <option value="holo" style="background: #1a1b26; color: white;" {% if report.template_key == 'holo' %}selected{% endif %}>Holo</option>
+                <option value="synthwave" style="background: #1a1b26; color: white;" {% if report.template_key == 'synthwave' %}selected{% endif %}>Synthwave</option>
+                <option value="paper" style="background: #1a1b26; color: white;" {% if report.template_key == 'paper' %}selected{% endif %}>Paper</option>
+                <option value="monochrome" style="background: #1a1b26; color: white;" {% if report.template_key == 'monochrome' %}selected{% endif %}>Monochrome</option>
+                <option value="matrix" style="background: #1a1b26; color: white;" {% if report.template_key == 'matrix' %}selected{% endif %}>Matrix</option>
+                <option value="liquid" style="background: #1a1b26; color: white;" {% if report.template_key == 'liquid' %}selected{% endif %}>Liquid</option>
               </select>
             </div>
             <div>
@@ -468,7 +468,7 @@
               <label class="step-label" style="display:block; margin-bottom: 8px;">Visible Sections</label>
               <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; max-height: 150px; overflow-y: auto; padding-right: 10px;">
                 {% set vis = report.presentation_config.get('visibleSections', ['hero', 'profile_summary', 'key_stats', 'timeline_commits', 'timeline_loc', 'activity_heatmap', 'language_mix', 'language_breakdown', 'highlights', 'repositories', 'notes_and_warnings', 'footer_meta']) if report.presentation_config else ['hero', 'profile_summary', 'key_stats', 'timeline_commits', 'timeline_loc', 'activity_heatmap', 'language_mix', 'language_breakdown', 'highlights', 'repositories', 'notes_and_warnings', 'footer_meta'] %}
-                
+
                 <label style="font-size: 13px; display: flex; align-items: center; gap: 6px;"><input type="checkbox" class="section-toggle" value="hero" {% if 'hero' in vis %}checked{% endif %}> Hero</label>
                 <label style="font-size: 13px; display: flex; align-items: center; gap: 6px;"><input type="checkbox" class="section-toggle" value="profile_summary" {% if 'profile_summary' in vis %}checked{% endif %}> Profile</label>
                 <label style="font-size: 13px; display: flex; align-items: center; gap: 6px;"><input type="checkbox" class="section-toggle" value="key_stats" {% if 'key_stats' in vis %}checked{% endif %}> Stats</label>
@@ -497,7 +497,7 @@
           <span class="muted">Refreshing creates a new snapshot version without changing the share identity.</span>
         </form>
       </section>
-      
+
       {% if report.status == 'ready' and report.share_url %}
       <section class="panel" style="margin-top: 18px; padding: 0; border-radius: 20px; overflow: hidden; height: 800px; display: flex; flex-direction: column;">
         <div style="background: rgba(0,0,0,0.2); padding: 12px 20px; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center;">
@@ -584,7 +584,7 @@
           const heroCopy = document.getElementById('heroCopyInput').value.trim();
           const notesHeading = document.getElementById('notesHeadingInput').value.trim();
           const statusEl = document.getElementById('saveStatus');
-          
+
           statusEl.textContent = 'Saving...';
           saveBtn.disabled = true;
 
@@ -594,7 +594,7 @@
             themeKey: theme,
             visibleSections: visibleSections
           };
-          
+
           payload.textOverrides = {};
           if (heroEyebrow) payload.textOverrides.hero_eyebrow = heroEyebrow;
           if (heroTitle) payload.textOverrides.hero_title = heroTitle;
