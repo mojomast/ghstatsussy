@@ -6,6 +6,7 @@ from statistics import mean
 from typing import Any
 
 from ghstats.analytics.aggregations import (
+    active_repositories,
     activity_heatmap,
     commits_by_day,
     language_breakdown,
@@ -136,7 +137,13 @@ def build_stats_cards(
         stat_card("loc-deleted", "Lines deleted", deleted_total, "lines", "red"),
         stat_card("prs", "PRs opened / merged", f"{dataset.pull_requests_total} / {dataset.pull_requests_merged_total}", None, "slate"),
         stat_card("issues", "Issues opened", dataset.issues_total, "issues", "blue"),
-        stat_card("repos", "Repos contributed to", len({repo.name_with_owner for repo in dataset.repos}), "repos", "violet"),
+        stat_card(
+            "repos",
+            "Repos contributed to",
+            len({repo.name_with_owner for repo in active_repositories(dataset)}),
+            "repos",
+            "violet",
+        ),
         stat_card("streak", "Current / longest streak", f"{streaks['current']} / {streaks['longest']}", "days", "orange"),
     ]
 
@@ -298,7 +305,11 @@ def build_highlights(
             "value": "weekend-warrior",
         })
 
-    unique_languages = {lang.name for repo in dataset.repos for lang in repo.languages}
+    unique_languages = {
+        lang.name
+        for repo in active_repositories(dataset, require_languages=True, exclude_forks=True)
+        for lang in repo.languages
+    }
     if len(unique_languages) >= 5:
         highlights.append({
             "kind": "milestone",

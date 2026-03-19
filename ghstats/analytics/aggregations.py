@@ -5,6 +5,7 @@ from datetime import date
 from typing import cast
 
 from ghstats.models.activity import ActivityDataset
+from ghstats.models.activity import RepoActivity
 from ghstats.utils.timeparse import iter_dates
 
 
@@ -40,9 +41,23 @@ def activity_heatmap(dataset: ActivityDataset) -> list[list[int]]:
     return matrix
 
 
+def active_repositories(
+    dataset: ActivityDataset,
+    *,
+    require_languages: bool = False,
+    exclude_forks: bool = False,
+) -> list[RepoActivity]:
+    repos = [repo for repo in dataset.repos if repo.total_contributions() > 0]
+    if exclude_forks:
+        repos = [repo for repo in repos if not repo.is_fork]
+    if require_languages:
+        repos = [repo for repo in repos if repo.languages]
+    return repos
+
+
 def language_breakdown(dataset: ActivityDataset) -> list[dict[str, int | float | str | None]]:
     totals: dict[str, dict[str, int | str | None]] = {}
-    for repo in dataset.repos:
+    for repo in active_repositories(dataset, require_languages=True, exclude_forks=True):
         for language in repo.languages:
             if language.name not in totals:
                 totals[language.name] = {
@@ -73,7 +88,7 @@ def language_breakdown(dataset: ActivityDataset) -> list[dict[str, int | float |
 def top_repositories(dataset: ActivityDataset, limit: int = 8) -> list[dict[str, object]]:
     detailed_commit_counts = Counter(commit.repo_name_with_owner for commit in dataset.commits)
     repos = sorted(
-        dataset.repos,
+        active_repositories(dataset),
         key=lambda repo: (
             repo.pushed_at.timestamp() if repo.pushed_at else 0.0,
             detailed_commit_counts.get(repo.name_with_owner, 0),
