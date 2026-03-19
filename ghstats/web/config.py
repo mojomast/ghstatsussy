@@ -22,6 +22,11 @@ class WebAppSettings:
     github_token_url: str
     github_user_api_url: str
     github_user_email_api_url: str
+    github_app_id: str
+    github_app_slug: str
+    github_app_private_key: str
+    github_app_api_url: str
+    github_app_base_url: str
     session_cookie_name: str
     allow_sample_reports: bool
     default_visibility: str
@@ -84,6 +89,11 @@ def load_web_settings() -> WebAppSettings:
             "GITHUB_USER_EMAIL_API_URL",
             "https://api.github.com/user/emails",
         ),
+        github_app_id=os.getenv("GITHUB_APP_ID", "").strip(),
+        github_app_slug=os.getenv("GITHUB_APP_SLUG", "").strip(),
+        github_app_private_key=os.getenv("GITHUB_APP_PRIVATE_KEY", ""),
+        github_app_api_url=os.getenv("GITHUB_APP_API_URL", "https://api.github.com").strip(),
+        github_app_base_url=os.getenv("GITHUB_APP_BASE_URL", "https://github.com/apps").strip(),
         session_cookie_name=os.getenv("SESSION_COOKIE_NAME", "ghstatsussy_session"),
         allow_sample_reports=_truthy(os.getenv("ALLOW_SAMPLE_REPORTS", "0")),
         default_visibility=default_visibility,

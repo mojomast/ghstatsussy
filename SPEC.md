@@ -67,6 +67,13 @@ The project must keep GitHub data fetching, analytics, and rendering decoupled s
 - Uses Chart.js via CDN for charts
 - Uses CSS and a custom heatmap grid for the infographic layout
 
+### Hosted export layer
+
+- Reuses stored render context plus saved presentation config to derive portable artifacts
+- Supports PDF, PNG, standalone HTML, and markdown export in the hosted app
+- Keeps export generation deterministic and snapshot-based, without live GitHub refetches
+- Supports optional GitHub profile README publishing only through a repo-scoped GitHub App flow with diff preview
+
 ## Data Flow
 
 1. Parse CLI options
@@ -95,3 +102,4 @@ The project must keep GitHub data fetching, analytics, and rendering decoupled s
 - Add persistent response caching
 - Add scheduled report generation and historical comparisons
 - Add a report comparison mode between two time windows
+- Expand hosted export variants and richer markdown/profile publishing presets

@@ -1,20 +1,31 @@
 from __future__ import annotations
 
 from pathlib import Path
-from uuid import UUID
+from typing import Any
+from uuid import UUID, uuid4
 
 import uvicorn
 from fastapi import Depends, FastAPI, Form, HTTPException, Request
-from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.responses import FileResponse, HTMLResponse, PlainTextResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pydantic import ValidationError
 from sqlalchemy.orm import Session, sessionmaker
-from starlette.middleware.trustedhost import TrustedHostMiddleware
 from starlette.middleware.sessions import SessionMiddleware
+from starlette.middleware.trustedhost import TrustedHostMiddleware
 
+from ghstats.config import RuntimeConfig, StaticTokenProvider
+from ghstats.export.browser import ExportRenderError
+from ghstats.export.markdown import build_markdown_export, render_markdown_preview
+from ghstats.export.service import serialize_export
+from ghstats.render.html import render_report_html
+from ghstats.render.templates import REPORT_TEMPLATES
+from ghstats.render.themes import get_theme
+from ghstats.service import GhStatsService
+from ghstats.utils.timeparse import build_time_window
 from ghstats.web.config import WebAppSettings, load_web_settings
 from ghstats.web.database import Base, create_engine_and_session_factory
+from ghstats.web.github_app import GitHubAppError, GitHubAppSettings, GitHubProfilePublisher
 from ghstats.web.github_oauth import (
     GitHubOAuthError,
     build_authorize_url,
@@ -23,11 +34,16 @@ from ghstats.web.github_oauth import (
     generate_state,
 )
 from ghstats.web.jobs import process_next_job
-from ghstats.web.models import Report, User
-from ghstats.web.schemas import ReportCreatePayload
+from ghstats.web.models import Report, ReportJob, User
+from ghstats.web.schemas import (
+    ExportCreatePayload,
+    GitHubProfileReadmeConnectPayload,
+    GitHubProfileReadmeDiffPayload,
+    GitHubProfileReadmePublishPayload,
+    MarkdownPreviewPayload,
+    ReportCreatePayload,
+)
 from ghstats.web.service import HostedReportService, serialize_report
-from ghstats.render.templates import REPORT_TEMPLATES
-from ghstats.render.themes import get_theme
 
 
 TEMPLATE_DIR = Path(__file__).resolve().parent.parent / "templates"
@@ -36,9 +52,15 @@ PREVIEW_READY_REPORT_ID = "11111111-1111-1111-1111-111111111111"
 PREVIEW_RUNNING_REPORT_ID = "22222222-2222-2222-2222-222222222222"
 PREVIEW_READY_JOB_ID = "33333333-3333-3333-3333-333333333333"
 PREVIEW_RUNNING_JOB_ID = "44444444-4444-4444-4444-444444444444"
+PREVIEW_INSTALLATION_ID = 424242
 
-# In-memory store for presentation config changes in preview mode
 _PREVIEW_REPORTS_STATE: dict[str, dict] = {}
+_PREVIEW_EXPORTS_STATE: dict[str, dict[str, dict[str, object]]] = {}
+_PREVIEW_PROFILE_README_STATE: dict[str, object] = {
+    "connected": False,
+    "current_readme": "# Preview User\n\nA placeholder profile README in preview mode.\n",
+    "last_publish_commit_sha": None,
+}
 
 
 def create_app(settings: WebAppSettings | None = None) -> FastAPI:
@@ -79,7 +101,6 @@ def create_app(settings: WebAppSettings | None = None) -> FastAPI:
     def healthz() -> dict[str, str]:
         return {"status": "ok", "service": "ghstatsussy-hosted"}
 
-
     @app.get("/gallery", response_class=HTMLResponse)
     def gallery(request: Request, user: User | None = Depends(optional_user)) -> HTMLResponse:
         if web_settings.preview_mode:
@@ -91,11 +112,7 @@ def create_app(settings: WebAppSettings | None = None) -> FastAPI:
         return templates.TemplateResponse(
             request,
             "web/gallery.html.j2",
-            {
-                "settings": web_settings,
-                "user": user,
-                "reports": reports,
-            },
+            {"settings": web_settings, "user": user, "reports": reports},
         )
 
     @app.get("/", response_class=HTMLResponse, response_model=None)
@@ -104,13 +121,7 @@ def create_app(settings: WebAppSettings | None = None) -> FastAPI:
             return _render_subdomain_report(request, web_settings, session_factory, user, report_path="")
         if user is not None and not web_settings.preview_mode:
             return RedirectResponse(url="/dashboard", status_code=302)
-        return templates.TemplateResponse(
-            request,
-            "web/index.html.j2",
-            {
-                "settings": web_settings,
-            },
-        )
+        return templates.TemplateResponse(request, "web/index.html.j2", {"settings": web_settings})
 
     @app.get("/auth/github/login")
     def github_login(request: Request) -> RedirectResponse:
@@ -171,11 +182,23 @@ def create_app(settings: WebAppSettings | None = None) -> FastAPI:
         user: User = Depends(require_user),
     ) -> HTMLResponse | RedirectResponse:
         if web_settings.preview_mode:
-            # Save the template choice immediately so the ready report reflects it
             _PREVIEW_REPORTS_STATE[PREVIEW_READY_REPORT_ID] = {
                 "themeKey": template_key,
-                "visibleSections": ["hero", "profile_summary", "key_stats", "timeline_commits", "timeline_loc", "activity_heatmap", "language_mix", "language_breakdown", "highlights", "repositories", "notes_and_warnings", "footer_meta"],
-                "textOverrides": {}
+                "visibleSections": [
+                    "hero",
+                    "profile_summary",
+                    "key_stats",
+                    "timeline_commits",
+                    "timeline_loc",
+                    "activity_heatmap",
+                    "language_mix",
+                    "language_breakdown",
+                    "highlights",
+                    "repositories",
+                    "notes_and_warnings",
+                    "footer_meta",
+                ],
+                "textOverrides": {},
             }
             return RedirectResponse(url=f"/dashboard/reports/{PREVIEW_READY_REPORT_ID}", status_code=302)
 
@@ -256,6 +279,7 @@ def create_app(settings: WebAppSettings | None = None) -> FastAPI:
                     "settings": web_settings,
                     "report": report_data,
                     "snapshot": snapshot,
+                    "profile_publish_status": _preview_profile_publish_status(user),
                 },
             )
         with session_factory() as session:
@@ -268,6 +292,8 @@ def create_app(settings: WebAppSettings | None = None) -> FastAPI:
                 raise HTTPException(status_code=404, detail="Report not found")
             snapshot = report.latest_snapshot
             report_data = serialize_report(report, web_settings)
+            profile_publish_status = service.exports.get_profile_publish_status(db_user)
+            profile_publish_status["install_url"] = _build_install_url_or_none(web_settings, db_user.login)
         return templates.TemplateResponse(
             request,
             "web/report_detail.html.j2",
@@ -275,6 +301,7 @@ def create_app(settings: WebAppSettings | None = None) -> FastAPI:
                 "settings": web_settings,
                 "report": report_data,
                 "snapshot": snapshot,
+                "profile_publish_status": profile_publish_status,
             },
         )
 
@@ -326,6 +353,9 @@ def create_app(settings: WebAppSettings | None = None) -> FastAPI:
 
     @app.get("/api/reports/{report_id}")
     def api_report_detail(report_id: UUID, user: User = Depends(require_user)) -> dict[str, object]:
+        if web_settings.preview_mode:
+            report_data, _ = _preview_report_detail(web_settings, str(report_id))
+            return report_data
         with session_factory() as session:
             db_user = session.get(User, user.id)
             if db_user is None:
@@ -339,22 +369,12 @@ def create_app(settings: WebAppSettings | None = None) -> FastAPI:
             payload["error_message"] = report.error_message
             return payload
 
-
     @app.post("/api/reports/{report_id}/presentation")
-    def api_update_presentation(
-        report_id: UUID,
-        payload: dict,
-        user: User = Depends(require_user),
-    ) -> dict[str, object]:
+    def api_update_presentation(report_id: UUID, payload: dict, user: User = Depends(require_user)) -> dict[str, object]:
         if web_settings.preview_mode:
             rid = str(report_id)
             config = dict(_PREVIEW_REPORTS_STATE.get(rid, {}))
-            if "themeKey" in payload:
-                config["themeKey"] = str(payload["themeKey"])
-            if "visibleSections" in payload:
-                config["visibleSections"] = [str(x) for x in payload["visibleSections"]]
-            if "textOverrides" in payload:
-                config["textOverrides"] = {str(k): str(v) for k, v in payload["textOverrides"].items() if isinstance(v, str)}
+            config = _merge_presentation_payload(config, payload)
             _PREVIEW_REPORTS_STATE[rid] = config
             return {"status": "ok", "presentation_config": config}
         with session_factory() as session:
@@ -365,27 +385,17 @@ def create_app(settings: WebAppSettings | None = None) -> FastAPI:
             report = service.get_report_for_user(db_user, str(report_id))
             if report is None:
                 raise HTTPException(status_code=404, detail="Report not found")
-            
-            # Update config safely
             existing_config = getattr(report, "presentation_config", None)
             config = dict(existing_config) if existing_config else {}
-            if "themeKey" in payload:
-                config["themeKey"] = str(payload["themeKey"])
-                report.template_key = config["themeKey"]
-            if "visibleSections" in payload:
-                config["visibleSections"] = [str(x) for x in payload["visibleSections"]]
-            if "textOverrides" in payload:
-                config["textOverrides"] = {str(k): str(v) for k, v in payload["textOverrides"].items() if isinstance(v, str)}
-            
-            setattr(report, "presentation_config", config)
+            config = _merge_presentation_payload(config, payload)
+            if "themeKey" in config:
+                report.template_key = str(config["themeKey"])
+            report.presentation_config = config
             session.commit()
             return {"status": "ok", "presentation_config": config}
 
     @app.post("/dashboard/reports/{report_id}/refresh")
-    def dashboard_refresh_report(
-        report_id: UUID,
-        user: User = Depends(require_user),
-    ) -> RedirectResponse:
+    def dashboard_refresh_report(report_id: UUID, user: User = Depends(require_user)) -> RedirectResponse:
         if web_settings.preview_mode:
             return RedirectResponse(url=f"/dashboard/reports/{report_id}", status_code=302)
         with session_factory() as session:
@@ -415,13 +425,309 @@ def create_app(settings: WebAppSettings | None = None) -> FastAPI:
             report = service.get_report_for_user(db_user, str(report_id))
             if report is None:
                 raise HTTPException(status_code=404, detail="Report not found")
-            report = service.queue_refresh(
-                report=report,
-                sample_data=payload.sample_data if payload else False,
-            )
+            report = service.queue_refresh(report=report, sample_data=payload.sample_data if payload else False)
             if web_settings.process_jobs_inline:
                 process_next_job(web_settings, session)
             return serialize_report(report, web_settings)
+
+    @app.post("/api/reports/{report_id}/exports")
+    def api_create_export(
+        report_id: UUID,
+        payload: ExportCreatePayload,
+        user: User = Depends(require_user),
+    ) -> dict[str, object]:
+        if web_settings.preview_mode:
+            export_entry = _preview_create_export(web_settings, str(report_id), payload.exportType, payload.options)
+            return export_entry
+        with session_factory() as session:
+            db_user = session.get(User, user.id)
+            if db_user is None:
+                raise HTTPException(status_code=404, detail="User not found")
+            service = HostedReportService(web_settings, session)
+            report = service.get_report_for_user(db_user, str(report_id))
+            if report is None:
+                raise HTTPException(status_code=404, detail="Report not found")
+            try:
+                export_record = service.queue_export(
+                    user=db_user,
+                    report=report,
+                    export_type=payload.exportType,
+                    options=payload.options,
+                )
+            except (ValueError, ExportRenderError) as error:
+                session.rollback()
+                raise HTTPException(status_code=400, detail=str(error)) from error
+            if web_settings.process_jobs_inline:
+                process_next_job(web_settings, session)
+                session.refresh(export_record)
+            return serialize_export(export_record)
+
+    @app.get("/api/reports/{report_id}/exports")
+    def api_list_exports(report_id: UUID, user: User = Depends(require_user)) -> list[dict[str, object]]:
+        if web_settings.preview_mode:
+            return _preview_list_exports(str(report_id))
+        with session_factory() as session:
+            db_user = session.get(User, user.id)
+            if db_user is None:
+                raise HTTPException(status_code=404, detail="User not found")
+            service = HostedReportService(web_settings, session)
+            report = service.get_report_for_user(db_user, str(report_id))
+            if report is None:
+                raise HTTPException(status_code=404, detail="Report not found")
+            return [serialize_export(export_record) for export_record in service.list_exports(report)]
+
+    @app.get("/api/reports/{report_id}/exports/{export_id}")
+    def api_export_detail(report_id: UUID, export_id: UUID, user: User = Depends(require_user)) -> dict[str, object]:
+        if web_settings.preview_mode:
+            export_entry = _preview_get_export(str(report_id), str(export_id))
+            if export_entry is None:
+                raise HTTPException(status_code=404, detail="Export not found")
+            return export_entry
+        with session_factory() as session:
+            db_user = session.get(User, user.id)
+            if db_user is None:
+                raise HTTPException(status_code=404, detail="User not found")
+            service = HostedReportService(web_settings, session)
+            report = service.get_report_for_user(db_user, str(report_id))
+            if report is None:
+                raise HTTPException(status_code=404, detail="Report not found")
+            export_record = service.get_export_for_user(db_user, report, str(export_id))
+            if export_record is None:
+                raise HTTPException(status_code=404, detail="Export not found")
+            return serialize_export(export_record)
+
+    @app.get("/api/reports/{report_id}/exports/{export_id}/download")
+    def api_export_download(report_id: UUID, export_id: UUID, user: User = Depends(require_user)):
+        if web_settings.preview_mode:
+            export_entry = _preview_get_export(str(report_id), str(export_id))
+            if export_entry is None:
+                raise HTTPException(status_code=404, detail="Export not found")
+            return _preview_download_export(web_settings, str(report_id), export_entry)
+        with session_factory() as session:
+            db_user = session.get(User, user.id)
+            if db_user is None:
+                raise HTTPException(status_code=404, detail="User not found")
+            service = HostedReportService(web_settings, session)
+            report = service.get_report_for_user(db_user, str(report_id))
+            if report is None:
+                raise HTTPException(status_code=404, detail="Report not found")
+            export_record = service.get_export_for_user(db_user, report, str(export_id))
+            if export_record is None or not export_record.artifact_path:
+                raise HTTPException(status_code=404, detail="Export artifact not found")
+            artifact_path = Path(export_record.artifact_path)
+            if not artifact_path.exists():
+                raise HTTPException(status_code=404, detail="Export artifact file is missing")
+            filename = f"{_safe_filename(report.title)}-{export_record.export_type}{artifact_path.suffix}"
+            return FileResponse(path=artifact_path, media_type=export_record.mime_type, filename=filename)
+
+    @app.get("/api/reports/{report_id}/markdown")
+    def api_markdown_detail(report_id: UUID, user: User = Depends(require_user)) -> dict[str, object]:
+        options = {"presetKey": "summary_markdown", "compact": False}
+        if web_settings.preview_mode:
+            preview = _preview_markdown_preview(web_settings, str(report_id), options)
+            return {"presetKey": options["presetKey"], **preview}
+        with session_factory() as session:
+            db_user = session.get(User, user.id)
+            if db_user is None:
+                raise HTTPException(status_code=404, detail="User not found")
+            service = HostedReportService(web_settings, session)
+            report = service.get_report_for_user(db_user, str(report_id))
+            if report is None:
+                raise HTTPException(status_code=404, detail="Report not found")
+            preview = service.exports.build_markdown_preview(report, options=options)
+            return {"presetKey": options["presetKey"], **preview}
+
+    @app.post("/api/reports/{report_id}/markdown")
+    def api_markdown_generate(
+        report_id: UUID,
+        payload: MarkdownPreviewPayload,
+        user: User = Depends(require_user),
+    ) -> dict[str, object]:
+        options = payload.model_dump()
+        if web_settings.preview_mode:
+            preview = _preview_markdown_preview(web_settings, str(report_id), options)
+            return {"presetKey": options.get("presetKey", "summary_markdown"), **preview}
+        with session_factory() as session:
+            db_user = session.get(User, user.id)
+            if db_user is None:
+                raise HTTPException(status_code=404, detail="User not found")
+            service = HostedReportService(web_settings, session)
+            report = service.get_report_for_user(db_user, str(report_id))
+            if report is None:
+                raise HTTPException(status_code=404, detail="Report not found")
+            preview = service.exports.build_markdown_preview(report, options=options)
+            return {"presetKey": options.get("presetKey", "summary_markdown"), **preview}
+
+    @app.post("/api/reports/{report_id}/markdown/preview")
+    def api_markdown_preview(
+        report_id: UUID,
+        payload: MarkdownPreviewPayload,
+        user: User = Depends(require_user),
+    ) -> dict[str, object]:
+        return api_markdown_generate(report_id, payload, user)
+
+    @app.get("/api/github/profile-readme/status")
+    def api_profile_readme_status(user: User = Depends(require_user)) -> dict[str, object]:
+        if web_settings.preview_mode:
+            return _preview_profile_publish_status(user)
+        with session_factory() as session:
+            db_user = session.get(User, user.id)
+            if db_user is None:
+                raise HTTPException(status_code=404, detail="User not found")
+            service = HostedReportService(web_settings, session)
+            status = service.exports.get_profile_publish_status(db_user)
+            status["install_url"] = _build_install_url_or_none(web_settings, db_user.login)
+            return status
+
+    @app.post("/api/github/profile-readme/connect")
+    def api_profile_readme_connect(
+        payload: GitHubProfileReadmeConnectPayload,
+        user: User = Depends(require_user),
+    ) -> dict[str, object]:
+        if web_settings.preview_mode:
+            _PREVIEW_PROFILE_README_STATE["connected"] = True
+            return _preview_profile_publish_status(user)
+        with session_factory() as session:
+            db_user = session.get(User, user.id)
+            if db_user is None:
+                raise HTTPException(status_code=404, detail="User not found")
+            service = HostedReportService(web_settings, session)
+            try:
+                publisher = _build_profile_publisher(web_settings)
+                publisher.verify_profile_repo_installation(
+                    installation_id=payload.app_installation_id,
+                    owner=payload.profile_repo_owner,
+                    repo=payload.profile_repo_name,
+                )
+                service.exports.connect_profile_publish_repo(
+                    user=db_user,
+                    github_login=payload.github_login,
+                    profile_repo_owner=payload.profile_repo_owner,
+                    profile_repo_name=payload.profile_repo_name,
+                    app_installation_id=payload.app_installation_id,
+                )
+            except (ValueError, GitHubAppError, Exception) as error:
+                session.rollback()
+                raise HTTPException(status_code=400, detail=str(error)) from error
+            session.commit()
+            status = service.exports.get_profile_publish_status(db_user)
+            status["install_url"] = _build_install_url_or_none(web_settings, db_user.login)
+            return status
+
+    @app.get("/api/github/profile-readme/current")
+    def api_profile_readme_current(user: User = Depends(require_user)) -> dict[str, object]:
+        if web_settings.preview_mode:
+            return {
+                "exists": True,
+                "content": str(_PREVIEW_PROFILE_README_STATE["current_readme"]),
+                "sha": str(_PREVIEW_PROFILE_README_STATE.get("last_publish_commit_sha") or "preview-sha"),
+            }
+        with session_factory() as session:
+            db_user = session.get(User, user.id)
+            if db_user is None:
+                raise HTTPException(status_code=404, detail="User not found")
+            service = HostedReportService(web_settings, session)
+            status = service.exports.get_profile_publish_status(db_user)
+            connection = status.get("connection")
+            if not connection:
+                raise HTTPException(status_code=400, detail="GitHub App repo connection is not configured.")
+            publisher = _build_profile_publisher(web_settings)
+            try:
+                return publisher.fetch_current_readme(
+                    installation_id=int(connection["app_installation_id"]),
+                    owner=str(connection["profile_repo_owner"]),
+                    repo=str(connection["profile_repo_name"]),
+                )
+            except (GitHubAppError, Exception) as error:
+                raise HTTPException(status_code=400, detail=str(error)) from error
+
+    @app.post("/api/reports/{report_id}/profile-readme/diff")
+    def api_profile_readme_diff(
+        report_id: UUID,
+        payload: GitHubProfileReadmeDiffPayload,
+        user: User = Depends(require_user),
+    ) -> dict[str, object]:
+        options = payload.model_dump(exclude={"current_readme"})
+        if web_settings.preview_mode:
+            preview = _preview_markdown_preview(web_settings, str(report_id), options)
+            markdown_body = str(preview["markdown"])
+            preview_html = str(preview["preview_html"])
+            return {
+                "markdown_body": markdown_body,
+                "preview_html": preview_html,
+                "diff": _unified_diff(payload.current_readme, markdown_body),
+            }
+        with session_factory() as session:
+            db_user = session.get(User, user.id)
+            if db_user is None:
+                raise HTTPException(status_code=404, detail="User not found")
+            service = HostedReportService(web_settings, session)
+            report = service.get_report_for_user(db_user, str(report_id))
+            if report is None:
+                raise HTTPException(status_code=404, detail="Report not found")
+            preview_payload = service.exports.build_markdown_for_profile_publish(report, options=options)
+            diff_payload = service.exports.profile_readme_diff(report, payload.current_readme, options=options)
+            diff_payload["preview_html"] = preview_payload["preview_html"]
+            return diff_payload
+
+    @app.post("/api/reports/{report_id}/profile-readme/publish")
+    def api_profile_readme_publish(
+        report_id: UUID,
+        payload: GitHubProfileReadmePublishPayload,
+        user: User = Depends(require_user),
+    ) -> dict[str, object]:
+        options = payload.model_dump(exclude={"current_readme", "confirm"})
+        if web_settings.preview_mode:
+            preview = _preview_markdown_preview(web_settings, str(report_id), options)
+            markdown_body = str(preview["markdown"])
+            _PREVIEW_PROFILE_README_STATE["current_readme"] = markdown_body
+            _PREVIEW_PROFILE_README_STATE["last_publish_commit_sha"] = "preview-commit-sha"
+            return {
+                "status": "published",
+                "commit_sha": "preview-commit-sha",
+                "markdown_body": markdown_body,
+                "diff": _unified_diff(payload.current_readme, markdown_body),
+            }
+        with session_factory() as session:
+            db_user = session.get(User, user.id)
+            if db_user is None:
+                raise HTTPException(status_code=404, detail="User not found")
+            service = HostedReportService(web_settings, session)
+            report = service.get_report_for_user(db_user, str(report_id))
+            if report is None:
+                raise HTTPException(status_code=404, detail="Report not found")
+            status = service.exports.get_profile_publish_status(db_user)
+            connection = status.get("connection")
+            if not connection:
+                raise HTTPException(status_code=400, detail="GitHub App repo connection is not configured.")
+            publisher = _build_profile_publisher(web_settings)
+            try:
+                current = publisher.fetch_current_readme(
+                    installation_id=int(connection["app_installation_id"]),
+                    owner=str(connection["profile_repo_owner"]),
+                    repo=str(connection["profile_repo_name"]),
+                )
+                preview_payload = service.exports.build_markdown_for_profile_publish(report, options=options)
+                diff_payload = service.exports.profile_readme_diff(report, str(current.get("content") or ""), options=options)
+                commit_sha = publisher.publish_readme(
+                    installation_id=int(connection["app_installation_id"]),
+                    owner=str(connection["profile_repo_owner"]),
+                    repo=str(connection["profile_repo_name"]),
+                    markdown_body=preview_payload["markdown"],
+                    sha=_none_or_str(current.get("sha")),
+                    commit_message="Update profile README from ghstatsussy snapshot",
+                )
+                service.exports.record_publish_result(db_user, commit_sha)
+                session.commit()
+                return {
+                    "status": "published",
+                    "commit_sha": commit_sha,
+                    "markdown_body": preview_payload["markdown"],
+                    "diff": diff_payload["diff"],
+                }
+            except (GitHubAppError, Exception) as error:
+                session.rollback()
+                raise HTTPException(status_code=400, detail=str(error)) from error
 
     @app.get("/api/jobs/{job_id}")
     def api_job_detail(job_id: UUID, user: User = Depends(require_user)) -> dict[str, object]:
@@ -429,20 +735,21 @@ def create_app(settings: WebAppSettings | None = None) -> FastAPI:
             db_user = session.get(User, user.id)
             if db_user is None:
                 raise HTTPException(status_code=404, detail="User not found")
-            report = (
-                session.query(Report)
-                .filter(Report.user_id == db_user.id, Report.latest_job_id == str(job_id))
+            job = (
+                session.query(ReportJob)
+                .join(Report, Report.id == ReportJob.report_id)
+                .filter(Report.user_id == db_user.id, ReportJob.id == str(job_id))
                 .one_or_none()
             )
-            if report is None or report.latest_job is None:
+            if job is None:
                 raise HTTPException(status_code=404, detail="Job not found")
-            job = report.latest_job
             progress_percent, current_step, total_steps = _job_progress(job.status)
             return {
                 "id": job.id,
-                "report_id": report.id,
+                "report_id": job.report_id,
                 "status": job.status,
                 "job_type": job.job_type,
+                "export_id": job.export_id,
                 "error_message": job.error_message,
                 "created_at": job.created_at.isoformat(),
                 "started_at": job.started_at.isoformat() if job.started_at else None,
@@ -487,22 +794,8 @@ def create_app(settings: WebAppSettings | None = None) -> FastAPI:
     @app.get("/r/{slug}")
     def public_report(slug: str, request: Request, user: User | None = Depends(optional_user)) -> HTMLResponse:
         if web_settings.preview_mode and slug == "preview-ready-report":
-            from ghstats.service import GhStatsService
-            from ghstats.config import RuntimeConfig, StaticTokenProvider
-            from ghstats.utils.timeparse import build_time_window
-            from ghstats.render.html import render_report_html
-            
-            ready_config = _PREVIEW_REPORTS_STATE.get(PREVIEW_READY_REPORT_ID, {})
-            ready_template = ready_config.get("themeKey", "orbital")
-            
-            service = GhStatsService(RuntimeConfig(include_private=False, token_provider=StaticTokenProvider("dummy")))
-            artifacts = service.build_artifacts(
-                window=build_time_window("30d"),
-                sample_data=True,
-                template_key=ready_template,
-                presentation_config=ready_config
-            )
-            return HTMLResponse(content=artifacts.html)
+            artifacts = _preview_artifacts(web_settings, PREVIEW_READY_REPORT_ID)
+            return HTMLResponse(content=artifacts["html"])
 
         with session_factory() as session:
             service = HostedReportService(web_settings, session)
@@ -592,10 +885,7 @@ def _render_dashboard(
     return templates.TemplateResponse(request, "web/dashboard.html.j2", context, status_code=status_code)
 
 
-def _merged_report_form_values(
-    settings: WebAppSettings,
-    form_values: dict[str, object] | None,
-) -> dict[str, object]:
+def _merged_report_form_values(settings: WebAppSettings, form_values: dict[str, object] | None) -> dict[str, object]:
     default_expiry = settings.default_report_expiry_days
     if settings.default_visibility == "public":
         default_expiry = min(default_expiry, 30)
@@ -651,10 +941,9 @@ def _validation_message(error: ValidationError) -> str:
 def _build_preview_reports(settings: WebAppSettings) -> list[dict[str, object]]:
     base_url = "" if settings.preview_mode else settings.app_base_url.rstrip("/")
     login = settings.preview_user_login
-    
     ready_config = _PREVIEW_REPORTS_STATE.get(PREVIEW_READY_REPORT_ID, {})
     ready_template = ready_config.get("themeKey", "orbital")
-    
+
     return [
         {
             "id": PREVIEW_READY_REPORT_ID,
@@ -672,6 +961,7 @@ def _build_preview_reports(settings: WebAppSettings) -> list[dict[str, object]]:
             "presentation_config": ready_config,
             "latest_job_id": PREVIEW_READY_JOB_ID,
             "expires_at": "2026-04-17T20:45:00+00:00",
+            "exports": _preview_list_exports(PREVIEW_READY_REPORT_ID),
             "user": {"login": login, "avatar_url": None},
         },
         {
@@ -689,6 +979,7 @@ def _build_preview_reports(settings: WebAppSettings) -> list[dict[str, object]]:
             "template_key": "gallery",
             "latest_job_id": PREVIEW_RUNNING_JOB_ID,
             "expires_at": "2026-04-30T19:00:00+00:00",
+            "exports": [],
             "user": {"login": login, "avatar_url": None},
         },
     ]
@@ -699,7 +990,6 @@ def _preview_report_detail(settings: WebAppSettings, report_id: str) -> tuple[di
     report = reports.get(report_id)
     if report is None:
         raise HTTPException(status_code=404, detail="Report not found")
-
     snapshot: dict[str, object] | None = None
     if report["status"] == "ready":
         snapshot = {"version": int(3)}
@@ -737,6 +1027,118 @@ def _preview_user(settings: WebAppSettings) -> User:
     user.store_metadata_opt_in = False
     user.can_use_public_subdomain = True
     return user
+
+
+def _preview_artifacts(settings: WebAppSettings, report_id: str) -> dict[str, Any]:
+    report_state = _PREVIEW_REPORTS_STATE.get(report_id, {})
+    template_key = str(report_state.get("themeKey") or "orbital")
+    presentation_config = dict(report_state or {"themeKey": template_key})
+    service = GhStatsService(RuntimeConfig(include_private=False, token_provider=StaticTokenProvider("dummy")))
+    artifacts = service.build_artifacts(
+        window=build_time_window("30d"),
+        sample_data=True,
+        template_key=template_key,
+        presentation_config=presentation_config,
+    )
+    html_document = render_report_html(
+        artifacts.context,
+        template_key=template_key,
+        presentation_config=presentation_config,
+    )
+    return {
+        "context": artifacts.context,
+        "html": html_document,
+        "presentation_config": presentation_config,
+    }
+
+
+def _preview_create_export(settings: WebAppSettings, report_id: str, export_type: str, options: dict) -> dict[str, object]:
+    report_data, _ = _preview_report_detail(settings, report_id)
+    export_id = str(uuid4())
+    mime_map = {
+        "pdf": "application/pdf",
+        "png": "image/png",
+        "html": "text/html; charset=utf-8",
+        "markdown": "text/markdown; charset=utf-8",
+    }
+    entry = {
+        "id": export_id,
+        "report_id": report_id,
+        "snapshot_id": "preview-snapshot-v3",
+        "export_type": export_type,
+        "status": "succeeded",
+        "presentation_hash": "preview",
+        "options": options,
+        "mime_type": mime_map.get(export_type, "application/octet-stream"),
+        "byte_size": None,
+        "error_message": None,
+        "created_at": "2026-03-19T00:00:00+00:00",
+        "updated_at": "2026-03-19T00:00:00+00:00",
+        "completed_at": "2026-03-19T00:00:00+00:00",
+        "expires_at": report_data.get("expires_at"),
+        "download_path": f"/api/reports/{report_id}/exports/{export_id}/download",
+    }
+    _PREVIEW_EXPORTS_STATE.setdefault(report_id, {})[export_id] = entry
+    return entry
+
+
+def _preview_list_exports(report_id: str) -> list[dict[str, object]]:
+    exports = list(_PREVIEW_EXPORTS_STATE.get(report_id, {}).values())
+    return sorted(exports, key=lambda item: str(item.get("created_at", "")), reverse=True)
+
+
+def _preview_get_export(report_id: str, export_id: str) -> dict[str, object] | None:
+    return _PREVIEW_EXPORTS_STATE.get(report_id, {}).get(export_id)
+
+
+def _preview_markdown_preview(settings: WebAppSettings, report_id: str, options: dict[str, object]) -> dict[str, object]:
+    preview = _preview_artifacts(settings, report_id)
+    context = preview["context"]
+    markdown_body = build_markdown_export(
+        context,
+        preset_key=str(options.get("presetKey", "summary_markdown")),
+        options=dict(options),
+    )
+    return {"markdown": markdown_body, "preview_html": render_markdown_preview(markdown_body)}
+
+
+def _preview_download_export(settings: WebAppSettings, report_id: str, export_entry: dict[str, object]):
+    preview = _preview_artifacts(settings, report_id)
+    export_type = str(export_entry["export_type"])
+    if export_type == "markdown":
+        options_raw = export_entry.get("options")
+        options: dict[str, object] = dict(options_raw) if isinstance(options_raw, dict) else {}
+        markdown_body = build_markdown_export(
+            preview["context"],
+            preset_key=str(options.get("presetKey", "summary_markdown")),
+            options=options,
+        )
+        return PlainTextResponse(markdown_body, media_type="text/markdown")
+    if export_type == "html":
+        return HTMLResponse(str(preview["html"]))
+    return PlainTextResponse(
+        f"Preview mode stub for {export_type} export. Use the real hosted flow for binary artifact generation.",
+        media_type="text/plain",
+    )
+
+
+def _preview_profile_publish_status(user: User) -> dict[str, object]:
+    connected = bool(_PREVIEW_PROFILE_README_STATE["connected"])
+    return {
+        "connected": connected,
+        "mode": "github_app_repo_install_only",
+        "expected_repo": f"{user.login}/{user.login}",
+        "install_url": "https://github.com/apps/example-ghstats/installations/new",
+        "permissions_note": "Preview mode mirrors the production safety model: GitHub App install on one profile repo only.",
+        "connection": {
+            "github_login": user.login,
+            "profile_repo_owner": user.login,
+            "profile_repo_name": user.login,
+            "app_installation_id": PREVIEW_INSTALLATION_ID,
+            "last_publish_commit_sha": _PREVIEW_PROFILE_README_STATE.get("last_publish_commit_sha"),
+            "last_publish_at": "2026-03-19T00:00:00+00:00" if _PREVIEW_PROFILE_README_STATE.get("last_publish_commit_sha") else None,
+        } if connected else None,
+    }
 
 
 def _none_or_str(value: object | None) -> str | None:
@@ -784,8 +1186,89 @@ def _render_subdomain_report(
         report = service.get_report_by_username_host(username=username, slug=slug)
         if report is None or report.latest_snapshot is None:
             raise HTTPException(status_code=404, detail="Report not found")
-        html = service.read_snapshot_html(report.latest_snapshot)
-    return HTMLResponse(content=html)
+        html_document = service.read_snapshot_html(report.latest_snapshot)
+    return HTMLResponse(content=html_document)
+
+
+def _merge_presentation_payload(existing: dict[str, object], payload: dict[str, object]) -> dict[str, object]:
+    config = dict(existing)
+    if "themeKey" in payload:
+        theme_key = str(payload["themeKey"]).strip().lower()
+        valid_template_keys = {template.key for template in REPORT_TEMPLATES}
+        if theme_key not in valid_template_keys:
+            raise HTTPException(status_code=400, detail="Invalid report theme.")
+        config["themeKey"] = theme_key
+    visible_sections = payload.get("visibleSections")
+    if isinstance(visible_sections, list):
+        allowed_sections = {
+            "hero",
+            "profile_summary",
+            "key_stats",
+            "timeline_commits",
+            "timeline_loc",
+            "activity_heatmap",
+            "language_mix",
+            "language_breakdown",
+            "highlights",
+            "repositories",
+            "notes_and_warnings",
+            "footer_meta",
+        }
+        normalized_sections: list[str] = []
+        for item in visible_sections:
+            section = str(item).strip()
+            if section in allowed_sections and section not in normalized_sections:
+                normalized_sections.append(section)
+        config["visibleSections"] = normalized_sections
+    text_overrides = payload.get("textOverrides")
+    if isinstance(text_overrides, dict):
+        config["textOverrides"] = {
+            str(key): str(value)[:280]
+            for key, value in text_overrides.items()
+            if isinstance(value, str)
+        }
+    return config
+
+
+def _build_profile_publisher(settings: WebAppSettings) -> GitHubProfilePublisher:
+    if not settings.github_app_id or not settings.github_app_private_key or not settings.github_app_slug:
+        raise GitHubAppError(
+            "GitHub App publishing is not configured. Set GITHUB_APP_ID, GITHUB_APP_SLUG, and GITHUB_APP_PRIVATE_KEY."
+        )
+    app_settings = GitHubAppSettings(
+        app_id=settings.github_app_id,
+        private_key=settings.github_app_private_key,
+        app_slug=settings.github_app_slug,
+        api_url=settings.github_app_api_url,
+        app_url=settings.github_app_base_url,
+    )
+    return GitHubProfilePublisher(app_settings)
+
+
+def _build_install_url_or_none(settings: WebAppSettings, login: str) -> str | None:
+    try:
+        return _build_profile_publisher(settings).build_install_url(login, login)
+    except GitHubAppError:
+        return None
+
+
+def _unified_diff(current_readme: str, markdown_body: str) -> str:
+    import difflib
+
+    return "\n".join(
+        difflib.unified_diff(
+            current_readme.splitlines(),
+            markdown_body.splitlines(),
+            fromfile="current/README.md",
+            tofile="generated/README.md",
+            lineterm="",
+        )
+    )
+
+
+def _safe_filename(value: str) -> str:
+    collapsed = "-".join(part for part in value.lower().split() if part)
+    return "".join(char for char in collapsed if char.isalnum() or char in {"-", "_"}) or "report"
 
 
 app = create_app()

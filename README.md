@@ -13,8 +13,8 @@ It is built CLI-first, but the internal architecture keeps data collection, anal
 - Analytics for commits, LOC churn, PRs, issues, language mix, repo insights, streaks, and fun facts
 - Optional raw JSON export
 - Sample-data mode for local previewing without a token
-- Hosted FastAPI app with GitHub OAuth, share links, and instant presentation controls
-- Generated reports include links back to the project repo and the ussyverse at `https://ussy.host`
+- Hosted FastAPI app with GitHub OAuth, snapshot-based exports, share links, and instant presentation controls
+- Generated reports include links back to the project repo, the ussyverse at `https://ussy.host`, and the Ussyverse Discord at `https://discord.gg/6b2Ej3rS3q`
 
 ## Install
 
@@ -137,6 +137,15 @@ Optional:
 export DATABASE_URL="sqlite:///./web_artifacts/ghstatsussy.db"
 export REPORT_STORAGE_DIR="./web_artifacts"
 export ALLOW_SAMPLE_REPORTS=1
+export GITHUB_APP_ID="your_github_app_id"
+export GITHUB_APP_SLUG="your_github_app_slug"
+export GITHUB_APP_PRIVATE_KEY="-----BEGIN RSA PRIVATE KEY-----\n...\n-----END RSA PRIVATE KEY-----"
+```
+
+For browser-based export rendering in local dev, install Playwright Chromium once:
+
+```bash
+python -m playwright install chromium
 ```
 
 ### Run the hosted app
@@ -172,6 +181,9 @@ Replace the host with your production URL when you deploy it.
 - serves public or unlisted report links at `/r/{slug}`
 - supports per-user subdomain-style URLs like `username.ghstats.ussyco.de`
 - keeps `include_private` reports private in this MVP
+- generates PDF, PNG, standalone HTML, and markdown exports from stored snapshot/presentation data
+- keeps private-report exports owner-only and does not generate exports from live GitHub refetches
+- supports GitHub profile README publishing through a repo-scoped GitHub App flow with diff preview instead of broad OAuth write scopes
 
 ### Privacy-first hosted posture
 
@@ -181,6 +193,15 @@ Replace the host with your production URL when you deploy it.
 - background workers fetch GitHub data, render the page, then keep only the configured artifacts
 - reports have an expiry window so hosted pages can age out automatically
 - if you want true no-retention refreshes, disable metadata storage and require the user to regenerate from a live OAuth session
+
+### Export and profile publishing
+
+- export generation is derived from stored `render_document.json` snapshot context plus the current saved presentation config
+- PDF and PNG use Playwright + Chromium for high-fidelity server-side rendering
+- standalone HTML freezes charts into image data and strips remote runtime dependencies so the file opens from disk
+- markdown export supports `profile_readme` and `summary_markdown` presets with preview/copy/download flows
+- profile README publishing is intentionally least-privilege: install a GitHub App on `username/username` only, preview the unified diff, then confirm publish
+- the main hosted auth flow stays read-oriented; publishing does not rely on broad OAuth scopes like `public_repo`
 
 ### Input hardening
 
@@ -315,6 +336,11 @@ Deployment templates are included in `examples/`:
 - `examples/ghstatsussy-worker.service`
 - `examples/certbot-ghstats-command.txt`
 
+### Ussyverse links
+
+- ussyverse: `https://ussy.host`
+- discord: `https://discord.gg/6b2Ej3rS3q`
+
 ## Project Layout
 
 - `ghstats/cli.py` - CLI entrypoint
@@ -333,4 +359,4 @@ Deployment templates are included in `examples/`:
 ## Hosting Notes
 
 - Reports are self-contained HTML files and can be hosted from any static file server
-- The generated footer links to the source repository and to `https://ussy.host`
+- The generated footer links to the source repository, to `https://ussy.host`, and to the Ussyverse Discord at `https://discord.gg/6b2Ej3rS3q`

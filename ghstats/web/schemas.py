@@ -107,3 +107,63 @@ class ViewerSummary(BaseModel):
     avatar_url: str | None
     profile_url: str | None
     email: str | None
+
+
+class ExportCreatePayload(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    exportType: str = Field(min_length=3, max_length=24)
+    options: dict = Field(default_factory=dict)
+
+    @field_validator("exportType", mode="before")
+    @classmethod
+    def normalize_export_type(cls, value: object) -> str:
+        export_type = unicodedata.normalize("NFKC", str(value)).strip().lower()
+        if export_type not in {"pdf", "png", "html", "markdown"}:
+            raise ValueError("Unsupported export type.")
+        return export_type
+
+
+class MarkdownPreviewPayload(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    presetKey: str = Field(default="summary_markdown")
+    compact: bool = False
+    visibleSections: list[str] = Field(default_factory=list)
+    textOverrides: dict[str, str] = Field(default_factory=dict)
+
+
+class GitHubProfileReadmeConnectPayload(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    github_login: str = Field(min_length=1, max_length=255)
+    profile_repo_owner: str = Field(min_length=1, max_length=255)
+    profile_repo_name: str = Field(min_length=1, max_length=255)
+    app_installation_id: int = Field(gt=0)
+
+
+class GitHubProfileReadmeDiffPayload(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    current_readme: str = Field(default="")
+    presetKey: str = Field(default="profile_readme")
+    compact: bool = True
+    visibleSections: list[str] = Field(default_factory=list)
+    textOverrides: dict[str, str] = Field(default_factory=dict)
+
+
+class GitHubProfileReadmePublishPayload(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    current_readme: str = Field(default="")
+    confirm: bool = False
+    presetKey: str = Field(default="profile_readme")
+    compact: bool = True
+    visibleSections: list[str] = Field(default_factory=list)
+    textOverrides: dict[str, str] = Field(default_factory=dict)
+
+    @model_validator(mode="after")
+    def validate_confirm(self) -> "GitHubProfileReadmePublishPayload":
+        if not self.confirm:
+            raise ValueError("Explicit confirmation is required before publishing.")
+        return self

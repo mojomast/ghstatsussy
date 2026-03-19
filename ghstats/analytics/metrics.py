@@ -59,6 +59,8 @@ def build_report_context(dataset: ActivityDataset) -> dict[str, Any]:
                 "app_label": "ghstats.ussyco.de",
                 "ussyverse_url": "https://ussy.host",
                 "ussyverse_label": "ussyverse",
+                "discord_url": "https://discord.gg/6b2Ej3rS3q",
+                "discord_label": "discord",
             },
         },
         "stats_cards": build_stats_cards(dataset, commit_series, line_series, streaks),

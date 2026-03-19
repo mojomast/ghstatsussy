@@ -1,6 +1,8 @@
 {% set status = job.status if job else report.status %}
-{% set status_title = 'Your report is queued.' if status == 'queued' else 'Your report is being generated.' if status == 'running' else 'Your report is ready.' if status in ['ready', 'succeeded'] else 'Your report hit a problem.' %}
-{% set status_copy = 'The worker has your job in line and should pick it up shortly.' if status == 'queued' else 'GitHub data is being fetched and packed into the final HTML snapshot.' if status == 'running' else 'Links and exports are live. You can share the snapshot now.' if status in ['ready', 'succeeded'] else 'The worker reported a failure. Try refreshing the page or rerunning the report.' %}
+{% set job_type = job.job_type if job else 'generate' %}
+{% set export_job = job_type.startswith('export:') %}
+{% set status_title = 'Your export is queued.' if export_job and status == 'queued' else 'Your export artifact is being rendered.' if export_job and status == 'running' else 'Your report is queued.' if status == 'queued' else 'Your report is being generated.' if status == 'running' else 'Your report is ready.' if status in ['ready', 'succeeded'] else 'Your report hit a problem.' %}
+{% set status_copy = 'The worker has your artifact job in line and should pick it up shortly.' if export_job and status == 'queued' else 'The worker is rendering a snapshot-based export from stored report context.' if export_job and status == 'running' else 'The worker has your job in line and should pick it up shortly.' if status == 'queued' else 'GitHub data is being fetched and packed into the final HTML snapshot.' if status == 'running' else 'Links and exports are live. You can share the snapshot now.' if status in ['ready', 'succeeded'] else 'The worker reported a failure. Try refreshing the page or rerunning the report.' %}
 {% set beacon_class = 'queued' if status == 'queued' else 'running' if status == 'running' else 'ready' if status in ['ready', 'succeeded'] else 'failed' %}
 <section class="status-panel" id="statusPanel" data-status="{{ status }}">
   <div class="eyebrow">Worker state</div>
@@ -44,14 +46,14 @@
       <div class="step-dot"></div>
       <div>
         <div class="step-label muted">Generation</div>
-        <strong>Churning GitHub and rendering HTML</strong>
+        <strong>{% if export_job %}Rendering artifact from stored snapshot{% else %}Churning GitHub and rendering HTML{% endif %}</strong>
       </div>
     </div>
     <div class="step {% if status in ['ready', 'succeeded'] %}active done{% elif status == 'failed' %}active{% endif %}">
       <div class="step-dot"></div>
       <div>
         <div class="step-label muted">Finalizing</div>
-        <strong>{% if status == 'failed' %}Pipeline stopped before publish{% else %}Publishing the latest snapshot{% endif %}</strong>
+        <strong>{% if status == 'failed' %}Pipeline stopped before publish{% elif export_job %}Artifact cached and ready for download{% else %}Publishing the latest snapshot{% endif %}</strong>
       </div>
     </div>
   </div>

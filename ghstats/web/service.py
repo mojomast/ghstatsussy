@@ -1,22 +1,25 @@
 from __future__ import annotations
 
-import secrets
 import json
+import secrets
 from datetime import datetime, timedelta, timezone
-from pathlib import Path
 
 from sqlalchemy.orm import Session
 
+from ghstats.export.service import ReportExportService, serialize_export
+from ghstats.render.html import render_report_html
 from ghstats.web.config import WebAppSettings
 from ghstats.web.crypto import TokenCipher
-from ghstats.web.models import Report, ReportSnapshot, User
+from ghstats.web.models import Report, ReportExport, ReportSnapshot, User
 from ghstats.web.queue import enqueue_report_job
-from ghstats.render.html import render_report_html
+
+
 class HostedReportService:
     def __init__(self, settings: WebAppSettings, session: Session) -> None:
         self.settings = settings
         self.session = session
         self.cipher = TokenCipher(settings.secret_key)
+        self.exports = ReportExportService(settings, session)
 
     def encrypt_token(self, token: str) -> str:
         return self.cipher.encrypt(token)
@@ -152,6 +155,48 @@ class HostedReportService:
         self.session.refresh(report)
         return report
 
+    def queue_export(
+        self,
+        *,
+        user: User,
+        report: Report,
+        export_type: str,
+        options: dict | None = None,
+    ) -> ReportExport:
+        export_record, normalized_options = self.exports.create_export_record(
+            user=user,
+            report=report,
+            export_type=export_type,
+            options=options,
+        )
+        if export_record.status == "succeeded":
+            self.session.commit()
+            self.session.refresh(export_record)
+            return export_record
+        enqueue_report_job(
+            self.session,
+            report=report,
+            job_type=f"export:{export_record.export_type}",
+            sample_data=False,
+            payload_json={
+                "export_type": export_record.export_type,
+                "snapshot_id": export_record.snapshot_id,
+                "options": normalized_options,
+            },
+            export_id=export_record.id,
+            set_latest_job=False,
+            update_report_status=False,
+        )
+        self.session.commit()
+        self.session.refresh(export_record)
+        return export_record
+
+    def list_exports(self, report: Report) -> list[ReportExport]:
+        return self.exports.list_exports_for_report(report)
+
+    def get_export_for_user(self, user: User, report: Report, export_id: str) -> ReportExport | None:
+        return self.exports.get_export_for_user(user, report.id, export_id)
+
     def build_share_url(self, report: Report) -> str:
         if self.settings.preview_mode:
             return f"/r/{report.slug}"
@@ -164,22 +209,15 @@ class HostedReportService:
         return f"https://{report.username_slug}.{base}/"
 
     def read_snapshot_html(self, snapshot: ReportSnapshot) -> str:
-        # Resolve legacy absolute paths to the current storage dir
         snapshot_dir = self.settings.report_storage_dir / snapshot.report.slug / f"v{snapshot.version}"
         render_document_file = snapshot_dir / "render_document.json"
-        
+
         if render_document_file.exists():
             context = json.loads(render_document_file.read_text(encoding="utf-8"))
-            
-            # Use presentation_config if available, fallback to report.template_key
             config = snapshot.report.presentation_config or {}
             template_key = config.get("themeKey", snapshot.report.template_key)
-            
-            # If the config provides text overrides, we should inject them into context or rendering step
-            # For now, just render using standard html.py but passing template_key dynamically
-            # Later we will pass the whole config to the new canonical renderer
             return render_report_html(context, template_key=template_key, presentation_config=config)
-            
+
         return (snapshot_dir / "report.html").read_text(encoding="utf-8")
 
     def _generate_slug(self) -> str:
@@ -219,6 +257,7 @@ def serialize_report(report: Report, settings: WebAppSettings) -> dict[str, obje
         "presentation_config": report.presentation_config,
         "latest_job_id": report.latest_job_id,
         "expires_at": report.expires_at.isoformat() if report.expires_at else None,
+        "exports": [serialize_export(export_record) for export_record in sorted(report.exports, key=lambda item: item.created_at, reverse=True)],
         "user": {
             "login": report.user.login,
             "avatar_url": report.user.avatar_url,

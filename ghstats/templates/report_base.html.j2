@@ -592,6 +592,10 @@
             <a href="{{ context.meta.links.app_url }}">{{ context.meta.links.app_label }}</a>
             &middot;
             <a href="{{ context.meta.links.ussyverse_url }}">{{ context.meta.links.ussyverse_label }}</a>
+            {% if context.meta.links.discord_url %}
+            &middot;
+            <a href="{{ context.meta.links.discord_url }}">{{ context.meta.links.discord_label }}</a>
+            {% endif %}
           </div>
         </footer>
       {% endif %}
@@ -599,6 +603,7 @@
 
     <script>
       const payload = {{ chart_payload_json|safe }};
+      window.payload = payload;
       const chartText = getComputedStyle(document.documentElement).getPropertyValue('--muted').trim() || '#7a8798';
       const chartGrid = getComputedStyle(document.documentElement).getPropertyValue('--line').trim() || 'rgba(255,255,255,0.08)';
 
@@ -619,60 +624,62 @@
         }
       };
 
-      new Chart(document.getElementById('commitsChart'), {
-        type: 'line',
-        data: {
-          labels: payload.commits.labels,
-          datasets: payload.commits.series.map((series) => ({
-            label: series.label,
-            data: series.values,
-            borderColor: series.color,
-            backgroundColor: `${series.color}22`,
-            fill: true,
-            tension: 0.35,
-            pointRadius: 0,
-            borderWidth: 3,
-          }))
-        },
-        options: sharedOptions,
-      });
+      if (typeof window.Chart === 'function') {
+        new Chart(document.getElementById('commitsChart'), {
+          type: 'line',
+          data: {
+            labels: payload.commits.labels,
+            datasets: payload.commits.series.map((series) => ({
+              label: series.label,
+              data: series.values,
+              borderColor: series.color,
+              backgroundColor: `${series.color}22`,
+              fill: true,
+              tension: 0.35,
+              pointRadius: 0,
+              borderWidth: 3,
+            }))
+          },
+          options: sharedOptions,
+        });
 
-      new Chart(document.getElementById('locChart'), {
-        type: 'bar',
-        data: {
-          labels: payload.loc.labels,
-          datasets: payload.loc.series.map((series) => ({
-            label: series.label,
-            data: series.values,
-            backgroundColor: series.color,
-            borderRadius: 10,
-          }))
-        },
-        options: sharedOptions,
-      });
+        new Chart(document.getElementById('locChart'), {
+          type: 'bar',
+          data: {
+            labels: payload.loc.labels,
+            datasets: payload.loc.series.map((series) => ({
+              label: series.label,
+              data: series.values,
+              backgroundColor: series.color,
+              borderRadius: 10,
+            }))
+          },
+          options: sharedOptions,
+        });
 
-      new Chart(document.getElementById('languageChart'), {
-        type: 'pie',
-        data: {
-          labels: payload.languages.labels,
-          datasets: [{ data: payload.languages.values, backgroundColor: payload.languages.colors, borderWidth: 0 }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: {
-              position: 'bottom',
-              labels: {
-                color: chartText,
-                usePointStyle: true,
-                padding: 16,
-                font: { family: getComputedStyle(document.documentElement).getPropertyValue('--body-font').trim() || 'sans-serif' }
+        new Chart(document.getElementById('languageChart'), {
+          type: 'pie',
+          data: {
+            labels: payload.languages.labels,
+            datasets: [{ data: payload.languages.values, backgroundColor: payload.languages.colors, borderWidth: 0 }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: 'bottom',
+                labels: {
+                  color: chartText,
+                  usePointStyle: true,
+                  padding: 16,
+                  font: { family: getComputedStyle(document.documentElement).getPropertyValue('--body-font').trim() || 'sans-serif' }
+                }
               }
             }
           }
-        }
-      });
+        });
+      }
     </script>
   </body>
 </html>

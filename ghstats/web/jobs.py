@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from datetime import datetime, timedelta, timezone
 
 from sqlalchemy.orm import Session
@@ -8,11 +9,9 @@ from ghstats.config import RuntimeConfig, StaticTokenProvider
 from ghstats.service import GhStatsService
 from ghstats.utils.timeparse import build_time_window
 from ghstats.web.config import WebAppSettings
-from ghstats.web.models import Report, ReportJob, ReportSnapshot, User
-from ghstats.web.queue import enqueue_report_job
+from ghstats.web.models import Report, ReportExport, ReportJob, ReportSnapshot, User
 from ghstats.web.serialization import json_default
-
-import json
+from ghstats.export.service import ReportExportService
 
 
 def utcnow() -> datetime:
@@ -50,79 +49,29 @@ def process_next_job(settings: WebAppSettings, session: Session) -> ReportJob | 
         job.status = "running"
         job.attempts += 1
         job.started_at = utcnow()
-        report.status = "running"
-        report.error_message = None
+        if not job.job_type.startswith("export:"):
+            report.status = "running"
+            report.error_message = None
         session.commit()
 
-        token = None if job.sample_data else _decrypt_user_token(settings, user)
-        runtime_config = RuntimeConfig(
-            token_provider=StaticTokenProvider(token),
-            include_private=report.include_private,
-        )
-        service = GhStatsService(runtime_config)
-        artifacts = service.build_artifacts(
-            window=build_time_window(report.since_spec),
-            sample_data=job.sample_data,
-            template_key=report.template_key,
-        )
-
-        next_version = 1 + max((snapshot.version for snapshot in report.snapshots), default=0)
-        snapshot_dir = settings.report_storage_dir / report.slug / f"v{next_version}"
-        snapshot_dir.mkdir(parents=True, exist_ok=True)
-
-        html_path = snapshot_dir / "report.html"
-        html_path.write_text(artifacts.html, encoding="utf-8")
-
-        render_document_file = snapshot_dir / "render_document.json"
-        render_document_file.write_text(
-            json.dumps(artifacts.context, indent=2, default=json_default),
-            encoding="utf-8"
-        )
-
-        json_path: str | None = None
-        if report.store_metadata:
-            json_file = snapshot_dir / "report.json"
-            json_file.write_text(
-                json.dumps(
-                    {
-                        "dataset": artifacts.dataset.to_dict(),
-                        
-                    },
-                    indent=2,
-                    default=json_default,
-                ),
-                encoding="utf-8",
-            )
-            json_path = str(json_file)
-
-        snapshot = ReportSnapshot(
-            report_id=report.id,
-            version=next_version,
-            html_path=str(html_path),
-            json_path=json_path,
-            contains_private_data=report.include_private,
-            restricted_contributions_count=artifacts.dataset.restricted_contributions_count,
-        )
-        session.add(snapshot)
-        session.flush()
-
-        report.latest_snapshot_id = snapshot.id
-        report.generated_at = snapshot.created_at
-        report.status = "ready"
-        report.error_message = None
-        if report.expires_at is None:
-            report.expires_at = utcnow() + timedelta(days=settings.default_report_expiry_days)
-
-        job.status = "succeeded"
-        job.finished_at = utcnow()
-        session.commit()
+        if job.job_type.startswith("export:"):
+            _process_export_job(settings, session, report, job)
+        else:
+            _process_report_generation_job(settings, session, report, user, job)
         return job
     except Exception as error:
         job.status = "failed"
         job.error_message = str(error)
         job.finished_at = utcnow()
-        report.status = "failed"
-        report.error_message = str(error)
+        if job.job_type.startswith("export:"):
+            export_record = session.get(ReportExport, job.export_id) if job.export_id else None
+            if export_record is not None:
+                export_record.status = "failed"
+                export_record.error_message = str(error)
+                export_record.completed_at = utcnow()
+        else:
+            report.status = "failed"
+            report.error_message = str(error)
         session.commit()
         return job
 
@@ -139,6 +88,97 @@ def delete_expired_reports(session: Session) -> int:
         session.delete(report)
     session.commit()
     return count
+
+
+def _process_report_generation_job(
+    settings: WebAppSettings,
+    session: Session,
+    report: Report,
+    user: User,
+    job: ReportJob,
+) -> None:
+    token = None if job.sample_data else _decrypt_user_token(settings, user)
+    runtime_config = RuntimeConfig(
+        token_provider=StaticTokenProvider(token),
+        include_private=report.include_private,
+    )
+    service = GhStatsService(runtime_config)
+    artifacts = service.build_artifacts(
+        window=build_time_window(report.since_spec),
+        sample_data=job.sample_data,
+        template_key=report.template_key,
+        presentation_config=report.presentation_config,
+    )
+
+    next_version = 1 + max((snapshot.version for snapshot in report.snapshots), default=0)
+    snapshot_dir = settings.report_storage_dir / report.slug / f"v{next_version}"
+    snapshot_dir.mkdir(parents=True, exist_ok=True)
+
+    html_path = snapshot_dir / "report.html"
+    html_path.write_text(artifacts.html, encoding="utf-8")
+
+    render_document_file = snapshot_dir / "render_document.json"
+    render_document_file.write_text(
+        json.dumps(artifacts.context, indent=2, default=json_default),
+        encoding="utf-8",
+    )
+
+    json_path: str | None = None
+    if report.store_metadata:
+        json_file = snapshot_dir / "report.json"
+        json_file.write_text(
+            json.dumps(
+                {
+                    "dataset": artifacts.dataset.to_dict(),
+                },
+                indent=2,
+                default=json_default,
+            ),
+            encoding="utf-8",
+        )
+        json_path = str(json_file)
+
+    snapshot = ReportSnapshot(
+        report_id=report.id,
+        version=next_version,
+        html_path=str(html_path),
+        json_path=json_path,
+        contains_private_data=report.include_private,
+        restricted_contributions_count=artifacts.dataset.restricted_contributions_count,
+    )
+    session.add(snapshot)
+    session.flush()
+
+    report.latest_snapshot_id = snapshot.id
+    report.generated_at = snapshot.created_at
+    report.status = "ready"
+    report.error_message = None
+    if report.expires_at is None:
+        report.expires_at = utcnow() + timedelta(days=settings.default_report_expiry_days)
+
+    job.status = "succeeded"
+    job.finished_at = utcnow()
+    session.commit()
+
+
+def _process_export_job(
+    settings: WebAppSettings,
+    session: Session,
+    report: Report,
+    job: ReportJob,
+) -> None:
+    export_record = session.get(ReportExport, job.export_id) if job.export_id else None
+    if export_record is None:
+        raise RuntimeError("Export record no longer exists.")
+    export_record.status = "running"
+    export_record.error_message = None
+    session.commit()
+
+    export_service = ReportExportService(settings, session)
+    export_service.execute_export(export_record)
+    job.status = "succeeded"
+    job.finished_at = utcnow()
+    session.commit()
 
 
 def _decrypt_user_token(settings: WebAppSettings, user: User) -> str:

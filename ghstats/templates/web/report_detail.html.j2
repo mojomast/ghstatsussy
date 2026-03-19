@@ -4,9 +4,6 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{{ report.title }} - ghstatsussy hosted</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <style>
       :root {
         --bg-0: #09111d;
@@ -29,7 +26,7 @@
       body {
         margin: 0;
         min-height: 100vh;
-        font-family: "IBM Plex Sans", sans-serif;
+        font-family: "Segoe UI", "Helvetica Neue", sans-serif;
         color: var(--ink);
         background:
           radial-gradient(circle at top left, rgba(90, 216, 255, 0.14), transparent 24%),
@@ -48,7 +45,7 @@
       }
 
       .shell {
-        width: min(1080px, calc(100% - 28px));
+        width: min(1180px, calc(100% - 28px));
         margin: 24px auto 36px;
         position: relative;
         z-index: 1;
@@ -56,17 +53,21 @@
 
       .panel,
       .status-panel,
-      .mini-panel {
+      .mini-panel,
+      .export-card,
+      .preview-panel {
         background: var(--panel);
         border: 1px solid var(--line);
-        border-radius: 28px;
+        border-radius: 24px;
         box-shadow: var(--shadow);
         backdrop-filter: blur(18px);
       }
 
       .panel,
       .status-panel,
-      .mini-panel {
+      .mini-panel,
+      .export-card,
+      .preview-panel {
         padding: 22px;
       }
 
@@ -74,8 +75,9 @@
       .chip,
       .step-label,
       .meta-label,
-      .button-text {
-        font-family: "IBM Plex Mono", monospace;
+      .button-text,
+      .mini-code {
+        font-family: "Courier New", monospace;
         text-transform: uppercase;
         letter-spacing: 0.1em;
       }
@@ -84,10 +86,30 @@
       .actions,
       .link-row,
       .steps,
-      .grid {
+      .grid,
+      .toolbar,
+      .export-grid,
+      .button-row,
+      .inline-form {
         display: flex;
         gap: 12px;
         flex-wrap: wrap;
+      }
+
+      .grid {
+        margin-top: 18px;
+        align-items: stretch;
+      }
+
+      .column-grid {
+        display: grid;
+        gap: 18px;
+        grid-template-columns: minmax(0, 1.4fr) minmax(320px, 0.95fr);
+      }
+
+      .stack {
+        display: grid;
+        gap: 18px;
       }
 
       .top {
@@ -95,10 +117,7 @@
         align-items: center;
       }
 
-      h1,
-      h2,
-      h3,
-      p {
+      h1, h2, h3, h4, p {
         margin: 0;
       }
 
@@ -133,7 +152,8 @@
         border: 1px solid rgba(90, 216, 255, 0.2);
       }
 
-      .chip.ready {
+      .chip.ready,
+      .chip.succeeded {
         color: var(--lime);
         border: 1px solid rgba(159, 245, 164, 0.18);
       }
@@ -143,34 +163,12 @@
         border: 1px solid rgba(255, 133, 115, 0.18);
       }
 
-      .grid {
-        margin-top: 18px;
-        align-items: stretch;
-      }
-
       .status-panel {
-        flex: 1 1 420px;
+        min-width: 0;
       }
 
       .mini-panel {
-        flex: 1 1 260px;
-      }
-
-      .spinner-wrap {
-        display: flex;
-        align-items: center;
-        gap: 16px;
-        margin-top: 18px;
-      }
-
-      .spinner {
-        width: 56px;
-        height: 56px;
-        border-radius: 999px;
-        border: 3px solid rgba(90, 216, 255, 0.14);
-        border-top-color: var(--cyan);
-        border-right-color: var(--lime);
-        animation: spin 1s linear infinite;
+        min-width: 0;
       }
 
       .beacon-card {
@@ -196,7 +194,7 @@
       }
 
       .micro {
-        font-family: "IBM Plex Mono", monospace;
+        font-family: "Courier New", monospace;
         letter-spacing: 0.1em;
         text-transform: uppercase;
         font-size: 11px;
@@ -314,13 +312,21 @@
       }
 
       .link-row {
-        margin-top: 18px;
+        margin-top: 14px;
+        align-items: center;
       }
 
       .link-row a,
-      .back-link {
+      .back-link,
+      .text-link {
         color: var(--cyan);
         text-decoration: none;
+      }
+
+      .text-link:hover,
+      .back-link:hover,
+      .link-row a:hover {
+        text-decoration: underline;
       }
 
       .disabled-link {
@@ -328,7 +334,8 @@
         cursor: not-allowed;
       }
 
-      button {
+      button,
+      .button-link {
         appearance: none;
         border: 0;
         border-radius: 16px;
@@ -338,14 +345,193 @@
         font: inherit;
         font-weight: 700;
         cursor: pointer;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 44px;
+      }
+
+      button.secondary,
+      .button-link.secondary {
+        background: transparent;
+        border: 1px solid var(--line);
+        color: var(--ink);
+      }
+
+      button.ghost {
+        background: rgba(255, 255, 255, 0.06);
+        color: var(--ink);
+      }
+
+      button[disabled] {
+        opacity: 0.55;
+        cursor: wait;
       }
 
       .refreshing button {
         opacity: 0.7;
       }
 
-      @keyframes spin {
-        to { transform: rotate(360deg); }
+      .section-grid {
+        display: grid;
+        gap: 18px;
+      }
+
+      .export-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+        margin-top: 18px;
+      }
+
+      .export-card {
+        display: grid;
+        gap: 10px;
+        border-radius: 20px;
+        background: rgba(255, 255, 255, 0.04);
+      }
+
+      .export-card h4 {
+        font-size: 1rem;
+      }
+
+      .export-card p {
+        color: var(--muted);
+        font-size: 0.95rem;
+        line-height: 1.5;
+      }
+
+      .export-list {
+        display: grid;
+        gap: 12px;
+        margin-top: 18px;
+      }
+
+      .export-item {
+        display: grid;
+        gap: 10px;
+        padding: 14px 16px;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.03);
+      }
+
+      .export-item-head {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+
+      .meta-pills {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      .preview-panel {
+        display: grid;
+        gap: 14px;
+      }
+
+      .preview-frame {
+        width: 100%;
+        min-height: 260px;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        background: rgba(255, 255, 255, 0.02);
+        padding: 18px;
+        overflow: auto;
+      }
+
+      .markdown-box {
+        width: 100%;
+        min-height: 260px;
+        border-radius: 16px;
+        border: 1px solid var(--line);
+        background: rgba(4, 10, 18, 0.92);
+        color: var(--ink);
+        padding: 16px;
+        font: 14px/1.5 "Courier New", monospace;
+        resize: vertical;
+      }
+
+      .split-preview {
+        display: grid;
+        gap: 16px;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .field,
+      select,
+      input,
+      textarea {
+        width: 100%;
+      }
+
+      select,
+      input,
+      textarea {
+        padding: 10px 12px;
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.05);
+        color: var(--ink);
+        border: 1px solid var(--line);
+      }
+
+      label {
+        display: grid;
+        gap: 8px;
+        font-size: 13px;
+      }
+
+      .checkbox-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px 12px;
+        max-height: 180px;
+        overflow-y: auto;
+        padding-right: 8px;
+      }
+
+      .checkbox-grid label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .note-box {
+        padding: 16px;
+        border-radius: 18px;
+        border: 1px solid rgba(242, 177, 93, 0.25);
+        background: rgba(242, 177, 93, 0.08);
+        color: #f7d4a4;
+      }
+
+      .danger-box {
+        padding: 16px;
+        border-radius: 18px;
+        border: 1px solid rgba(255, 133, 115, 0.25);
+        background: rgba(255, 133, 115, 0.08);
+        color: #ffc3b9;
+      }
+
+      .mini-code {
+        font-size: 11px;
+        color: var(--muted);
+      }
+
+      .hidden {
+        display: none !important;
+      }
+
+      iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+        background: #fff;
       }
 
       @keyframes scan {
@@ -358,31 +544,39 @@
         50% { transform: scale(1.06); opacity: 0.9; }
       }
 
+      @media (max-width: 980px) {
+        .column-grid,
+        .split-preview,
+        .export-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
       @media (max-width: 720px) {
         .top {
           align-items: flex-start;
           flex-direction: column;
         }
 
-        .spinner-wrap {
-          align-items: flex-start;
-          flex-direction: column;
+        .checkbox-grid {
+          grid-template-columns: 1fr;
         }
       }
-
     </style>
     {% if report.status in ['queued', 'running'] %}
     <meta http-equiv="refresh" content="8" />
     {% endif %}
   </head>
   <body>
+    {% set ready = report.status == 'ready' %}
+    {% set vis = report.presentation_config.get('visibleSections', ['hero', 'profile_summary', 'key_stats', 'timeline_commits', 'timeline_loc', 'activity_heatmap', 'language_mix', 'language_breakdown', 'highlights', 'repositories', 'notes_and_warnings', 'footer_meta']) if report.presentation_config else ['hero', 'profile_summary', 'key_stats', 'timeline_commits', 'timeline_loc', 'activity_heatmap', 'language_mix', 'language_breakdown', 'highlights', 'repositories', 'notes_and_warnings', 'footer_meta'] %}
     <main class="shell">
       <section class="panel">
         <div class="top">
           <div>
             <span class="eyebrow">Report detail</span>
             <h1 style="margin-top: 12px;">{{ report.title }}</h1>
-            <p class="muted" style="margin-top: 10px;">Track the queue, watch the worker churn, and open the hosted result when it lands.</p>
+            <p class="muted" style="margin-top: 10px; max-width: 70ch;">Track the queue, lock export artifacts to the stored snapshot, and publish markdown only through a repo-scoped GitHub App flow.</p>
           </div>
           <a class="back-link" href="/dashboard">Back to dashboard</a>
         </div>
@@ -396,100 +590,241 @@
           {% if report.store_metadata %}<span class="chip">metadata retained</span>{% endif %}
         </div>
 
-        <div class="grid">
-          <div id="progressShell" style="flex: 1 1 420px;">
-            {% include 'web/_report_progress.html.j2' %}
+        <div class="grid column-grid">
+          <div class="stack">
+            <div id="progressShell">{% include 'web/_report_progress.html.j2' %}</div>
+
+            <section class="mini-panel">
+              <div class="eyebrow">Access</div>
+              <h3 style="margin-top: 12px;">Share surfaces</h3>
+              <div class="link-row">
+                {% if ready and snapshot %}
+                <a href="{{ report.share_url }}">Open share link</a>
+                {% else %}
+                <span class="disabled-link">Share link available when ready</span>
+                {% endif %}
+              </div>
+              <div class="link-row">
+                {% if ready and report.host_url %}
+                <a href="{{ report.host_url }}">Open subdomain link</a>
+                {% else %}
+                <span class="disabled-link">Subdomain will light up after publish</span>
+                {% endif %}
+              </div>
+              <div class="link-row">
+                {% if snapshot %}<span class="muted">Snapshot v{{ snapshot.version }}</span>{% endif %}
+                {% if report.expires_at %}<span class="muted">Expires {{ report.expires_at }}</span>{% endif %}
+              </div>
+            </section>
           </div>
 
-          <section class="mini-panel">
-            {% set ready = report.status == 'ready' %}
-            <div class="eyebrow">Access</div>
-            <h3 style="margin-top: 12px;">Share surfaces</h3>
-            <div class="link-row">
-              {% if ready and snapshot %}
-              <a href="{{ report.share_url }}">Open share link</a>
-              {% else %}
-              <span class="disabled-link">Share link available when ready</span>
-              {% endif %}
+          <div class="stack">
+            <section class="mini-panel">
+              <div class="eyebrow">Export rules</div>
+              <h3 style="margin-top: 12px;">Snapshot-first artifact policy</h3>
+              <div class="note-box" style="margin-top: 14px;">
+                Exports reuse stored snapshot and presentation data only. No live GitHub refetches, no arbitrary public URL rendering, and private report artifacts stay owner-only.
+              </div>
+              <div class="link-row">
+                <span class="mini-code">recommended order: PDF/PNG -> HTML -> markdown -> GitHub profile publish</span>
+              </div>
+            </section>
+          </div>
+        </div>
+
+        {% if ready %}
+        <div class="section-grid" style="margin-top: 18px;">
+          <section class="panel" style="border-radius: 20px;">
+            <div class="eyebrow">Presentation Configuration</div>
+            <h3 style="margin-top: 12px;">Customize Report</h3>
+            <p class="muted" style="margin-top: 8px;">Apply themes and toggle sections instantly without regenerating analytics.</p>
+            <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));">
+              <div>
+                <label class="step-label" style="display:block; margin-bottom: 8px;">Theme</label>
+                <select id="themeSelect">
+                  {% for template in ['default','ledger','transit','archive','scrapbook','orbital','fieldnotes','signalroom','gallery','tapearchive','cyberpunk','glassmorphism','brutalism','retro_os','holo','synthwave','paper','monochrome','matrix','liquid'] %}
+                  <option value="{{ template }}" {% if report.template_key == template %}selected{% endif %}>{{ template }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div>
+                <label class="step-label" style="display:block; margin-bottom: 8px;">Text Overrides</label>
+                <input type="text" id="heroEyebrowInput" placeholder="Hero Eyebrow" value="{{ report.presentation_config.get('textOverrides', {}).get('hero_eyebrow', '') if report.presentation_config else '' }}" />
+                <input type="text" id="heroTitleInput" placeholder="Hero Title" style="margin-top: 8px;" value="{{ report.presentation_config.get('textOverrides', {}).get('hero_title', '') if report.presentation_config else '' }}" />
+                <input type="text" id="heroCopyInput" placeholder="Hero Copy" style="margin-top: 8px;" value="{{ report.presentation_config.get('textOverrides', {}).get('hero_copy', '') if report.presentation_config else '' }}" />
+                <input type="text" id="notesHeadingInput" placeholder="Notes Heading" style="margin-top: 8px;" value="{{ report.presentation_config.get('textOverrides', {}).get('notes_heading', '') if report.presentation_config else '' }}" />
+              </div>
+              <div>
+                <label class="step-label" style="display:block; margin-bottom: 8px;">Visible Sections</label>
+                <div class="checkbox-grid">
+                  <label><input type="checkbox" class="section-toggle" value="hero" {% if 'hero' in vis %}checked{% endif %}> Hero</label>
+                  <label><input type="checkbox" class="section-toggle" value="profile_summary" {% if 'profile_summary' in vis %}checked{% endif %}> Profile</label>
+                  <label><input type="checkbox" class="section-toggle" value="key_stats" {% if 'key_stats' in vis %}checked{% endif %}> Stats</label>
+                  <label><input type="checkbox" class="section-toggle" value="timeline_commits" {% if 'timeline_commits' in vis %}checked{% endif %}> Commits Chart</label>
+                  <label><input type="checkbox" class="section-toggle" value="timeline_loc" {% if 'timeline_loc' in vis %}checked{% endif %}> LOC Chart</label>
+                  <label><input type="checkbox" class="section-toggle" value="activity_heatmap" {% if 'activity_heatmap' in vis %}checked{% endif %}> Heatmap</label>
+                  <label><input type="checkbox" class="section-toggle" value="language_mix" {% if 'language_mix' in vis %}checked{% endif %}> Lang Mix</label>
+                  <label><input type="checkbox" class="section-toggle" value="language_breakdown" {% if 'language_breakdown' in vis %}checked{% endif %}> Lang Stats</label>
+                  <label><input type="checkbox" class="section-toggle" value="highlights" {% if 'highlights' in vis %}checked{% endif %}> Highlights</label>
+                  <label><input type="checkbox" class="section-toggle" value="repositories" {% if 'repositories' in vis %}checked{% endif %}> Repositories</label>
+                  <label><input type="checkbox" class="section-toggle" value="notes_and_warnings" {% if 'notes_and_warnings' in vis %}checked{% endif %}> Warnings</label>
+                  <label><input type="checkbox" class="section-toggle" value="footer_meta" {% if 'footer_meta' in vis %}checked{% endif %}> Footer Meta</label>
+                </div>
+              </div>
             </div>
-            <div class="link-row">
-              {% if ready and report.host_url %}
-              <a href="{{ report.host_url }}">Open subdomain link</a>
-              {% else %}
-              <span class="disabled-link">Subdomain will light up after publish</span>
-              {% endif %}
+            <div class="button-row" style="margin-top: 18px; align-items: center;">
+              <button id="savePresentationBtn" type="button">Save Presentation</button>
+              <button id="resetPresentationBtn" type="button" class="secondary">Reset Defaults</button>
+              <span id="saveStatus" class="muted"></span>
             </div>
-            <div class="link-row">
-              {% if snapshot %}<span class="muted">Snapshot v{{ snapshot.version }}</span>{% endif %}
-              {% if report.expires_at %}<span class="muted">Expires {{ report.expires_at }}</span>{% endif %}
+          </section>
+
+          <section class="panel" style="border-radius: 20px;">
+            <div class="eyebrow">Visual Exports</div>
+            <h3 style="margin-top: 12px;">Create portable artifacts</h3>
+            <p class="muted" style="margin-top: 8px;">PDF and PNG render the current presentation from stored snapshot context. HTML freezes the report into a single-file offline artifact.</p>
+            <div class="export-grid">
+              <article class="export-card">
+                <div class="chip">PDF</div>
+                <h4>Download PDF</h4>
+                <p>Best long-form handoff format. Server-rendered with a headless browser and print styling.</p>
+                <button type="button" data-export-type="pdf">Queue PDF export</button>
+              </article>
+              <article class="export-card">
+                <div class="chip">PNG</div>
+                <h4>Download PNG</h4>
+                <p>Quick-share image snapshot. Very tall reports may be rejected in favor of PDF.</p>
+                <button type="button" data-export-type="png">Queue PNG export</button>
+              </article>
+              <article class="export-card">
+                <div class="chip">HTML</div>
+                <h4>Download HTML</h4>
+                <p>Portable single-file export with remote chart and avatar dependencies frozen out.</p>
+                <button type="button" data-export-type="html">Queue HTML export</button>
+              </article>
+              <article class="export-card">
+                <div class="chip">Artifact log</div>
+                <h4>Recent exports</h4>
+                <p>Completed artifacts stay pinned to this snapshot and current presentation hash.</p>
+                <div id="exportStatusNote" class="muted">No export queued yet.</div>
+              </article>
+            </div>
+            <div id="exportList" class="export-list"></div>
+          </section>
+
+          <section class="panel" style="border-radius: 20px;">
+            <div class="eyebrow">Markdown Export</div>
+            <h3 style="margin-top: 12px;">Compose GitHub-native markdown</h3>
+            <p class="muted" style="margin-top: 8px;">Generated from sanitized report data, not scraped HTML. Use compact README mode or a fuller summary block.</p>
+            <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); align-items: end;">
+              <label>
+                <span class="mini-code">preset</span>
+                <select id="markdownPresetSelect">
+                  <option value="profile_readme">profile_readme</option>
+                  <option value="summary_markdown" selected>summary_markdown</option>
+                </select>
+              </label>
+              <label>
+                <span class="mini-code">layout</span>
+                <select id="markdownCompactSelect">
+                  <option value="false" selected>Expanded</option>
+                  <option value="true">Compact</option>
+                </select>
+              </label>
+              <label>
+                <span class="mini-code">custom title</span>
+                <input type="text" id="markdownTitleInput" placeholder="Optional markdown heading" />
+              </label>
+              <label>
+                <span class="mini-code">custom tagline</span>
+                <input type="text" id="markdownTaglineInput" placeholder="Optional intro line" />
+              </label>
+            </div>
+            <div class="grid" style="grid-template-columns: 1fr 1fr; margin-top: 16px;">
+              <div>
+                <div class="mini-code" style="margin-bottom: 8px;">sections</div>
+                <div id="markdownSectionGrid" class="checkbox-grid">
+                  <label><input type="checkbox" class="markdown-section-toggle" value="intro" checked> Intro</label>
+                  <label><input type="checkbox" class="markdown-section-toggle" value="key_stats" checked> Key Stats</label>
+                  <label><input type="checkbox" class="markdown-section-toggle" value="top_repositories" checked> Top Repositories</label>
+                  <label><input type="checkbox" class="markdown-section-toggle" value="recent_activity" checked> Recent Activity</label>
+                  <label><input type="checkbox" class="markdown-section-toggle" value="language_snapshot" checked> Language Snapshot</label>
+                  <label><input type="checkbox" class="markdown-section-toggle" value="highlights" checked> Highlights</label>
+                  <label><input type="checkbox" class="markdown-section-toggle" value="warnings"> Notes</label>
+                  <label><input type="checkbox" class="markdown-section-toggle" value="hosted_report_link" checked> Hosted Link</label>
+                </div>
+              </div>
+              <div class="button-row" style="align-items: flex-end; justify-content: flex-end;">
+                <button type="button" id="refreshMarkdownBtn">Refresh Markdown</button>
+                <button type="button" id="downloadMarkdownBtn" class="secondary">Queue Markdown export</button>
+                <button type="button" id="copyMarkdownBtn" class="ghost">Copy Markdown</button>
+              </div>
+            </div>
+            <div class="split-preview" style="margin-top: 18px;">
+              <div class="preview-panel">
+                <div class="mini-code">markdown</div>
+                <textarea id="markdownOutput" class="markdown-box" spellcheck="false"></textarea>
+              </div>
+              <div class="preview-panel">
+                <div class="mini-code">preview</div>
+                <div id="markdownPreview" class="preview-frame muted">Generate markdown to preview it here.</div>
+                <div class="note-box">GitHub rendering may differ slightly from this local preview.</div>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel" style="border-radius: 20px;">
+            <div class="eyebrow">GitHub Profile Publishing</div>
+            <h3 style="margin-top: 12px;">Publish README with least privilege</h3>
+            <p class="muted" style="margin-top: 8px;">No broad OAuth write scopes. This flow expects a GitHub App installed only on the exact profile repository.</p>
+            <div class="note-box" style="margin-top: 14px;">
+              Safe path: create <strong>{{ profile_publish_status.expected_repo if profile_publish_status else (report.user.login ~ '/' ~ report.user.login if report.user else 'username/username') }}</strong>, install the GitHub App on that repo only, preview the diff, then confirm publish.
+            </div>
+            <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); margin-top: 16px;">
+              <label>
+                <span class="mini-code">github login</span>
+                <input type="text" id="profileGithubLoginInput" value="{{ profile_publish_status.connection.github_login if profile_publish_status and profile_publish_status.connection else (report.user.login if report.user else '') }}" />
+              </label>
+              <label>
+                <span class="mini-code">profile repo owner</span>
+                <input type="text" id="profileRepoOwnerInput" value="{{ profile_publish_status.connection.profile_repo_owner if profile_publish_status and profile_publish_status.connection else (report.user.login if report.user else '') }}" />
+              </label>
+              <label>
+                <span class="mini-code">profile repo name</span>
+                <input type="text" id="profileRepoNameInput" value="{{ profile_publish_status.connection.profile_repo_name if profile_publish_status and profile_publish_status.connection else (report.user.login if report.user else '') }}" />
+              </label>
+              <label>
+                <span class="mini-code">app installation id</span>
+                <input type="number" id="profileInstallationIdInput" value="{{ profile_publish_status.connection.app_installation_id if profile_publish_status and profile_publish_status.connection else '' }}" placeholder="Repo-scoped installation id" />
+              </label>
+            </div>
+            <div class="button-row" style="margin-top: 16px; align-items: center;">
+              <button type="button" id="connectProfileBtn">Save Repo Connection</button>
+              {% if profile_publish_status and profile_publish_status.install_url %}
+              <a href="{{ profile_publish_status.install_url }}" class="button-link secondary" target="_blank">Open GitHub App install</a>
+              {% endif %}
+              <span id="profileConnectStatus" class="muted"></span>
+            </div>
+            <div class="split-preview" style="margin-top: 18px;">
+              <div class="preview-panel">
+                <div class="toolbar">
+                  <div class="mini-code">current README</div>
+                  <button type="button" id="loadCurrentReadmeBtn" class="secondary">Fetch current README</button>
+                </div>
+                <textarea id="currentReadmeInput" class="markdown-box" spellcheck="false"></textarea>
+              </div>
+              <div class="preview-panel">
+                <div class="toolbar">
+                  <div class="mini-code">unified diff</div>
+                  <button type="button" id="previewPublishDiffBtn">Preview diff</button>
+                  <button type="button" id="publishProfileBtn" class="ghost">Publish to profile</button>
+                </div>
+                <textarea id="publishDiffOutput" class="markdown-box" spellcheck="false" readonly></textarea>
+                <div id="publishStatus" class="muted">Diff preview required before publishing.</div>
+              </div>
             </div>
           </section>
         </div>
-
-        {% if report.status == 'ready' %}
-        <section class="panel" style="margin-top: 18px; border-radius: 20px;">
-          <div class="eyebrow">Presentation Configuration</div>
-          <h3 style="margin-top: 12px;">Customize Report</h3>
-          <p class="muted" style="margin-top: 8px;">Apply themes and toggle sections instantly without regenerating.</p>
-          <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));">
-            <div>
-              <label class="step-label" style="display:block; margin-bottom: 8px;">Theme</label>
-              <select id="themeSelect" style="width: 100%; padding: 10px; border-radius: 8px; background: rgba(255,255,255,0.05); color: white; border: 1px solid var(--line);">
-                <option value="default" style="background: #1a1b26; color: white;" {% if report.template_key == 'default' %}selected{% endif %}>Default</option>
-                <option value="ledger" style="background: #1a1b26; color: white;" {% if report.template_key == 'ledger' %}selected{% endif %}>Ledger</option>
-                <option value="transit" style="background: #1a1b26; color: white;" {% if report.template_key == 'transit' %}selected{% endif %}>Transit</option>
-                <option value="archive" style="background: #1a1b26; color: white;" {% if report.template_key == 'archive' %}selected{% endif %}>Archive</option>
-                <option value="scrapbook" style="background: #1a1b26; color: white;" {% if report.template_key == 'scrapbook' %}selected{% endif %}>Scrapbook</option>
-                <option value="orbital" style="background: #1a1b26; color: white;" {% if report.template_key == 'orbital' %}selected{% endif %}>Orbital</option>
-                <option value="fieldnotes" style="background: #1a1b26; color: white;" {% if report.template_key == 'fieldnotes' %}selected{% endif %}>Fieldnotes</option>
-                <option value="signalroom" style="background: #1a1b26; color: white;" {% if report.template_key == 'signalroom' %}selected{% endif %}>Signalroom</option>
-                <option value="gallery" style="background: #1a1b26; color: white;" {% if report.template_key == 'gallery' %}selected{% endif %}>Gallery</option>
-                <option value="tapearchive" style="background: #1a1b26; color: white;" {% if report.template_key == 'tapearchive' %}selected{% endif %}>Tapearchive</option>
-                <option value="cyberpunk" style="background: #1a1b26; color: white;" {% if report.template_key == 'cyberpunk' %}selected{% endif %}>Cyberpunk</option>
-                <option value="glassmorphism" style="background: #1a1b26; color: white;" {% if report.template_key == 'glassmorphism' %}selected{% endif %}>Glassmorphism</option>
-                <option value="brutalism" style="background: #1a1b26; color: white;" {% if report.template_key == 'brutalism' %}selected{% endif %}>Brutalism</option>
-                <option value="retro_os" style="background: #1a1b26; color: white;" {% if report.template_key == 'retro_os' %}selected{% endif %}>Retro OS</option>
-                <option value="holo" style="background: #1a1b26; color: white;" {% if report.template_key == 'holo' %}selected{% endif %}>Holo</option>
-                <option value="synthwave" style="background: #1a1b26; color: white;" {% if report.template_key == 'synthwave' %}selected{% endif %}>Synthwave</option>
-                <option value="paper" style="background: #1a1b26; color: white;" {% if report.template_key == 'paper' %}selected{% endif %}>Paper</option>
-                <option value="monochrome" style="background: #1a1b26; color: white;" {% if report.template_key == 'monochrome' %}selected{% endif %}>Monochrome</option>
-                <option value="matrix" style="background: #1a1b26; color: white;" {% if report.template_key == 'matrix' %}selected{% endif %}>Matrix</option>
-                <option value="liquid" style="background: #1a1b26; color: white;" {% if report.template_key == 'liquid' %}selected{% endif %}>Liquid</option>
-              </select>
-            </div>
-            <div>
-              <label class="step-label" style="display:block; margin-bottom: 8px;">Text Overrides</label>
-              <input type="text" id="heroEyebrowInput" placeholder="Hero Eyebrow (e.g. Developer Report)" style="width: 100%; padding: 10px; margin-bottom: 8px; border-radius: 8px; background: rgba(255,255,255,0.05); color: white; border: 1px solid var(--line);" value="{{ report.presentation_config.get('textOverrides', {}).get('hero_eyebrow', '') if report.presentation_config else '' }}" />
-              <input type="text" id="heroTitleInput" placeholder="Hero Title (e.g. Activity Summary)" style="width: 100%; padding: 10px; margin-bottom: 8px; border-radius: 8px; background: rgba(255,255,255,0.05); color: white; border: 1px solid var(--line);" value="{{ report.presentation_config.get('textOverrides', {}).get('hero_title', '') if report.presentation_config else '' }}" />
-              <input type="text" id="heroCopyInput" placeholder="Hero Copy" style="width: 100%; padding: 10px; margin-bottom: 8px; border-radius: 8px; background: rgba(255,255,255,0.05); color: white; border: 1px solid var(--line);" value="{{ report.presentation_config.get('textOverrides', {}).get('hero_copy', '') if report.presentation_config else '' }}" />
-              <input type="text" id="notesHeadingInput" placeholder="Notes Heading (e.g. Caveats)" style="width: 100%; padding: 10px; border-radius: 8px; background: rgba(255,255,255,0.05); color: white; border: 1px solid var(--line);" value="{{ report.presentation_config.get('textOverrides', {}).get('notes_heading', '') if report.presentation_config else '' }}" />
-            </div>
-            <div>
-              <label class="step-label" style="display:block; margin-bottom: 8px;">Visible Sections</label>
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; max-height: 150px; overflow-y: auto; padding-right: 10px;">
-                {% set vis = report.presentation_config.get('visibleSections', ['hero', 'profile_summary', 'key_stats', 'timeline_commits', 'timeline_loc', 'activity_heatmap', 'language_mix', 'language_breakdown', 'highlights', 'repositories', 'notes_and_warnings', 'footer_meta']) if report.presentation_config else ['hero', 'profile_summary', 'key_stats', 'timeline_commits', 'timeline_loc', 'activity_heatmap', 'language_mix', 'language_breakdown', 'highlights', 'repositories', 'notes_and_warnings', 'footer_meta'] %}
-
-                <label style="font-size: 13px; display: flex; align-items: center; gap: 6px;"><input type="checkbox" class="section-toggle" value="hero" {% if 'hero' in vis %}checked{% endif %}> Hero</label>
-                <label style="font-size: 13px; display: flex; align-items: center; gap: 6px;"><input type="checkbox" class="section-toggle" value="profile_summary" {% if 'profile_summary' in vis %}checked{% endif %}> Profile</label>
-                <label style="font-size: 13px; display: flex; align-items: center; gap: 6px;"><input type="checkbox" class="section-toggle" value="key_stats" {% if 'key_stats' in vis %}checked{% endif %}> Stats</label>
-                <label style="font-size: 13px; display: flex; align-items: center; gap: 6px;"><input type="checkbox" class="section-toggle" value="timeline_commits" {% if 'timeline_commits' in vis %}checked{% endif %}> Commits Chart</label>
-                <label style="font-size: 13px; display: flex; align-items: center; gap: 6px;"><input type="checkbox" class="section-toggle" value="timeline_loc" {% if 'timeline_loc' in vis %}checked{% endif %}> LOC Chart</label>
-                <label style="font-size: 13px; display: flex; align-items: center; gap: 6px;"><input type="checkbox" class="section-toggle" value="activity_heatmap" {% if 'activity_heatmap' in vis %}checked{% endif %}> Heatmap</label>
-                <label style="font-size: 13px; display: flex; align-items: center; gap: 6px;"><input type="checkbox" class="section-toggle" value="language_mix" {% if 'language_mix' in vis %}checked{% endif %}> Lang Mix</label>
-                <label style="font-size: 13px; display: flex; align-items: center; gap: 6px;"><input type="checkbox" class="section-toggle" value="language_breakdown" {% if 'language_breakdown' in vis %}checked{% endif %}> Lang Stats</label>
-                <label style="font-size: 13px; display: flex; align-items: center; gap: 6px;"><input type="checkbox" class="section-toggle" value="highlights" {% if 'highlights' in vis %}checked{% endif %}> Highlights</label>
-                <label style="font-size: 13px; display: flex; align-items: center; gap: 6px;"><input type="checkbox" class="section-toggle" value="repositories" {% if 'repositories' in vis %}checked{% endif %}> Repositories</label>
-                <label style="font-size: 13px; display: flex; align-items: center; gap: 6px;"><input type="checkbox" class="section-toggle" value="notes_and_warnings" {% if 'notes_and_warnings' in vis %}checked{% endif %}> Warnings</label>
-                <label style="font-size: 13px; display: flex; align-items: center; gap: 6px;"><input type="checkbox" class="section-toggle" value="footer_meta" {% if 'footer_meta' in vis %}checked{% endif %}> Footer Meta</label>
-              </div>
-            </div>
-          </div>
-          <div style="margin-top: 18px; display: flex; gap: 12px; align-items: center;">
-            <button id="savePresentationBtn" type="button">Save Presentation</button>
-            <button id="resetPresentationBtn" type="button" style="background: transparent; border: 1px solid var(--line); color: var(--muted);">Reset Defaults</button>
-            <span id="saveStatus" class="muted"></span>
-          </div>
-        </section>
         {% endif %}
 
         <form id="refreshForm" method="post" action="/dashboard/reports/{{ report.id }}/refresh" class="actions" style="margin-top: 18px;">
@@ -500,19 +835,223 @@
 
       {% if report.status == 'ready' and report.share_url %}
       <section class="panel" style="margin-top: 18px; padding: 0; border-radius: 20px; overflow: hidden; height: 800px; display: flex; flex-direction: column;">
-        <div style="background: rgba(0,0,0,0.2); padding: 12px 20px; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center;">
+        <div style="background: rgba(0,0,0,0.2); padding: 12px 20px; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap;">
           <span class="eyebrow" style="margin: 0;">Live Preview</span>
           <a href="{{ report.share_url }}" target="_blank" style="color: var(--cyan); text-decoration: none; font-size: 13px;">Open in new tab &nearr;</a>
         </div>
-        <iframe id="reportPreviewFrame" src="{{ report.share_url }}" style="width: 100%; height: 100%; border: none; background: #fff;"></iframe>
+        <iframe id="reportPreviewFrame" src="{{ report.share_url }}"></iframe>
       </section>
       {% endif %}
     </main>
 
     <script>
+      const reportId = {{ report.id|tojson }};
       const latestJobId = {{ report.latest_job_id|tojson if report.latest_job_id else 'null' }};
+      const reportStatus = {{ report.status|tojson }};
+      const ready = reportStatus === 'ready';
+      const shareUrl = {{ report.share_url|tojson if report.share_url else 'null' }};
+      const initialExports = {{ report.exports|tojson if report.exports else '[]' }};
+      const profilePublishStatus = {{ profile_publish_status|tojson if profile_publish_status else 'null' }};
       const refreshForm = document.getElementById('refreshForm');
       const progressShell = document.getElementById('progressShell');
+      const exportList = document.getElementById('exportList');
+      const exportStatusNote = document.getElementById('exportStatusNote');
+      const markdownOutput = document.getElementById('markdownOutput');
+      const markdownPreview = document.getElementById('markdownPreview');
+      const publishDiffOutput = document.getElementById('publishDiffOutput');
+
+      let exportEntries = Array.isArray(initialExports) ? initialExports.slice() : [];
+      let lastGeneratedMarkdown = '';
+
+      const defaultVisibleSections = [
+        'hero', 'profile_summary', 'key_stats', 'timeline_commits', 'timeline_loc',
+        'activity_heatmap', 'language_mix', 'language_breakdown', 'highlights',
+        'repositories', 'notes_and_warnings', 'footer_meta'
+      ];
+
+      function byId(id) {
+        return document.getElementById(id);
+      }
+
+      function setText(id, value) {
+        const node = byId(id);
+        if (node) node.textContent = value;
+      }
+
+      function sortExports(entries) {
+        return entries.slice().sort((a, b) => String(b.created_at || '').localeCompare(String(a.created_at || '')));
+      }
+
+      function mergeExportEntry(entry) {
+        const next = exportEntries.filter((item) => item.id !== entry.id);
+        next.push(entry);
+        exportEntries = sortExports(next);
+        renderExports();
+      }
+
+      function renderExports() {
+        if (!exportList) return;
+        if (!exportEntries.length) {
+          exportList.innerHTML = '<div class="muted">No exports created yet.</div>';
+          if (exportStatusNote) exportStatusNote.textContent = 'No export queued yet.';
+          return;
+        }
+        exportList.innerHTML = exportEntries.map((entry) => {
+          const ready = entry.status === 'succeeded' && entry.download_path;
+          const bytes = entry.byte_size ? `${entry.byte_size} bytes` : 'pending size';
+          const preset = entry.options && entry.options.presetKey ? `preset ${entry.options.presetKey}` : 'snapshot-bound';
+          return `
+            <article class="export-item">
+              <div class="export-item-head">
+                <div>
+                  <strong>${entry.export_type.toUpperCase()}</strong>
+                  <div class="mini-code">${preset}</div>
+                </div>
+                <div class="meta-pills">
+                  <span class="chip ${entry.status}">${entry.status}</span>
+                  <span class="chip">${bytes}</span>
+                </div>
+              </div>
+              <div class="muted">Created ${entry.created_at || 'just now'}</div>
+              <div class="button-row">
+                ${ready ? `<a class="button-link secondary" href="${entry.download_path}">Download ${entry.export_type.toUpperCase()}</a>` : '<span class="muted">Artifact is still running or failed.</span>'}
+                ${entry.error_message ? `<span class="danger-box">${entry.error_message}</span>` : ''}
+              </div>
+            </article>
+          `;
+        }).join('');
+        if (exportStatusNote) {
+          exportStatusNote.textContent = `${exportEntries.length} export artifact${exportEntries.length === 1 ? '' : 's'} tracked for this snapshot.`;
+        }
+      }
+
+      async function apiJson(url, options = {}) {
+        const response = await fetch(url, {
+          headers: { 'Content-Type': 'application/json', ...(options.headers || {}) },
+          ...options,
+        });
+        let data = null;
+        try {
+          data = await response.json();
+        } catch (error) {
+          data = null;
+        }
+        if (!response.ok) {
+          const detail = data && data.detail ? data.detail : `Request failed (${response.status})`;
+          throw new Error(detail);
+        }
+        return data;
+      }
+
+      function currentPresentationPayload() {
+        const visibleSections = Array.from(document.querySelectorAll('.section-toggle:checked')).map((cb) => cb.value);
+        const payload = {
+          themeKey: byId('themeSelect') ? byId('themeSelect').value : 'default',
+          visibleSections,
+          textOverrides: {},
+        };
+        const heroEyebrow = byId('heroEyebrowInput')?.value.trim();
+        const heroTitle = byId('heroTitleInput')?.value.trim();
+        const heroCopy = byId('heroCopyInput')?.value.trim();
+        const notesHeading = byId('notesHeadingInput')?.value.trim();
+        if (heroEyebrow) payload.textOverrides.hero_eyebrow = heroEyebrow;
+        if (heroTitle) payload.textOverrides.hero_title = heroTitle;
+        if (heroCopy) payload.textOverrides.hero_copy = heroCopy;
+        if (notesHeading) payload.textOverrides.notes_heading = notesHeading;
+        return payload;
+      }
+
+      function currentMarkdownOptions() {
+        const visibleSections = Array.from(document.querySelectorAll('.markdown-section-toggle:checked')).map((cb) => cb.value);
+        const textOverrides = {};
+        const title = byId('markdownTitleInput')?.value.trim();
+        const tagline = byId('markdownTaglineInput')?.value.trim();
+        if (title) textOverrides.title = title;
+        if (tagline) textOverrides.tagline = tagline;
+        return {
+          presetKey: byId('markdownPresetSelect')?.value || 'summary_markdown',
+          compact: (byId('markdownCompactSelect')?.value || 'false') === 'true',
+          visibleSections,
+          textOverrides,
+        };
+      }
+
+      async function queueExport(exportType, options = {}) {
+        setText('exportStatusNote', `Queueing ${exportType.toUpperCase()} export...`);
+        const payload = { exportType, options };
+        const entry = await apiJson(`/api/reports/${reportId}/exports`, { method: 'POST', body: JSON.stringify(payload) });
+        mergeExportEntry(entry);
+        setText('exportStatusNote', `${exportType.toUpperCase()} export ${entry.status === 'succeeded' ? 'ready' : 'queued'}.`);
+        return entry;
+      }
+
+      async function refreshExportList() {
+        const entries = await apiJson(`/api/reports/${reportId}/exports`);
+        exportEntries = sortExports(Array.isArray(entries) ? entries : []);
+        renderExports();
+      }
+
+      async function refreshMarkdownPreview() {
+        const options = currentMarkdownOptions();
+        const payload = await apiJson(`/api/reports/${reportId}/markdown/preview`, { method: 'POST', body: JSON.stringify(options) });
+        lastGeneratedMarkdown = payload.markdown || '';
+        if (markdownOutput) markdownOutput.value = payload.markdown || '';
+        if (markdownPreview) markdownPreview.innerHTML = payload.preview_html || '<span class="muted">No preview available.</span>';
+        return payload;
+      }
+
+      async function loadCurrentReadme() {
+        const payload = await apiJson('/api/github/profile-readme/current');
+        if (byId('currentReadmeInput')) {
+          byId('currentReadmeInput').value = payload.content || '';
+        }
+        setText('publishStatus', payload.exists ? 'Loaded current README from the configured profile repo.' : 'Profile README does not exist yet; publish will create it.');
+        return payload;
+      }
+
+      async function previewProfileDiff() {
+        const markdownOptions = currentMarkdownOptions();
+        markdownOptions.presetKey = 'profile_readme';
+        markdownOptions.compact = true;
+        const payload = await apiJson(`/api/reports/${reportId}/profile-readme/diff`, {
+          method: 'POST',
+          body: JSON.stringify({ current_readme: byId('currentReadmeInput')?.value || '', ...markdownOptions }),
+        });
+        if (publishDiffOutput) publishDiffOutput.value = payload.diff || '';
+        lastGeneratedMarkdown = payload.markdown_body || lastGeneratedMarkdown;
+        if (markdownPreview && payload.preview_html) markdownPreview.innerHTML = payload.preview_html;
+        setText('publishStatus', 'Diff preview ready. Review it before publishing.');
+        return payload;
+      }
+
+      async function connectProfileRepo() {
+        const payload = {
+          github_login: byId('profileGithubLoginInput')?.value.trim() || '',
+          profile_repo_owner: byId('profileRepoOwnerInput')?.value.trim() || '',
+          profile_repo_name: byId('profileRepoNameInput')?.value.trim() || '',
+          app_installation_id: Number(byId('profileInstallationIdInput')?.value || 0),
+        };
+        setText('profileConnectStatus', 'Saving connection...');
+        await apiJson('/api/github/profile-readme/connect', { method: 'POST', body: JSON.stringify(payload) });
+        setText('profileConnectStatus', 'Profile repo connection saved.');
+      }
+
+      async function publishProfileReadme() {
+        const markdownOptions = currentMarkdownOptions();
+        markdownOptions.presetKey = 'profile_readme';
+        markdownOptions.compact = true;
+        const payload = await apiJson(`/api/reports/${reportId}/profile-readme/publish`, {
+          method: 'POST',
+          body: JSON.stringify({
+            current_readme: byId('currentReadmeInput')?.value || '',
+            confirm: true,
+            ...markdownOptions,
+          }),
+        });
+        if (publishDiffOutput) publishDiffOutput.value = payload.diff || '';
+        if (byId('currentReadmeInput')) byId('currentReadmeInput').value = payload.markdown_body || '';
+        setText('publishStatus', `Published README${payload.commit_sha ? ` at ${payload.commit_sha}` : ''}.`);
+      }
 
       if (refreshForm) {
         refreshForm.addEventListener('submit', () => {
@@ -520,17 +1059,13 @@
         });
       }
 
-      if (latestJobId && {{ 'true' if report.status in ['queued', 'running'] else 'false' }}) {
+      if (latestJobId && ['queued', 'running'].includes(reportStatus)) {
         const poll = async () => {
           try {
-            const response = await fetch(`/dashboard/reports/{{ report.id }}/progress`, { headers: { 'Accept': 'text/html' } });
-            if (!response.ok) {
-              return;
-            }
+            const response = await fetch(`/dashboard/reports/${reportId}/progress`, { headers: { 'Accept': 'text/html' } });
+            if (!response.ok) return;
             const html = await response.text();
-            if (progressShell) {
-              progressShell.innerHTML = html;
-            }
+            if (progressShell) progressShell.innerHTML = html;
             const nextState = progressShell?.querySelector('[data-status]')?.getAttribute('data-status');
             if (nextState === 'ready' || nextState === 'succeeded' || nextState === 'failed') {
               window.location.reload();
@@ -539,90 +1074,179 @@
             console.warn('status poll failed', error);
           }
         };
-
         window.setInterval(poll, 4000);
       }
 
-      const resetBtn = document.getElementById('resetPresentationBtn');
+      const resetBtn = byId('resetPresentationBtn');
       if (resetBtn) {
         resetBtn.addEventListener('click', async () => {
-          if (!confirm('Are you sure you want to reset to the default theme and visible sections?')) return;
-          const statusEl = document.getElementById('saveStatus');
-          statusEl.textContent = 'Resetting...';
+          if (!confirm('Reset to the default theme and visible sections?')) return;
+          setText('saveStatus', 'Resetting...');
           resetBtn.disabled = true;
-
-          const payload = {
-            themeKey: 'default',
-            visibleSections: ["hero", "profile_summary", "key_stats", "timeline_commits", "timeline_loc", "activity_heatmap", "language_mix", "language_breakdown", "highlights", "repositories", "notes_and_warnings", "footer_meta"],
-            textOverrides: {}
-          };
-
           try {
-            const res = await fetch(`/api/reports/{{ report.id }}/presentation`, {
+            await apiJson(`/api/reports/${reportId}/presentation`, {
               method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(payload)
+              body: JSON.stringify({ themeKey: 'default', visibleSections: defaultVisibleSections, textOverrides: {} }),
             });
-            if (res.ok) {
-              window.location.reload();
-            } else {
-              statusEl.textContent = 'Failed to reset.';
-            }
-          } catch (err) {
-            statusEl.textContent = 'Error resetting.';
+            window.location.reload();
+          } catch (error) {
+            setText('saveStatus', error.message);
+          } finally {
+            resetBtn.disabled = false;
           }
-          resetBtn.disabled = false;
         });
       }
 
-      const saveBtn = document.getElementById('savePresentationBtn');
+      const saveBtn = byId('savePresentationBtn');
       if (saveBtn) {
         saveBtn.addEventListener('click', async () => {
-          const theme = document.getElementById('themeSelect').value;
-          const heroEyebrow = document.getElementById('heroEyebrowInput').value.trim();
-          const heroTitle = document.getElementById('heroTitleInput').value.trim();
-          const heroCopy = document.getElementById('heroCopyInput').value.trim();
-          const notesHeading = document.getElementById('notesHeadingInput').value.trim();
-          const statusEl = document.getElementById('saveStatus');
-
-          statusEl.textContent = 'Saving...';
+          const payload = currentPresentationPayload();
+          setText('saveStatus', 'Saving...');
           saveBtn.disabled = true;
-
-          const visibleSections = Array.from(document.querySelectorAll('.section-toggle:checked')).map(cb => cb.value);
-
-          const payload = {
-            themeKey: theme,
-            visibleSections: visibleSections
-          };
-
-          payload.textOverrides = {};
-          if (heroEyebrow) payload.textOverrides.hero_eyebrow = heroEyebrow;
-          if (heroTitle) payload.textOverrides.hero_title = heroTitle;
-          if (heroCopy) payload.textOverrides.hero_copy = heroCopy;
-          if (notesHeading) payload.textOverrides.notes_heading = notesHeading;
-
           try {
-            const res = await fetch(`/api/reports/{{ report.id }}/presentation`, {
+            await apiJson(`/api/reports/${reportId}/presentation`, {
               method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(payload)
+              body: JSON.stringify(payload),
             });
-            if (res.ok) {
-              statusEl.textContent = 'Saved! Refreshing preview...';
-              const frame = document.getElementById('reportPreviewFrame');
-              if (frame) {
-                const baseSrc = frame.src.split('?')[0];
-                frame.src = baseSrc + '?t=' + new Date().getTime();
-              }
-              setTimeout(() => { statusEl.textContent = 'Changes are live.'; }, 1500);
-            } else {
-              statusEl.textContent = 'Failed to save.';
+            setText('saveStatus', 'Saved. Refreshing preview...');
+            const frame = byId('reportPreviewFrame');
+            if (frame) {
+              const baseSrc = frame.src.split('?')[0];
+              frame.src = `${baseSrc}?t=${Date.now()}`;
             }
-          } catch (err) {
-            statusEl.textContent = 'Error saving.';
+            setTimeout(() => setText('saveStatus', 'Changes are live.'), 1200);
+          } catch (error) {
+            setText('saveStatus', error.message);
+          } finally {
+            saveBtn.disabled = false;
           }
-          saveBtn.disabled = false;
         });
+      }
+
+      document.querySelectorAll('[data-export-type]').forEach((button) => {
+        button.addEventListener('click', async () => {
+          const exportType = button.getAttribute('data-export-type');
+          button.disabled = true;
+          try {
+            await queueExport(exportType, {});
+          } catch (error) {
+            setText('exportStatusNote', error.message);
+          } finally {
+            button.disabled = false;
+          }
+        });
+      });
+
+      const refreshMarkdownBtn = byId('refreshMarkdownBtn');
+      if (refreshMarkdownBtn) {
+        refreshMarkdownBtn.addEventListener('click', async () => {
+          refreshMarkdownBtn.disabled = true;
+          try {
+            await refreshMarkdownPreview();
+          } catch (error) {
+            if (markdownPreview) markdownPreview.innerHTML = `<div class="danger-box">${error.message}</div>`;
+          } finally {
+            refreshMarkdownBtn.disabled = false;
+          }
+        });
+      }
+
+      const downloadMarkdownBtn = byId('downloadMarkdownBtn');
+      if (downloadMarkdownBtn) {
+        downloadMarkdownBtn.addEventListener('click', async () => {
+          downloadMarkdownBtn.disabled = true;
+          try {
+            await queueExport('markdown', currentMarkdownOptions());
+          } catch (error) {
+            setText('exportStatusNote', error.message);
+          } finally {
+            downloadMarkdownBtn.disabled = false;
+          }
+        });
+      }
+
+      const copyMarkdownBtn = byId('copyMarkdownBtn');
+      if (copyMarkdownBtn) {
+        copyMarkdownBtn.addEventListener('click', async () => {
+          const text = markdownOutput ? markdownOutput.value : '';
+          if (!text) {
+            setText('exportStatusNote', 'Generate markdown first.');
+            return;
+          }
+          try {
+            await navigator.clipboard.writeText(text);
+            setText('exportStatusNote', 'Markdown copied to clipboard.');
+          } catch (error) {
+            setText('exportStatusNote', 'Clipboard copy failed.');
+          }
+        });
+      }
+
+      const connectProfileBtn = byId('connectProfileBtn');
+      if (connectProfileBtn) {
+        connectProfileBtn.addEventListener('click', async () => {
+          connectProfileBtn.disabled = true;
+          try {
+            await connectProfileRepo();
+          } catch (error) {
+            setText('profileConnectStatus', error.message);
+          } finally {
+            connectProfileBtn.disabled = false;
+          }
+        });
+      }
+
+      const loadCurrentReadmeBtn = byId('loadCurrentReadmeBtn');
+      if (loadCurrentReadmeBtn) {
+        loadCurrentReadmeBtn.addEventListener('click', async () => {
+          loadCurrentReadmeBtn.disabled = true;
+          try {
+            await loadCurrentReadme();
+          } catch (error) {
+            setText('publishStatus', error.message);
+          } finally {
+            loadCurrentReadmeBtn.disabled = false;
+          }
+        });
+      }
+
+      const previewPublishDiffBtn = byId('previewPublishDiffBtn');
+      if (previewPublishDiffBtn) {
+        previewPublishDiffBtn.addEventListener('click', async () => {
+          previewPublishDiffBtn.disabled = true;
+          try {
+            await previewProfileDiff();
+          } catch (error) {
+            setText('publishStatus', error.message);
+          } finally {
+            previewPublishDiffBtn.disabled = false;
+          }
+        });
+      }
+
+      const publishProfileBtn = byId('publishProfileBtn');
+      if (publishProfileBtn) {
+        publishProfileBtn.addEventListener('click', async () => {
+          if (!confirm('Publish the generated markdown to README.md on the configured profile repository?')) return;
+          publishProfileBtn.disabled = true;
+          try {
+            await publishProfileReadme();
+          } catch (error) {
+            setText('publishStatus', error.message);
+          } finally {
+            publishProfileBtn.disabled = false;
+          }
+        });
+      }
+
+      renderExports();
+      if (ready) {
+        refreshMarkdownPreview().catch((error) => {
+          if (markdownPreview) markdownPreview.innerHTML = `<div class="danger-box">${error.message}</div>`;
+        });
+        if (profilePublishStatus && profilePublishStatus.connection && byId('currentReadmeInput')) {
+          byId('currentReadmeInput').value = '';
+        }
       }
     </script>
   </body>
