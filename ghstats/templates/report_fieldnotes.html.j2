@@ -1,190 +1,38 @@
 {% extends "report_base.html.j2" %}
 
-{% block hero %}
+{% block theme_css %}
 <style>
-.notebook-hero {
-    background: #fdfbf7;
-    background-image: linear-gradient(#e5e5e5 1px, transparent 1px);
-    background-size: 100% 32px;
-    border-left: 40px solid #d9534f;
-    padding: 40px;
-    border-radius: 8px;
-    box-shadow: 5px 5px 15px rgba(0,0,0,0.1);
-    color: #333;
-    margin-bottom: 2rem;
-    position: relative;
-    font-family: 'Courier New', Courier, monospace;
+
+/* Fieldnotes Theme */
+.template-fieldnotes {
+  background: #f4f1ea;
+  color: #4a463f;
+  background-image: linear-gradient(#e5e0d8 1px, transparent 1px);
+  background-size: 100% 28px;
+  line-height: 28px;
 }
-.notebook-hero::before {
-    content: '';
-    position: absolute;
-    left: -30px;
-    top: 0;
-    bottom: 0;
-    width: 20px;
-    background-image: radial-gradient(circle, #222 4px, transparent 5px);
-    background-size: 100% 32px;
-    background-repeat: repeat-y;
+.template-fieldnotes .hero, .template-fieldnotes .panel, .template-fieldnotes .chart-card {
+  background: rgba(255,255,255,0.9);
+  border: 1px solid #dcd7ce;
+  border-radius: 4px;
+  box-shadow: 2px 4px 12px rgba(0,0,0,0.05);
 }
-.notebook-title {
-    font-size: 3rem;
-    font-weight: bold;
-    margin: 0 0 1rem 0;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    border-bottom: 2px dashed #333;
-    padding-bottom: 10px;
+.template-fieldnotes h1, .template-fieldnotes h2 {
+  font-family: "Courier New", Courier, monospace;
+  color: #2c2a26;
 }
-.notebook-meta {
-    display: flex;
-    gap: 1rem;
-    font-size: 1.2rem;
-    margin-bottom: 2rem;
-    flex-wrap: wrap;
+.template-fieldnotes .section-kicker {
+  color: #b25c42;
+  font-weight: bold;
+  text-decoration: underline;
+  text-decoration-style: wavy;
 }
-.notebook-meta span {
-    background: #ffeb3b;
-    padding: 4px 12px;
-    border-radius: 4px;
-    color: #000;
-    transform: rotate(-1deg);
-    display: inline-block;
+.template-fieldnotes .repo-card, .template-fieldnotes .fact, .template-fieldnotes .hero-stat {
+  border: none;
+  border-left: 4px solid #466a62;
+  background: rgba(70, 106, 98, 0.05);
+  border-radius: 0;
 }
-.notebook-stats {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 20px;
-}
-.notebook-stat-box {
-    border: 2px solid #333;
-    padding: 15px;
-    text-align: center;
-    background: white;
-    transform: rotate(1deg);
-    box-shadow: 3px 3px 0 #333;
-}
-.notebook-stat-val {
-    font-size: 2rem;
-    font-weight: bold;
-    color: #d9534f;
-}
-.notebook-stat-label {
-    font-size: 0.9rem;
-    text-transform: uppercase;
-    font-weight: bold;
-    margin-top: 5px;
-}
+
 </style>
-
-<div class="notebook-hero">
-    <h1 class="notebook-title">Field Notes: @{{ context.meta.subject.login }}</h1>
-    <div class="notebook-meta">
-        <span>{{ context.meta.period.start }} to {{ context.meta.period.end }}</span>
-        <span>{{ context.meta.period.days }} Days Active</span>
-        <span>{{ report_template.label }}</span>
-    </div>
-    <div class="notebook-stats">
-        {% for card in context.stats_cards[:4] %}
-        <div class="notebook-stat-box">
-            <div class="notebook-stat-val">{{ card.value }}</div>
-            <div class="notebook-stat-label">{{ card.label }}</div>
-        </div>
-        {% endfor %}
-    </div>
-</div>
-{% endblock %}
-
-{% block content %}
-<style>
-.notebook-content {
-    font-family: 'Courier New', Courier, monospace;
-}
-.notebook-section {
-    background: #fff;
-    border: 1px solid #ddd;
-    padding: 30px;
-    margin-bottom: 30px;
-    border-radius: 4px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-    position: relative;
-}
-.notebook-section::after {
-    content: "CONFIDENTIAL";
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) rotate(-45deg);
-    font-size: 8rem;
-    color: rgba(255,0,0,0.03);
-    pointer-events: none;
-    z-index: 0;
-}
-.notebook-section h2 {
-    font-size: 1.8rem;
-    border-bottom: 3px double #333;
-    padding-bottom: 10px;
-    margin-top: 0;
-    margin-bottom: 20px;
-    position: relative;
-    z-index: 1;
-}
-.grid-2 {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 30px;
-    position: relative;
-    z-index: 1;
-}
-.chart-container {
-    background: #fafafa;
-    border: 1px dashed #999;
-    padding: 15px;
-    border-radius: 4px;
-}
-.fact-item {
-    padding: 15px;
-    border-left: 4px solid #d9534f;
-    background: #f9f9f9;
-    margin-bottom: 15px;
-    position: relative;
-    z-index: 1;
-}
-.fact-item h3 { margin: 0 0 10px 0; }
-</style>
-
-<div class="notebook-content">
-    <div class="notebook-section">
-        <h2>Observational Data</h2>
-        <div class="grid-2">
-            <div class="chart-container">
-                <h3>{{ context.chart_datasets.commits_timeline.title }}</h3>
-                <canvas id="commitsChart" style="max-height: 250px;"></canvas>
-            </div>
-            <div class="chart-container">
-                <h3>{{ context.heatmap.title }}</h3>
-                <div class="calendar-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(10px, 1fr)); gap: 4px; margin-top: 10px;">
-                    {% for week in context.heatmap.weeks %}
-                        {% for day in week.days %}
-                            <div class="cell level-{{ day.level }}" title="{{ day.tooltip }}" style="aspect-ratio: 1; border-radius: 2px;"></div>
-                        {% endfor %}
-                    {% endfor %}
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="notebook-section">
-        <h2>Key Discoveries</h2>
-        <div class="grid-2">
-            {% for item in context.highlights %}
-            <div class="fact-item">
-                <div style="font-size:0.8rem; color:#666; text-transform:uppercase;">{{ item.kind }}</div>
-                <h3>{{ item.title }}</h3>
-                {% if item.value %}<div style="font-size:1.5rem; font-weight:bold; color:#333;">{{ item.value }}</div>{% endif %}
-                <p>{{ item.text }}</p>
-            </div>
-            {% endfor %}
-        </div>
-    </div>
-</div>
 {% endblock %}

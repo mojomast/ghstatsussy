@@ -1,175 +1,46 @@
 {% extends "report_base.html.j2" %}
 
-{% block hero %}
+{% block theme_css %}
 <style>
-/* Editorial / Ledger Theme */
-.editorial-hero {
-  border-bottom: 4px solid var(--ink);
-  padding: 40px 20px;
-  text-align: center;
-  background: var(--bg-alt);
-  font-family: 'Times New Roman', serif; /* Classic editorial font */
+
+/* Ledger Editorial Theme */
+.template-ledger {
+  background: #fdfbf7;
+  color: #2b2b2b;
+  font-family: "Georgia", serif;
 }
-.editorial-title {
-  font-size: 5rem;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: -2px;
-  line-height: 0.9;
-  margin-bottom: 20px;
-  color: var(--ink);
-  border-top: 2px solid var(--ink);
-  border-bottom: 2px solid var(--ink);
-  padding: 20px 0;
-  display: inline-block;
+.template-ledger .hero {
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid #2b2b2b;
+  border-top: 6px solid #7b2d26;
+  border-radius: 0;
+  box-shadow: none;
 }
-.editorial-meta {
-  display: flex;
-  justify-content: center;
-  gap: 30px;
-  font-family: var(--mono-font);
-  font-size: 0.9rem;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin-bottom: 30px;
+.template-ledger h1, .template-ledger h2, .template-ledger h3 {
+  font-family: "Times New Roman", Times, serif;
 }
-.editorial-avatar {
-  border-radius: 50%;
-  width: 100px;
-  height: 100px;
-  border: 3px solid var(--ink);
-  margin: 0 auto 20px;
+.template-ledger .section-kicker {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  color: #7b2d26;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 4px;
+  margin-bottom: 12px;
   display: block;
 }
-.editorial-kpi-grid {
-  display: flex;
-  justify-content: space-around;
-  border-top: 1px solid var(--ink);
-  padding-top: 20px;
-  margin-top: 30px;
+.template-ledger .panel, .template-ledger .chart-card {
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 0;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.03);
 }
-.editorial-kpi {
-  text-align: center;
+.template-ledger .repo-card, .template-ledger .fact, .template-ledger .hero-stat, .template-ledger .stat-card {
+  border: 1px solid #eaeaea;
+  border-radius: 0;
+  background: #fafafa;
 }
-.editorial-kpi .value {
-  font-size: 2.5rem;
-  font-weight: bold;
-  color: var(--accent);
-}
-.editorial-kpi .label {
-  font-family: var(--mono-font);
-  text-transform: uppercase;
-  font-size: 0.8rem;
-  color: var(--muted);
-}
+
 </style>
-
-<div class="editorial-hero">
-  {% if context.meta.subject.avatar_url %}
-  <img class="editorial-avatar" src="{{ context.meta.subject.avatar_url }}" alt="avatar" />
-  {% endif %}
-  <div class="editorial-meta">
-    <span>VOL. {{ context.meta.period.days }}</span>
-    <span>{{ context.meta.period.start }} — {{ context.meta.period.end }}</span>
-    <span>THE LEDGER</span>
-  </div>
-  <h1 class="editorial-title">@{{ context.meta.subject.login }}</h1>
-  <p style="font-size: 1.5rem; max-width: 600px; margin: 0 auto; color: var(--muted); font-style: italic;">
-    {{ theme.hero_copy }}
-  </p>
-
-  <div class="editorial-kpi-grid">
-    {% for card in context.stats_cards[:4] %}
-    <div class="editorial-kpi">
-      <div class="value">{{ card.value }}</div>
-      <div class="label">{{ card.label }}</div>
-    </div>
-    {% endfor %}
-  </div>
-</div>
-{% endblock %}
-
-{% block content %}
-<style>
-.editorial-content {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 40px;
-  padding: 40px 20px;
-  font-family: 'Times New Roman', serif;
-}
-.editorial-section {
-  border-top: 3px solid var(--ink);
-  padding-top: 20px;
-  margin-bottom: 40px;
-}
-.editorial-h2 {
-  font-size: 2.5rem;
-  font-weight: bold;
-  text-transform: uppercase;
-  margin-bottom: 20px;
-}
-.editorial-article {
-  column-count: 2;
-  column-gap: 30px;
-  font-size: 1.1rem;
-  line-height: 1.6;
-  text-align: justify;
-}
-.editorial-sidebar {
-  border-left: 1px solid var(--line);
-  padding-left: 30px;
-}
-.editorial-highlight {
-  background: var(--panel-strong);
-  padding: 20px;
-  margin-bottom: 20px;
-  border-left: 5px solid var(--accent);
-}
-</style>
-
-<div class="editorial-content">
-  <div class="editorial-main">
-    <div class="editorial-section">
-      <h2 class="editorial-h2">The Highlights</h2>
-      <div class="editorial-article">
-        {% for item in context.highlights %}
-        <p><strong>{{ item.title }}</strong>: {{ item.text }}</p>
-        {% endfor %}
-        <p>In total, @{{ context.meta.subject.login }} accumulated extraordinary numbers. 
-        As the charts show, the timeline of commits tells a story of relentless progress.</p>
-        {% if context.chart_datasets.commits_timeline.series and context.chart_datasets.commits_timeline.series[0]['values'] %}
-        <p>Peak commit volume reached impressive heights.</p>
-        {% endif %}
-      </div>
-    </div>
-
-    <div class="editorial-section">
-      <h2 class="editorial-h2">Timeline</h2>
-      <div style="height: 300px; width: 100%; border: 1px solid var(--ink); padding: 10px;">
-        <canvas id="commitsChart"></canvas>
-      </div>
-    </div>
-  </div>
-
-  <div class="editorial-sidebar">
-    <div class="editorial-section">
-      <h2 class="editorial-h2" style="font-size: 1.8rem;">Top Repositories</h2>
-      {% for repo in context.repo_insights[:5] %}
-      <div class="editorial-highlight">
-        <h4 style="margin: 0; font-size: 1.2rem;"><a href="{{ repo.url }}" style="color: var(--ink); text-decoration: none;">{{ repo.full_name }}</a></h4>
-        <p style="margin: 10px 0; font-size: 0.9rem; color: var(--muted);">{{ repo.description or 'No description' }}</p>
-        <span style="font-family: var(--mono-font); font-size: 0.8rem; color: var(--accent);">{{ repo.primary_language }}</span>
-      </div>
-      {% endfor %}
-    </div>
-
-    <div class="editorial-section">
-      <h2 class="editorial-h2" style="font-size: 1.8rem;">Languages</h2>
-      <div style="height: 250px;">
-        <canvas id="languageChart"></canvas>
-      </div>
-    </div>
-  </div>
-</div>
 {% endblock %}

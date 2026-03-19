@@ -1,0 +1,30 @@
+{% extends "report_base.html.j2" %}
+{% block theme_css %}
+<style>
+/* Matrix specific animations */
+@keyframes matrixRain {
+  0% { background-position: 0% 0%; }
+  100% { background-position: 0% 1000px; }
+}
+
+body::before {
+  content: "1010101010010101010101011101010101010101010";
+  position: fixed;
+  inset: 0;
+  color: rgba(0, 255, 65, 0.05);
+  font-family: monospace;
+  font-size: 20px;
+  line-height: 20px;
+  word-wrap: break-word;
+  overflow: hidden;
+  z-index: 0;
+  pointer-events: none;
+  animation: matrixRain 40s linear infinite;
+}
+
+.template-matrix .panel, .template-matrix .hero {
+  position: relative;
+  z-index: 1;
+}
+</style>
+{% endblock %}

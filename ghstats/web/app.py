@@ -37,6 +37,9 @@ PREVIEW_RUNNING_REPORT_ID = "22222222-2222-2222-2222-222222222222"
 PREVIEW_READY_JOB_ID = "33333333-3333-3333-3333-333333333333"
 PREVIEW_RUNNING_JOB_ID = "44444444-4444-4444-4444-444444444444"
 
+# In-memory store for presentation config changes in preview mode
+_PREVIEW_REPORTS_STATE: dict[str, dict] = {}
+
 
 def create_app(settings: WebAppSettings | None = None) -> FastAPI:
     web_settings = settings or load_web_settings()
@@ -168,7 +171,13 @@ def create_app(settings: WebAppSettings | None = None) -> FastAPI:
         user: User = Depends(require_user),
     ) -> HTMLResponse | RedirectResponse:
         if web_settings.preview_mode:
-            return RedirectResponse(url=f"/dashboard/reports/{PREVIEW_RUNNING_REPORT_ID}", status_code=302)
+            # Save the template choice immediately so the ready report reflects it
+            _PREVIEW_REPORTS_STATE[PREVIEW_READY_REPORT_ID] = {
+                "themeKey": template_key,
+                "visibleSections": ["hero", "profile_summary", "key_stats", "timeline_commits", "timeline_loc", "activity_heatmap", "language_mix", "language_breakdown", "highlights", "repositories", "notes_and_warnings", "footer_meta"],
+                "textOverrides": {}
+            }
+            return RedirectResponse(url=f"/dashboard/reports/{PREVIEW_READY_REPORT_ID}", status_code=302)
 
         form_values = _report_form_values(
             since_spec=since_spec,
@@ -338,7 +347,16 @@ def create_app(settings: WebAppSettings | None = None) -> FastAPI:
         user: User = Depends(require_user),
     ) -> dict[str, object]:
         if web_settings.preview_mode:
-            return {"status": "ok"}
+            rid = str(report_id)
+            config = dict(_PREVIEW_REPORTS_STATE.get(rid, {}))
+            if "themeKey" in payload:
+                config["themeKey"] = str(payload["themeKey"])
+            if "visibleSections" in payload:
+                config["visibleSections"] = [str(x) for x in payload["visibleSections"]]
+            if "textOverrides" in payload:
+                config["textOverrides"] = {str(k): str(v) for k, v in payload["textOverrides"].items() if isinstance(v, str)}
+            _PREVIEW_REPORTS_STATE[rid] = config
+            return {"status": "ok", "presentation_config": config}
         with session_factory() as session:
             db_user = session.get(User, user.id)
             if db_user is None:
@@ -349,7 +367,8 @@ def create_app(settings: WebAppSettings | None = None) -> FastAPI:
                 raise HTTPException(status_code=404, detail="Report not found")
             
             # Update config safely
-            config = report.presentation_config or {}
+            existing_config = getattr(report, "presentation_config", None)
+            config = dict(existing_config) if existing_config else {}
             if "themeKey" in payload:
                 config["themeKey"] = str(payload["themeKey"])
                 report.template_key = config["themeKey"]
@@ -358,7 +377,7 @@ def create_app(settings: WebAppSettings | None = None) -> FastAPI:
             if "textOverrides" in payload:
                 config["textOverrides"] = {str(k): str(v) for k, v in payload["textOverrides"].items() if isinstance(v, str)}
             
-            report.presentation_config = config
+            setattr(report, "presentation_config", config)
             session.commit()
             return {"status": "ok", "presentation_config": config}
 
@@ -469,15 +488,19 @@ def create_app(settings: WebAppSettings | None = None) -> FastAPI:
     def public_report(slug: str, request: Request, user: User | None = Depends(optional_user)) -> HTMLResponse:
         if web_settings.preview_mode and slug == "preview-ready-report":
             from ghstats.service import GhStatsService
-            from ghstats.config import RuntimeConfig
+            from ghstats.config import RuntimeConfig, StaticTokenProvider
             from ghstats.utils.timeparse import build_time_window
             from ghstats.render.html import render_report_html
             
-            service = GhStatsService(RuntimeConfig(include_private=False, token_provider=lambda: "dummy"))
+            ready_config = _PREVIEW_REPORTS_STATE.get(PREVIEW_READY_REPORT_ID, {})
+            ready_template = ready_config.get("themeKey", "orbital")
+            
+            service = GhStatsService(RuntimeConfig(include_private=False, token_provider=StaticTokenProvider("dummy")))
             artifacts = service.build_artifacts(
                 window=build_time_window("30d"),
                 sample_data=True,
-                template_key="orbital"
+                template_key=ready_template,
+                presentation_config=ready_config
             )
             return HTMLResponse(content=artifacts.html)
 
@@ -626,8 +649,12 @@ def _validation_message(error: ValidationError) -> str:
 
 
 def _build_preview_reports(settings: WebAppSettings) -> list[dict[str, object]]:
-    base_url = settings.app_base_url.rstrip("/")
+    base_url = "" if settings.preview_mode else settings.app_base_url.rstrip("/")
     login = settings.preview_user_login
+    
+    ready_config = _PREVIEW_REPORTS_STATE.get(PREVIEW_READY_REPORT_ID, {})
+    ready_template = ready_config.get("themeKey", "orbital")
+    
     return [
         {
             "id": PREVIEW_READY_REPORT_ID,
@@ -641,7 +668,8 @@ def _build_preview_reports(settings: WebAppSettings) -> list[dict[str, object]]:
             "share_url": f"{base_url}/r/preview-ready-report",
             "host_url": f"https://{login}.preview.local/",
             "store_metadata": True,
-            "template_key": "orbital",
+            "template_key": ready_template,
+            "presentation_config": ready_config,
             "latest_job_id": PREVIEW_READY_JOB_ID,
             "expires_at": "2026-04-17T20:45:00+00:00",
             "user": {"login": login, "avatar_url": None},

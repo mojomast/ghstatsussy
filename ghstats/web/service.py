@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import secrets
+import json
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
@@ -10,6 +11,7 @@ from ghstats.web.config import WebAppSettings
 from ghstats.web.crypto import TokenCipher
 from ghstats.web.models import Report, ReportSnapshot, User
 from ghstats.web.queue import enqueue_report_job
+from ghstats.render.html import render_report_html
 class HostedReportService:
     def __init__(self, settings: WebAppSettings, session: Session) -> None:
         self.settings = settings
@@ -151,6 +153,8 @@ class HostedReportService:
         return report
 
     def build_share_url(self, report: Report) -> str:
+        if self.settings.preview_mode:
+            return f"/r/{report.slug}"
         return f"{self.settings.app_base_url}/r/{report.slug}"
 
     def build_host_url(self, report: Report) -> str | None:
@@ -208,7 +212,7 @@ def serialize_report(report: Report, settings: WebAppSettings) -> dict[str, obje
         "include_private": report.include_private,
         "status": report.status,
         "generated_at": report.generated_at.isoformat() if report.generated_at else None,
-        "share_url": f"{settings.app_base_url}/r/{report.slug}",
+        "share_url": f"/r/{report.slug}" if settings.preview_mode else f"{settings.app_base_url}/r/{report.slug}",
         "host_url": host_url,
         "store_metadata": report.store_metadata,
         "template_key": report.template_key,

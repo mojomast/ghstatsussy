@@ -31,6 +31,7 @@ class GhStatsService:
         window: TimeWindow,
         sample_data: bool = False,
         template_key: str | None = None,
+        presentation_config: dict[str, Any] | None = None,
     ) -> ReportArtifacts:
         if sample_data:
             dataset = build_sample_dataset(
@@ -50,7 +51,7 @@ class GhStatsService:
 
         dataset.template_key = template_key
         context = build_report_context(dataset)
-        html = render_report_html(context, template_key=template_key)
+        html = render_report_html(context, template_key=template_key, presentation_config=presentation_config)
         return ReportArtifacts(dataset=dataset, context=context, html=html)
 
 

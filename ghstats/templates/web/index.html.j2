@@ -458,7 +458,11 @@
                 <div class="micro muted">Ready when you are</div>
                 <h3>Bring your GitHub account</h3>
               </div>
+              {% if settings.preview_mode %}
+              <a class="cta" href="/dashboard">Enter Preview Mode</a>
+              {% else %}
               <a class="cta" href="/auth/github/login">Sign in with GitHub</a>
+              {% endif %}
             </div>
             <p class="lede" style="font-size: 1rem; margin-top: 14px; max-width: none;">Sign in with GitHub, choose a time window, and generate a polished stats page you can share. By default, ghstatsussy keeps only the hosted HTML report; metadata retention is optional, and reports with private activity stay private.</p>
           </section>

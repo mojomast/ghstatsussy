@@ -30,6 +30,16 @@ class ReportTemplateKey(str, Enum):
     signalroom = "signalroom"
     gallery = "gallery"
     tapearchive = "tapearchive"
+    cyberpunk = "cyberpunk"
+    glassmorphism = "glassmorphism"
+    brutalism = "brutalism"
+    retro_os = "retro_os"
+    holo = "holo"
+    synthwave = "synthwave"
+    paper = "paper"
+    monochrome = "monochrome"
+    matrix = "matrix"
+    liquid = "liquid"
 
 
 class ReportCreatePayload(BaseModel):

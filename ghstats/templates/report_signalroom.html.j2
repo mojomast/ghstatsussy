@@ -1,194 +1,39 @@
 {% extends "report_base.html.j2" %}
 
-{% block hero %}
+{% block theme_css %}
 <style>
-.signal-hero {
-    background: #0a0a0a;
-    color: #00ff00;
-    font-family: 'Consolas', 'Monaco', monospace;
-    padding: 40px;
-    border: 1px solid #00ff00;
-    box-shadow: 0 0 20px rgba(0,255,0,0.2), inset 0 0 20px rgba(0,255,0,0.1);
-    position: relative;
-    overflow: hidden;
+
+/* Signal Room Theme */
+.template-signalroom {
+  background: #0a0a0a;
+  color: #d0d0d0;
+  font-family: 'IBM Plex Mono', monospace;
 }
-.signal-hero::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: repeating-linear-gradient(
-        0deg,
-        rgba(0, 255, 0, 0.03),
-        rgba(0, 255, 0, 0.03) 1px,
-        transparent 1px,
-        transparent 2px
-    );
-    pointer-events: none;
+.template-signalroom .hero {
+  background: #111;
+  border: 2px solid #333;
+  border-radius: 0;
+  border-top: 8px solid #9ff5a4;
 }
-.signal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid #00ff00;
-    padding-bottom: 20px;
-    margin-bottom: 30px;
+.template-signalroom h1, .template-signalroom h2, .template-signalroom .section-kicker {
+  color: #9ff5a4;
+  text-shadow: 0 0 8px rgba(159,245,164,0.4);
 }
-.signal-title {
-    font-size: 2.5rem;
-    margin: 0;
-    text-shadow: 0 0 5px #00ff00;
-    animation: glitch 2s infinite;
+.template-signalroom .panel, .template-signalroom .chart-card {
+  background: #141414;
+  border: 1px solid #333;
+  border-radius: 0;
 }
-.signal-meta {
-    text-align: right;
-    font-size: 0.9rem;
+.template-signalroom .repo-card, .template-signalroom .fact, .template-signalroom .hero-stat {
+  background: #000;
+  border: 1px solid #444;
+  border-radius: 0;
 }
-.signal-stats-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 15px;
+.template-signalroom .chip {
+  background: #222;
+  border: 1px solid #555;
+  color: #f2b15d;
 }
-.signal-stat {
-    background: rgba(0, 255, 0, 0.05);
-    border: 1px solid #004400;
-    padding: 20px;
-    text-align: center;
-    transition: all 0.3s;
-}
-.signal-stat:hover {
-    background: rgba(0, 255, 0, 0.15);
-    border-color: #00ff00;
-}
-.signal-stat-val {
-    font-size: 2.2rem;
-    font-weight: bold;
-    text-shadow: 0 0 10px #00ff00;
-}
-.signal-stat-label {
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    margin-top: 10px;
-    opacity: 0.8;
-}
-@keyframes glitch {
-    0% { transform: translate(0) }
-    20% { transform: translate(-2px, 2px) }
-    40% { transform: translate(-2px, -2px) }
-    60% { transform: translate(2px, 2px) }
-    80% { transform: translate(2px, -2px) }
-    100% { transform: translate(0) }
-}
+
 </style>
-
-<div class="signal-hero">
-    <div class="signal-header">
-        <h1 class="signal-title">SYS_OPS // @{{ context.meta.subject.login }}</h1>
-        <div class="signal-meta">
-            <div>INIT: {{ context.meta.period.start }}</div>
-            <div>TERM: {{ context.meta.period.end }}</div>
-            <div>STATUS: ONLINE</div>
-        </div>
-    </div>
-    <div class="signal-stats-grid">
-        {% for card in context.stats_cards[:4] %}
-        <div class="signal-stat">
-            <div class="signal-stat-val">{{ card.value }}</div>
-            <div class="signal-stat-label">{{ card.label }}</div>
-        </div>
-        {% endfor %}
-    </div>
-</div>
-{% endblock %}
-
-{% block content %}
-<style>
-.signal-content {
-    background: #050505;
-    color: #00dd00;
-    font-family: 'Consolas', 'Monaco', monospace;
-    padding: 20px;
-    margin-top: 20px;
-}
-.signal-panel {
-    border: 1px solid #004400;
-    background: #080808;
-    margin-bottom: 20px;
-    position: relative;
-}
-.signal-panel-header {
-    background: #002200;
-    border-bottom: 1px solid #004400;
-    padding: 10px 15px;
-    font-size: 1.1rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    display: flex;
-    justify-content: space-between;
-}
-.signal-panel-body {
-    padding: 20px;
-}
-.radar-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-}
-.radar-chart {
-    height: 300px;
-    border: 1px solid #003300;
-    position: relative;
-}
-.signal-log {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-.signal-log li {
-    padding: 10px;
-    border-bottom: 1px solid #002200;
-    display: flex;
-    align-items: flex-start;
-}
-.signal-log li::before {
-    content: '>';
-    margin-right: 10px;
-    color: #00ff00;
-    animation: blink 1s infinite;
-}
-@keyframes blink { 50% { opacity: 0; } }
-</style>
-
-<div class="signal-content">
-    <div class="radar-grid">
-        <div class="signal-panel">
-            <div class="signal-panel-header">
-                <span>TELEMETRY_DATA.DAT</span>
-                <span>[ACTV]</span>
-            </div>
-            <div class="signal-panel-body radar-chart">
-                <canvas id="commitsChart"></canvas>
-            </div>
-        </div>
-        <div class="signal-panel">
-            <div class="signal-panel-header">
-                <span>SECTOR_SCAN.LOG</span>
-                <span>[SCAN]</span>
-            </div>
-            <div class="signal-panel-body">
-                <ul class="signal-log">
-                    {% for item in context.highlights[:5] %}
-                    <li>
-                        <div>
-                            <span style="color:#fff;">[{{ item.kind }}]</span> {{ item.title }}
-                            {% if item.value %}<span style="color:#00ff00;"> => {{ item.value }}</span>{% endif %}
-                            <div style="font-size:0.8rem; opacity:0.7; margin-top:5px;">{{ item.text }}</div>
-                        </div>
-                    </li>
-                    {% endfor %}
-                </ul>
-            </div>
-        </div>
-    </div>
-</div>
 {% endblock %}

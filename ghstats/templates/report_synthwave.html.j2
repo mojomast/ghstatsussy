@@ -1,0 +1,18 @@
+{% extends "report_base.html.j2" %}
+{% block theme_css %}
+<style>
+body {
+  position: relative;
+}
+body::after {
+  content: "";
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  height: 40vh;
+  background: linear-gradient(0deg, rgba(255,0,127,0.2) 0%, transparent 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+.shell { z-index: 1; position: relative; }
+</style>
+{% endblock %}
