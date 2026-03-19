@@ -330,6 +330,38 @@ def create_app(settings: WebAppSettings | None = None) -> FastAPI:
             payload["error_message"] = report.error_message
             return payload
 
+
+    @app.post("/api/reports/{report_id}/presentation")
+    def api_update_presentation(
+        report_id: UUID,
+        payload: dict,
+        user: User = Depends(require_user),
+    ) -> dict[str, object]:
+        if web_settings.preview_mode:
+            return {"status": "ok"}
+        with session_factory() as session:
+            db_user = session.get(User, user.id)
+            if db_user is None:
+                raise HTTPException(status_code=404, detail="User not found")
+            service = HostedReportService(web_settings, session)
+            report = service.get_report_for_user(db_user, str(report_id))
+            if report is None:
+                raise HTTPException(status_code=404, detail="Report not found")
+            
+            # Update config safely
+            config = report.presentation_config or {}
+            if "themeKey" in payload:
+                config["themeKey"] = str(payload["themeKey"])
+                report.template_key = config["themeKey"]
+            if "visibleSections" in payload:
+                config["visibleSections"] = [str(x) for x in payload["visibleSections"]]
+            if "textOverrides" in payload:
+                config["textOverrides"] = {str(k): str(v) for k, v in payload["textOverrides"].items() if isinstance(v, str)}
+            
+            report.presentation_config = config
+            session.commit()
+            return {"status": "ok", "presentation_config": config}
+
     @app.post("/dashboard/reports/{report_id}/refresh")
     def dashboard_refresh_report(
         report_id: UUID,
@@ -435,6 +467,20 @@ def create_app(settings: WebAppSettings | None = None) -> FastAPI:
 
     @app.get("/r/{slug}")
     def public_report(slug: str, request: Request, user: User | None = Depends(optional_user)) -> HTMLResponse:
+        if web_settings.preview_mode and slug == "preview-ready-report":
+            from ghstats.service import GhStatsService
+            from ghstats.config import RuntimeConfig
+            from ghstats.utils.timeparse import build_time_window
+            from ghstats.render.html import render_report_html
+            
+            service = GhStatsService(RuntimeConfig(include_private=False, token_provider=lambda: "dummy"))
+            artifacts = service.build_artifacts(
+                window=build_time_window("30d"),
+                sample_data=True,
+                template_key="orbital"
+            )
+            return HTMLResponse(content=artifacts.html)
+
         with session_factory() as session:
             service = HostedReportService(web_settings, session)
             report = service.get_report_by_slug(slug)

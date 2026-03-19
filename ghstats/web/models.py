@@ -3,7 +3,7 @@ from __future__ import annotations
 import uuid
 from datetime import datetime, timezone
 
-from sqlalchemy import Boolean, DateTime, ForeignKey, Integer, String, Text
+from sqlalchemy import Boolean, DateTime, ForeignKey, Integer, String, Text, JSON
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from ghstats.web.database import Base
@@ -50,6 +50,7 @@ class Report(Base):
     latest_job_id: Mapped[str | None] = mapped_column(String(36), ForeignKey("report_jobs.id"), nullable=True)
     store_metadata: Mapped[bool] = mapped_column(Boolean, default=False)
     template_key: Mapped[str] = mapped_column(String(32), default="default")
+    presentation_config: Mapped[dict | None] = mapped_column(JSON, nullable=True)
     expires_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     username_slug: Mapped[str | None] = mapped_column(String(255), nullable=True, index=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)

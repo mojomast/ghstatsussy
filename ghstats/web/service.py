@@ -162,6 +162,20 @@ class HostedReportService:
     def read_snapshot_html(self, snapshot: ReportSnapshot) -> str:
         # Resolve legacy absolute paths to the current storage dir
         snapshot_dir = self.settings.report_storage_dir / snapshot.report.slug / f"v{snapshot.version}"
+        render_document_file = snapshot_dir / "render_document.json"
+        
+        if render_document_file.exists():
+            context = json.loads(render_document_file.read_text(encoding="utf-8"))
+            
+            # Use presentation_config if available, fallback to report.template_key
+            config = snapshot.report.presentation_config or {}
+            template_key = config.get("themeKey", snapshot.report.template_key)
+            
+            # If the config provides text overrides, we should inject them into context or rendering step
+            # For now, just render using standard html.py but passing template_key dynamically
+            # Later we will pass the whole config to the new canonical renderer
+            return render_report_html(context, template_key=template_key, presentation_config=config)
+            
         return (snapshot_dir / "report.html").read_text(encoding="utf-8")
 
     def _generate_slug(self) -> str:

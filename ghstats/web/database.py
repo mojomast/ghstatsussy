@@ -45,6 +45,10 @@ def _run_sqlite_migrations(engine: Engine) -> None:
             row[1]
             for row in connection.exec_driver_sql("PRAGMA table_info(reports)")
         }
+        if "presentation_config" not in report_columns:
+            connection.exec_driver_sql(
+                "ALTER TABLE reports ADD COLUMN presentation_config JSON DEFAULT NULL"
+            )
         if "template_key" not in report_columns:
             connection.exec_driver_sql(
                 "ALTER TABLE reports ADD COLUMN template_key VARCHAR(32) NOT NULL DEFAULT 'default'"

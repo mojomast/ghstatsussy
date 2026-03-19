@@ -24,7 +24,9 @@ def _environment() -> Environment:
     return env
 
 
-def render_report_html(context: dict[str, Any], *, template_key: str | None = None) -> str:
+def render_report_html(context: dict[str, Any], *, template_key: str | None = None, presentation_config: dict[str, Any] | None = None) -> str:
+    if presentation_config is None:
+        presentation_config = {}
     report_template = get_report_template(template_key)
     template = _environment().get_template(report_template.template_name)
     chart_payload = {
@@ -40,4 +42,5 @@ def render_report_html(context: dict[str, Any], *, template_key: str | None = No
         theme=theme,
         chart_payload=chart_payload,
         chart_payload_json=json.dumps(chart_payload),
+        presentation_config=presentation_config,
     )
