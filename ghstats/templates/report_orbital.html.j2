@@ -1,102 +1,52 @@
 {% extends "report_base.html.j2" %}
 
-{% block hero %}
-<section class="orbital-hero panel" style="display: grid; gap: 24px; padding: 32px; border-bottom: 2px solid var(--line);">
-  <div style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 20px;">
-    <div>
-      <div class="eyebrow" style="margin-bottom: 12px; color: var(--accent); border-color: var(--accent);">SYS.OP.{{ context.meta.subject.login|upper }}</div>
-      <h1 style="font-family: var(--mono-font); font-size: 2.8rem; text-transform: uppercase;">{{ theme.hero_title }}</h1>
-      <div class="muted" style="font-family: var(--mono-font); margin-top: 8px;">{{ context.meta.subtitle }} // {{ context.meta.period.start }} - {{ context.meta.period.end }}</div>
-    </div>
-    {% if context.meta.subject.avatar_url %}
-    <img src="{{ context.meta.subject.avatar_url }}" alt="avatar" style="width: 80px; height: 80px; border-radius: 50%; filter: grayscale(100%) contrast(1.2) sepia(100%) hue-rotate(180deg);" />
-    {% endif %}
-  </div>
+{% block theme_css %}
+<style>
 
-  <div style="display: flex; gap: 2px; height: 8px; background: rgba(255,255,255,0.05);">
-    <div style="flex: {{ context.chart_datasets.loc_timeline.series[0]['values']|sum }}; background: var(--accent-2);"></div>
-    <div style="flex: {{ context.chart_datasets.loc_timeline.series[1]['values']|sum }}; background: var(--accent-4);"></div>
-  </div>
-</section>
-{% endblock %}
+/* Orbital Telemetry Theme */
+.template-orbital {
+  font-family: var(--body-font);
+}
+.template-orbital h1, .template-orbital h2, .template-orbital .section-kicker {
+  font-family: var(--mono-font);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.template-orbital .hero {
+  border: 1px solid var(--line);
+  border-bottom: 4px solid var(--accent);
+  background: var(--panel);
+}
+.template-orbital .profile-card img {
+  filter: grayscale(100%) contrast(1.2) sepia(100%) hue-rotate(180deg);
+  border-radius: 50%;
+}
+.template-orbital .section-kicker {
+  color: var(--accent);
+}
+.template-orbital .section-kicker::before {
+  content: "[ ";
+}
+.template-orbital .section-kicker::after {
+  content: " ]";
+}
+.template-orbital .hero-stat {
+  border: none;
+  border-left: 3px solid var(--accent);
+  border-radius: 0;
+  background: transparent;
+}
+.template-orbital .panel, .template-orbital .chart-card, .template-orbital .repo-card {
+  border: 1px solid var(--line);
+  background: rgba(6, 11, 22, 0.84);
+  border-radius: 4px;
+}
+.template-orbital .fact {
+  border: none;
+  border-left: 2px dashed var(--accent-3);
+  border-radius: 0;
+  background: transparent;
+}
 
-{% block content %}
-<div class="orbital-grid" style="display: grid; grid-template-columns: 1fr 340px; gap: 24px; margin-top: 24px;">
-  
-  <div class="orbital-main" style="display: grid; gap: 24px;">
-    <!-- Telemetry Array -->
-    <section class="panel">
-      <div class="section-kicker" style="margin-bottom: 16px;">[ TELEMETRY READOUT ]</div>
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px;">
-        {% for card in context.stats_cards %}
-        <div style="border-left: 3px solid var(--accent); padding-left: 12px;">
-          <div class="muted" style="font-family: var(--mono-font); font-size: 0.85rem; text-transform: uppercase;">{{ card.label }}</div>
-          <div style="font-family: var(--mono-font); font-size: 1.8rem; font-weight: 700; margin-top: 4px; color: var(--ink);">{{ card.value }}</div>
-        </div>
-        {% endfor %}
-      </div>
-    </section>
-
-    <!-- Signal Charts -->
-    <section class="panel" style="display: grid; gap: 24px;">
-      <div class="section-kicker">[ SIGNAL DECAY / COMMITS ]</div>
-      <div style="height: 240px; width: 100%;">
-        <canvas id="commitsChart"></canvas>
-      </div>
-    </section>
-
-    <section class="panel">
-      <div class="section-kicker" style="margin-bottom: 24px;">[ ACTIVE NODES / REPOSITORIES ]</div>
-      <div style="display: grid; gap: 16px;">
-        {% for repo in context.repo_insights %}
-        <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: rgba(255,255,255,0.02); border: 1px solid var(--line); border-radius: 8px;">
-          <div>
-            <div style="font-family: var(--mono-font); color: var(--accent); font-weight: bold;"><a href="{{ repo.url }}">{{ repo.full_name }}</a></div>
-            <div class="muted" style="font-size: 0.9rem; margin-top: 4px;">{{ repo.description or 'NO.DESC' }}</div>
-          </div>
-          <div style="text-align: right; font-family: var(--mono-font); font-size: 0.85rem;">
-            <div>{{ repo.activity.commits }} COMMITS</div>
-            <div class="muted">{{ repo.primary_language or 'MIXED' }}</div>
-          </div>
-        </div>
-        {% endfor %}
-      </div>
-    </section>
-  </div>
-
-  <div class="orbital-sidebar" style="display: grid; gap: 24px; align-content: start;">
-    
-    <section class="panel">
-      <div class="section-kicker" style="margin-bottom: 16px;">[ ANOMALY LOG ]</div>
-      <div class="stack">
-        {% for item in context.highlights %}
-        <div style="border-left: 2px dashed var(--accent-3); padding-left: 12px;">
-          <div class="muted" style="font-family: var(--mono-font); font-size: 0.8rem; text-transform: uppercase;">{{ item.kind }}</div>
-          <div style="font-weight: bold; margin-top: 4px;">{{ item.title }}</div>
-          <div style="font-size: 0.9rem; margin-top: 4px;" class="muted">{{ item.text }}</div>
-        </div>
-        {% endfor %}
-      </div>
-    </section>
-
-    <section class="panel">
-      <div class="section-kicker" style="margin-bottom: 16px;">[ LANGUAGE MIX ]</div>
-      <div style="height: 220px; width: 100%;">
-        <canvas id="languageChart"></canvas>
-      </div>
-    </section>
-
-    <section class="panel">
-      <div class="section-kicker" style="margin-bottom: 16px;">[ HEAT SIGNATURE ]</div>
-      <div class="calendar-grid">
-        {% for week in context.heatmap.weeks %}
-          {% for day in week.days %}
-          <div class="cell level-{{ day.level }}" title="{{ day.tooltip }}" style="border-radius: 2px;"></div>
-          {% endfor %}
-        {% endfor %}
-      </div>
-    </section>
-
-  </div>
-</div>
+</style>
 {% endblock %}

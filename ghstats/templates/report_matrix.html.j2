@@ -1,0 +1,106 @@
+{% extends "report_base.html.j2" %}
+{% block theme_css %}
+<style>
+  :root {
+    --ink: #00ff41; --muted: #008f11;
+    --matrix-green: #00ff41;
+    --matrix-dark: #0d0208;
+    --matrix-light-green: #008f11;
+    --matrix-glow: rgba(0, 255, 65, 0.5);
+  }
+
+  body {
+    background-color: var(--matrix-dark);
+    font-family: 'Courier New', Courier, monospace;
+    color: var(--matrix-green);
+    overflow-x: hidden;
+  }
+
+  /* Matrix raining code background illusion via radial gradient and lines */
+  body::before {
+    content: "";
+    position: fixed;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    background: repeating-linear-gradient(0deg, rgba(0,255,65,0.05), rgba(0,255,65,0.05) 1px, transparent 1px, transparent 2px);
+    z-index: -1;
+    pointer-events: none;
+    animation: scanlines 10s linear infinite;
+  }
+
+  @keyframes scanlines {
+    0% { background-position: 0 0; }
+    100% { background-position: 0 100vh; }
+  }
+
+  /* Core Elements */
+  h1, h2, h3, h4, h5, h6, .value, .label, .section-kicker, .eyebrow, .chip, a, p {
+    color: var(--matrix-green) !important;
+    text-shadow: 0 0 4px var(--matrix-glow);
+    text-transform: uppercase;
+  }
+
+  .muted { color: var(--matrix-light-green) !important; }
+
+  /* Brutalist Components */
+  .hero, .panel, .chart-card, .stat-card, .repo-card, .fact, .warning, .mini-panel, .profile-card, .hero-stat {
+    background: transparent !important;
+    border: 2px solid var(--matrix-green) !important;
+    border-radius: 0 !important;
+    box-shadow: 4px 4px 0px var(--matrix-light-green);
+    position: relative;
+    padding: 20px;
+    margin-bottom: 20px;
+    transition: all 0.2s ease-in-out;
+  }
+
+  .hero::after, .panel::after, .chart-card::after {
+    content: "[SYS_OK]";
+    position: absolute;
+    top: -10px;
+    right: 10px;
+    background: var(--matrix-dark);
+    padding: 0 5px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    border: 1px solid var(--matrix-green);
+  }
+
+  /* Glitch Hover Effect */
+  .stat-card:hover, .repo-card:hover {
+    box-shadow: -4px -4px 0px var(--matrix-light-green);
+    transform: translate(2px, 2px);
+  }
+
+  .chip, .eyebrow {
+    border: 1px dotted var(--matrix-green);
+    background: var(--matrix-dark);
+    border-radius: 0;
+  }
+
+  .chip::before { content: "root@ghstats:~# "; }
+
+  /* Blinking cursor */
+  h1::after {
+    content: "_";
+    animation: blink 1s step-end infinite;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+
+  .stats-grid {
+    border-top: 2px dashed var(--matrix-green);
+    padding-top: 16px;
+    margin-top: 16px;
+  }
+
+  /* Selection styling */
+  ::selection {
+    background: var(--matrix-green);
+    color: var(--matrix-dark);
+    text-shadow: none;
+  }
+</style>
+{% endblock %}

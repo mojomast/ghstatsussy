@@ -1,0 +1,99 @@
+{% extends "report_base.html.j2" %}
+{% block theme_css %}
+<style>
+  :root {
+    --ink: #f8fafc; --muted: #cbd5e1;
+  }
+  /* Base & Backdrop */
+  body {
+    background: radial-gradient(circle at 15% 50%, #1e1b4b, #312e81, #1e1b4b);
+    position: relative;
+    overflow-x: hidden;
+    color: #f8fafc;
+  }
+
+  /* Background overlapping blurred shapes */
+  body::before, body::after {
+    content: '';
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(120px);
+    z-index: -1;
+  }
+  body::before {
+    width: 600px;
+    height: 600px;
+    background: #6366f1;
+    top: -10%;
+    left: -10%;
+    opacity: 0.6;
+    animation: float 10s ease-in-out infinite alternate;
+  }
+  body::after {
+    width: 500px;
+    height: 500px;
+    background: #ec4899;
+    bottom: -10%;
+    right: -10%;
+    opacity: 0.5;
+    animation: float 14s ease-in-out infinite alternate-reverse;
+  }
+  @keyframes float {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(100px, 100px) scale(1.1); }
+  }
+
+  /* Glassmorphism Containers */
+  .shell {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    border-radius: 40px;
+    padding: 32px;
+    box-shadow: 0 16px 64px 0 rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero, .panel, .chart-card, .stat-card, .repo-card, .fact, .warning, .mini-panel, .profile-card, .hero-stat {
+    background: linear-gradient(110deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.01)) !important;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 30px !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.25) !important;
+    border-left: 1px solid rgba(255, 255, 255, 0.25) !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2), inset 0 2px 20px rgba(255, 255, 255, 0.03);
+    transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.3s ease;
+  }
+
+  .hero:hover, .panel:hover, .stat-card:hover, .repo-card:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3), inset 0 2px 20px rgba(255, 255, 255, 0.05);
+  }
+
+  .hero { display: flex; flex-direction: column; text-align: center; align-items: center; position: relative; overflow: hidden; }
+
+  .hero-grid { width: 100%; display: flex; justify-content: center; flex-wrap: wrap; gap: 20px; }
+
+  .hero-stat { flex: 1; min-width: 160px; text-align: center; }
+
+  .chip, .eyebrow {
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(8px);
+    border-radius: 20px;
+    color: #e2e8f0;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+  }
+
+  h1, h2, h3 {
+    background: linear-gradient(to right, #ffffff, #a5b4fc);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    letter-spacing: -0.02em;
+  }
+</style>
+{% endblock %}

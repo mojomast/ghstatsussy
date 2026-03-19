@@ -1,0 +1,106 @@
+{% extends "report_base.html.j2" %}
+{% block theme_css %}
+<style>
+  :root {
+    --ink: #e0ffff; --muted: #a0c0c0;
+  }
+  @keyframes holo-glow {
+    0%, 100% { filter: drop-shadow(0 0 15px rgba(0, 255, 255, 0.4)) drop-shadow(0 0 30px rgba(255, 0, 255, 0.2)); }
+    50% { filter: drop-shadow(0 0 25px rgba(0, 255, 255, 0.7)) drop-shadow(0 0 45px rgba(255, 0, 255, 0.5)); }
+  }
+  @keyframes scanline {
+    0% { transform: translateY(-100%); }
+    100% { transform: translateY(100vh); }
+  }
+  @keyframes mesh-shift {
+    0% { background-position: 0% 0%; }
+    100% { background-position: 50px 50px; }
+  }
+  @keyframes spin {
+    100% { transform: rotate(1turn); }
+  }
+  body {
+    background: #050508;
+    background-image:
+      linear-gradient(rgba(0, 255, 255, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 50px 50px;
+    animation: mesh-shift 10s linear infinite;
+    color: #e0ffff;
+    font-family: 'Courier New', Courier, monospace;
+    position: relative;
+    overflow-x: hidden;
+  }
+  body::before {
+    content: "";
+    position: fixed;
+    top: 0; left: 0; right: 0; height: 5px;
+    background: rgba(0,255,255,0.8);
+    box-shadow: 0 0 20px rgba(0, 255, 255, 1);
+    animation: scanline 6s linear infinite;
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.5;
+  }
+  .shell {
+    perspective: 1200px;
+  }
+  .hero, .panel, .chart-card, .stat-card, .repo-card, .fact, .warning, .mini-panel, .profile-card, .hero-stat {
+    background: linear-gradient(135deg, rgba(0, 255, 255, 0.05) 0%, rgba(255, 0, 255, 0.05) 100%);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(0, 255, 255, 0.2) !important;
+    border-radius: 20px;
+    box-shadow:
+      inset 0 0 20px rgba(0, 255, 255, 0.05),
+      0 8px 32px rgba(0, 0, 0, 0.5);
+    transform-style: preserve-3d;
+    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    animation: holo-glow 4s infinite alternate;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::after, .panel::after, .chart-card::after {
+    content: '';
+    position: absolute;
+    top: -50%; left: -50%; width: 200%; height: 200%;
+    background: conic-gradient(transparent, rgba(0, 255, 255, 0.1), transparent 30%);
+    animation: spin 10s linear infinite;
+    z-index: -1;
+  }
+  .panel:hover, .chart-card:hover, .stat-card:hover, .repo-card:hover {
+    transform: translateZ(40px) rotateX(2deg) rotateY(-2deg);
+    border-color: rgba(0, 255, 255, 0.8) !important;
+    box-shadow:
+      inset 0 0 40px rgba(0, 255, 255, 0.1),
+      0 15px 40px rgba(0, 255, 255, 0.3),
+      0 0 20px rgba(255, 0, 255, 0.2);
+  }
+  h1, h2, h3, h4, h5, h6, .value {
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-shadow:
+      0 0 5px rgba(0, 255, 255, 0.5),
+      0 0 10px rgba(0, 255, 255, 0.5),
+      0 0 20px rgba(255, 0, 255, 0.5);
+  }
+  .chip, .eyebrow {
+    background: linear-gradient(90deg, transparent, rgba(0,255,255,0.2), transparent);
+    border: 1px solid rgba(0, 255, 255, 0.5);
+    border-radius: 50px;
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+    color: #0ff;
+    text-shadow: 0 0 5px #0ff;
+  }
+  a {
+    color: #f0f;
+    text-shadow: 0 0 5px #f0f;
+    transition: all 0.3s;
+  }
+  a:hover {
+    color: #0ff;
+    text-shadow: 0 0 8px #0ff, 0 0 15px #0ff;
+  }
+</style>
+{% endblock %}

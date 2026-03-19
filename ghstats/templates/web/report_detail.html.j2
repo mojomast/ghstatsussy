@@ -426,11 +426,87 @@
           </section>
         </div>
 
+        {% if report.status == 'ready' %}
+        <section class="panel" style="margin-top: 18px; border-radius: 20px;">
+          <div class="eyebrow">Presentation Configuration</div>
+          <h3 style="margin-top: 12px;">Customize Report</h3>
+          <p class="muted" style="margin-top: 8px;">Apply themes and toggle sections instantly without regenerating.</p>
+          <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));">
+            <div>
+              <label class="step-label" style="display:block; margin-bottom: 8px;">Theme</label>
+              <select id="themeSelect" style="width: 100%; padding: 10px; border-radius: 8px; background: rgba(255,255,255,0.05); color: white; border: 1px solid var(--line);">
+                <option value="default" style="background: #1a1b26; color: white;" {% if report.template_key == 'default' %}selected{% endif %}>Default</option>
+                <option value="ledger" style="background: #1a1b26; color: white;" {% if report.template_key == 'ledger' %}selected{% endif %}>Ledger</option>
+                <option value="transit" style="background: #1a1b26; color: white;" {% if report.template_key == 'transit' %}selected{% endif %}>Transit</option>
+                <option value="archive" style="background: #1a1b26; color: white;" {% if report.template_key == 'archive' %}selected{% endif %}>Archive</option>
+                <option value="scrapbook" style="background: #1a1b26; color: white;" {% if report.template_key == 'scrapbook' %}selected{% endif %}>Scrapbook</option>
+                <option value="orbital" style="background: #1a1b26; color: white;" {% if report.template_key == 'orbital' %}selected{% endif %}>Orbital</option>
+                <option value="fieldnotes" style="background: #1a1b26; color: white;" {% if report.template_key == 'fieldnotes' %}selected{% endif %}>Fieldnotes</option>
+                <option value="signalroom" style="background: #1a1b26; color: white;" {% if report.template_key == 'signalroom' %}selected{% endif %}>Signalroom</option>
+                <option value="gallery" style="background: #1a1b26; color: white;" {% if report.template_key == 'gallery' %}selected{% endif %}>Gallery</option>
+                <option value="tapearchive" style="background: #1a1b26; color: white;" {% if report.template_key == 'tapearchive' %}selected{% endif %}>Tapearchive</option>
+                <option value="cyberpunk" style="background: #1a1b26; color: white;" {% if report.template_key == 'cyberpunk' %}selected{% endif %}>Cyberpunk</option>
+                <option value="glassmorphism" style="background: #1a1b26; color: white;" {% if report.template_key == 'glassmorphism' %}selected{% endif %}>Glassmorphism</option>
+                <option value="brutalism" style="background: #1a1b26; color: white;" {% if report.template_key == 'brutalism' %}selected{% endif %}>Brutalism</option>
+                <option value="retro_os" style="background: #1a1b26; color: white;" {% if report.template_key == 'retro_os' %}selected{% endif %}>Retro OS</option>
+                <option value="holo" style="background: #1a1b26; color: white;" {% if report.template_key == 'holo' %}selected{% endif %}>Holo</option>
+                <option value="synthwave" style="background: #1a1b26; color: white;" {% if report.template_key == 'synthwave' %}selected{% endif %}>Synthwave</option>
+                <option value="paper" style="background: #1a1b26; color: white;" {% if report.template_key == 'paper' %}selected{% endif %}>Paper</option>
+                <option value="monochrome" style="background: #1a1b26; color: white;" {% if report.template_key == 'monochrome' %}selected{% endif %}>Monochrome</option>
+                <option value="matrix" style="background: #1a1b26; color: white;" {% if report.template_key == 'matrix' %}selected{% endif %}>Matrix</option>
+                <option value="liquid" style="background: #1a1b26; color: white;" {% if report.template_key == 'liquid' %}selected{% endif %}>Liquid</option>
+              </select>
+            </div>
+            <div>
+              <label class="step-label" style="display:block; margin-bottom: 8px;">Text Overrides</label>
+              <input type="text" id="heroEyebrowInput" placeholder="Hero Eyebrow (e.g. Developer Report)" style="width: 100%; padding: 10px; margin-bottom: 8px; border-radius: 8px; background: rgba(255,255,255,0.05); color: white; border: 1px solid var(--line);" value="{{ report.presentation_config.get('textOverrides', {}).get('hero_eyebrow', '') if report.presentation_config else '' }}" />
+              <input type="text" id="heroTitleInput" placeholder="Hero Title (e.g. Activity Summary)" style="width: 100%; padding: 10px; margin-bottom: 8px; border-radius: 8px; background: rgba(255,255,255,0.05); color: white; border: 1px solid var(--line);" value="{{ report.presentation_config.get('textOverrides', {}).get('hero_title', '') if report.presentation_config else '' }}" />
+              <input type="text" id="heroCopyInput" placeholder="Hero Copy" style="width: 100%; padding: 10px; margin-bottom: 8px; border-radius: 8px; background: rgba(255,255,255,0.05); color: white; border: 1px solid var(--line);" value="{{ report.presentation_config.get('textOverrides', {}).get('hero_copy', '') if report.presentation_config else '' }}" />
+              <input type="text" id="notesHeadingInput" placeholder="Notes Heading (e.g. Caveats)" style="width: 100%; padding: 10px; border-radius: 8px; background: rgba(255,255,255,0.05); color: white; border: 1px solid var(--line);" value="{{ report.presentation_config.get('textOverrides', {}).get('notes_heading', '') if report.presentation_config else '' }}" />
+            </div>
+            <div>
+              <label class="step-label" style="display:block; margin-bottom: 8px;">Visible Sections</label>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; max-height: 150px; overflow-y: auto; padding-right: 10px;">
+                {% set vis = report.presentation_config.get('visibleSections', ['hero', 'profile_summary', 'key_stats', 'timeline_commits', 'timeline_loc', 'activity_heatmap', 'language_mix', 'language_breakdown', 'highlights', 'repositories', 'notes_and_warnings', 'footer_meta']) if report.presentation_config else ['hero', 'profile_summary', 'key_stats', 'timeline_commits', 'timeline_loc', 'activity_heatmap', 'language_mix', 'language_breakdown', 'highlights', 'repositories', 'notes_and_warnings', 'footer_meta'] %}
+
+                <label style="font-size: 13px; display: flex; align-items: center; gap: 6px;"><input type="checkbox" class="section-toggle" value="hero" {% if 'hero' in vis %}checked{% endif %}> Hero</label>
+                <label style="font-size: 13px; display: flex; align-items: center; gap: 6px;"><input type="checkbox" class="section-toggle" value="profile_summary" {% if 'profile_summary' in vis %}checked{% endif %}> Profile</label>
+                <label style="font-size: 13px; display: flex; align-items: center; gap: 6px;"><input type="checkbox" class="section-toggle" value="key_stats" {% if 'key_stats' in vis %}checked{% endif %}> Stats</label>
+                <label style="font-size: 13px; display: flex; align-items: center; gap: 6px;"><input type="checkbox" class="section-toggle" value="timeline_commits" {% if 'timeline_commits' in vis %}checked{% endif %}> Commits Chart</label>
+                <label style="font-size: 13px; display: flex; align-items: center; gap: 6px;"><input type="checkbox" class="section-toggle" value="timeline_loc" {% if 'timeline_loc' in vis %}checked{% endif %}> LOC Chart</label>
+                <label style="font-size: 13px; display: flex; align-items: center; gap: 6px;"><input type="checkbox" class="section-toggle" value="activity_heatmap" {% if 'activity_heatmap' in vis %}checked{% endif %}> Heatmap</label>
+                <label style="font-size: 13px; display: flex; align-items: center; gap: 6px;"><input type="checkbox" class="section-toggle" value="language_mix" {% if 'language_mix' in vis %}checked{% endif %}> Lang Mix</label>
+                <label style="font-size: 13px; display: flex; align-items: center; gap: 6px;"><input type="checkbox" class="section-toggle" value="language_breakdown" {% if 'language_breakdown' in vis %}checked{% endif %}> Lang Stats</label>
+                <label style="font-size: 13px; display: flex; align-items: center; gap: 6px;"><input type="checkbox" class="section-toggle" value="highlights" {% if 'highlights' in vis %}checked{% endif %}> Highlights</label>
+                <label style="font-size: 13px; display: flex; align-items: center; gap: 6px;"><input type="checkbox" class="section-toggle" value="repositories" {% if 'repositories' in vis %}checked{% endif %}> Repositories</label>
+                <label style="font-size: 13px; display: flex; align-items: center; gap: 6px;"><input type="checkbox" class="section-toggle" value="notes_and_warnings" {% if 'notes_and_warnings' in vis %}checked{% endif %}> Warnings</label>
+                <label style="font-size: 13px; display: flex; align-items: center; gap: 6px;"><input type="checkbox" class="section-toggle" value="footer_meta" {% if 'footer_meta' in vis %}checked{% endif %}> Footer Meta</label>
+              </div>
+            </div>
+          </div>
+          <div style="margin-top: 18px; display: flex; gap: 12px; align-items: center;">
+            <button id="savePresentationBtn" type="button">Save Presentation</button>
+            <button id="resetPresentationBtn" type="button" style="background: transparent; border: 1px solid var(--line); color: var(--muted);">Reset Defaults</button>
+            <span id="saveStatus" class="muted"></span>
+          </div>
+        </section>
+        {% endif %}
+
         <form id="refreshForm" method="post" action="/dashboard/reports/{{ report.id }}/refresh" class="actions" style="margin-top: 18px;">
           <button type="submit">Refresh report</button>
           <span class="muted">Refreshing creates a new snapshot version without changing the share identity.</span>
         </form>
       </section>
+
+      {% if report.status == 'ready' and report.share_url %}
+      <section class="panel" style="margin-top: 18px; padding: 0; border-radius: 20px; overflow: hidden; height: 800px; display: flex; flex-direction: column;">
+        <div style="background: rgba(0,0,0,0.2); padding: 12px 20px; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center;">
+          <span class="eyebrow" style="margin: 0;">Live Preview</span>
+          <a href="{{ report.share_url }}" target="_blank" style="color: var(--cyan); text-decoration: none; font-size: 13px;">Open in new tab &nearr;</a>
+        </div>
+        <iframe id="reportPreviewFrame" src="{{ report.share_url }}" style="width: 100%; height: 100%; border: none; background: #fff;"></iframe>
+      </section>
+      {% endif %}
     </main>
 
     <script>
@@ -465,6 +541,88 @@
         };
 
         window.setInterval(poll, 4000);
+      }
+
+      const resetBtn = document.getElementById('resetPresentationBtn');
+      if (resetBtn) {
+        resetBtn.addEventListener('click', async () => {
+          if (!confirm('Are you sure you want to reset to the default theme and visible sections?')) return;
+          const statusEl = document.getElementById('saveStatus');
+          statusEl.textContent = 'Resetting...';
+          resetBtn.disabled = true;
+
+          const payload = {
+            themeKey: 'default',
+            visibleSections: ["hero", "profile_summary", "key_stats", "timeline_commits", "timeline_loc", "activity_heatmap", "language_mix", "language_breakdown", "highlights", "repositories", "notes_and_warnings", "footer_meta"],
+            textOverrides: {}
+          };
+
+          try {
+            const res = await fetch(`/api/reports/{{ report.id }}/presentation`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(payload)
+            });
+            if (res.ok) {
+              window.location.reload();
+            } else {
+              statusEl.textContent = 'Failed to reset.';
+            }
+          } catch (err) {
+            statusEl.textContent = 'Error resetting.';
+          }
+          resetBtn.disabled = false;
+        });
+      }
+
+      const saveBtn = document.getElementById('savePresentationBtn');
+      if (saveBtn) {
+        saveBtn.addEventListener('click', async () => {
+          const theme = document.getElementById('themeSelect').value;
+          const heroEyebrow = document.getElementById('heroEyebrowInput').value.trim();
+          const heroTitle = document.getElementById('heroTitleInput').value.trim();
+          const heroCopy = document.getElementById('heroCopyInput').value.trim();
+          const notesHeading = document.getElementById('notesHeadingInput').value.trim();
+          const statusEl = document.getElementById('saveStatus');
+
+          statusEl.textContent = 'Saving...';
+          saveBtn.disabled = true;
+
+          const visibleSections = Array.from(document.querySelectorAll('.section-toggle:checked')).map(cb => cb.value);
+
+          const payload = {
+            themeKey: theme,
+            visibleSections: visibleSections
+          };
+
+          payload.textOverrides = {};
+          if (heroEyebrow) payload.textOverrides.hero_eyebrow = heroEyebrow;
+          if (heroTitle) payload.textOverrides.hero_title = heroTitle;
+          if (heroCopy) payload.textOverrides.hero_copy = heroCopy;
+          if (notesHeading) payload.textOverrides.notes_heading = notesHeading;
+
+          try {
+            const res = await fetch(`/api/reports/{{ report.id }}/presentation`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(payload)
+            });
+            if (res.ok) {
+              statusEl.textContent = 'Saved! Refreshing preview...';
+              const frame = document.getElementById('reportPreviewFrame');
+              if (frame) {
+                const baseSrc = frame.src.split('?')[0];
+                frame.src = baseSrc + '?t=' + new Date().getTime();
+              }
+              setTimeout(() => { statusEl.textContent = 'Changes are live.'; }, 1500);
+            } else {
+              statusEl.textContent = 'Failed to save.';
+            }
+          } catch (err) {
+            statusEl.textContent = 'Error saving.';
+          }
+          saveBtn.disabled = false;
+        });
       }
     </script>
   </body>

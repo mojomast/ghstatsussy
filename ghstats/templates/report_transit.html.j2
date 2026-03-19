@@ -1,18 +1,28 @@
 {% extends "report_base.html.j2" %}
 
-{% block hero %}
+{% block theme_css %}
 <style>
-/* Subway Map Theme */
-.transit-hero {
+/* Subway Map Theme applied to Canonical DOM */
+.template-transit {
+  background: #1a1a1a;
+  color: #ddd;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+/* Hero Map Lines */
+.template-transit .hero {
   background: #111;
   color: #eee;
   padding: 60px 40px;
+  border: none;
   border-bottom: 8px solid #ff4500;
+  border-radius: 0;
   position: relative;
   overflow: hidden;
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
-.transit-line {
+
+.template-transit .hero::before {
+  content: "";
   position: absolute;
   top: 50%;
   left: 0;
@@ -22,7 +32,9 @@
   z-index: 0;
   transform: translateY(-50%);
 }
-.transit-line-2 {
+
+.template-transit .hero::after {
+  content: "";
   position: absolute;
   top: 70%;
   left: -10%;
@@ -32,9 +44,23 @@
   z-index: 0;
   transform: rotate(-5deg);
 }
-.transit-station {
+
+.template-transit .hero-copy,
+.template-transit .hero-side {
   position: relative;
   z-index: 1;
+}
+
+/* Make it look more centered like transit */
+.template-transit .hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+/* Station Avatar */
+.template-transit .profile-card {
   background: #111;
   border: 6px solid #ff4500;
   border-radius: 50%;
@@ -44,17 +70,22 @@
   align-items: center;
   justify-content: center;
   margin: 0 auto 30px;
+  padding: 0;
 }
-.transit-avatar {
+
+.template-transit .profile-card img {
   border-radius: 50%;
   width: 110px;
   height: 110px;
   object-fit: cover;
 }
-.transit-title {
-  position: relative;
-  z-index: 1;
-  text-align: center;
+
+/* Hide extra text in profile card to make it just a station */
+.template-transit .profile-card div {
+  display: none;
+}
+
+.template-transit .hero h1 {
   font-size: 4rem;
   font-weight: 800;
   letter-spacing: -1px;
@@ -62,165 +93,92 @@
   margin-bottom: 10px;
   text-shadow: 3px 3px 0 #000;
 }
-.transit-subtitle {
-  position: relative;
-  z-index: 1;
-  text-align: center;
-  font-size: 1.2rem;
-  color: #aaa;
+
+.template-transit .chip {
   background: #222;
-  display: inline-block;
-  padding: 5px 15px;
+  border: none;
   border-radius: 20px;
-  margin: 0 auto;
-  display: block;
-  width: fit-content;
+  color: #aaa;
 }
-.transit-stats {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  margin-top: 40px;
-}
-.transit-stat-box {
+
+/* Stat boxes */
+.template-transit .hero-stat {
   background: #222;
+  border: none;
   border-left: 8px solid #00ce00;
+  border-radius: 0;
   padding: 15px 25px;
   color: #fff;
+  box-shadow: none;
 }
-.transit-stat-box .value {
-  font-size: 2rem;
-  font-weight: bold;
-}
-.transit-stat-box .label {
-  font-size: 0.8rem;
-  text-transform: uppercase;
-  color: #888;
-}
-</style>
 
-<div class="transit-hero">
-  <div class="transit-line"></div>
-  <div class="transit-line-2"></div>
-  
-  <div class="transit-station">
-    {% if context.meta.subject.avatar_url %}
-    <img class="transit-avatar" src="{{ context.meta.subject.avatar_url }}" alt="avatar" />
-    {% endif %}
-  </div>
-  
-  <h1 class="transit-title">{{ context.meta.subject.login }} STATION</h1>
-  <div class="transit-subtitle">{{ context.meta.period.start }} TO {{ context.meta.period.end }}</div>
+.template-transit .hero-stat:nth-child(1) { border-left-color: #ff4500; }
+.template-transit .hero-stat:nth-child(2) { border-left-color: #0078d7; }
+.template-transit .hero-stat:nth-child(3) { border-left-color: #ffcc00; }
+.template-transit .hero-stat:nth-child(4) { border-left-color: #00ce00; }
 
-  <div class="transit-stats">
-    {% for card in context.stats_cards[:4] %}
-    <div class="transit-stat-box" style="border-color: {% if loop.index0 == 0 %}#ff4500{% elif loop.index0 == 1 %}#0078d7{% elif loop.index0 == 2 %}#ffcc00{% else %}#00ce00{% endif %};">
-      <div class="value">{{ card.value }}</div>
-      <div class="label">{{ card.label }}</div>
-    </div>
-    {% endfor %}
-  </div>
-</div>
-{% endblock %}
-
-{% block content %}
-<style>
-.transit-content {
-  background: #1a1a1a;
-  color: #ddd;
-  padding: 50px;
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-}
-.transit-map {
-  display: flex;
-  flex-direction: column;
-  gap: 40px;
-}
-.transit-route {
+/* Route Panels */
+.template-transit .panel,
+.template-transit .chart-card {
   background: #222;
+  border: none;
   border-radius: 10px;
   padding: 30px;
   position: relative;
   overflow: hidden;
+  box-shadow: none;
 }
-.transit-route::before {
+
+.template-transit .panel::before,
+.template-transit .chart-card::before {
   content: '';
   position: absolute;
   top: 0; left: 0; bottom: 0;
   width: 15px;
-  background: var(--route-color, #ff4500);
+  background: #0078d7; /* Default route line */
 }
-.transit-route h2 {
-  margin-top: 0;
+
+/* Color different sections */
+.template-transit .charts-grid .chart-card:nth-child(1)::before { background: #0078d7; }
+.template-transit .charts-grid .chart-card:nth-child(2)::before { background: #ffcc00; }
+.template-transit .panel::before { background: #00ce00; }
+
+.template-transit h2 {
   font-size: 2rem;
   text-transform: uppercase;
-  margin-bottom: 20px;
   color: #fff;
 }
-.transit-stops {
-  display: flex;
-  gap: 20px;
-  flex-wrap: wrap;
-}
-.transit-stop {
-  background: #333;
+
+/* Stops (Repos and facts) */
+.template-transit .repo-card,
+.template-transit .fact {
+  background: #222;
+  border: none;
+  border-left: 8px solid #ff4500;
+  border-radius: 0;
   padding: 15px;
-  border-radius: 8px;
-  flex: 1;
-  min-width: 250px;
-  border: 2px solid #444;
 }
-.transit-stop h3 {
-  margin: 0 0 10px 0;
-  color: #fff;
+
+.template-transit .fact { border-left-color: #0078d7; }
+
+.template-transit .repo-card .chip {
+  background: #111;
+  padding: 3px 8px;
+  font-size: 0.7rem;
+  border-radius: 4px;
 }
-.transit-stop p {
-  margin: 0;
-  color: #bbb;
-  font-size: 0.9rem;
+
+.template-transit .warning {
+  background: #331111;
+  border-left: 8px solid #ff0000;
+  border-radius: 0;
 }
+
+.template-transit .language-item {
+  border-left: 4px solid #ffcc00;
+  background: #111;
+  border-radius: 0;
+}
+
 </style>
-
-<div class="transit-content">
-  <div class="transit-map">
-    
-    <div class="transit-route" style="--route-color: #0078d7;">
-      <h2>Activity Line (Commits)</h2>
-      <div style="height: 300px; width: 100%; background: #111; padding: 20px; border-radius: 8px;">
-        <canvas id="commitsChart"></canvas>
-      </div>
-    </div>
-
-    <div class="transit-route" style="--route-color: #ffcc00;">
-      <h2>Language Terminals</h2>
-      <div style="height: 300px; width: 100%; background: #111; padding: 20px; border-radius: 8px;">
-        <canvas id="languageChart"></canvas>
-      </div>
-      <div style="margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
-        {% for lang in context.language_slices %}
-        <span style="background: #333; padding: 5px 10px; border-radius: 20px; font-size: 0.8rem; border: 1px solid #555;">{{ lang.name }} ({{ lang.percent }}%)</span>
-        {% endfor %}
-      </div>
-    </div>
-
-    <div class="transit-route" style="--route-color: #00ce00;">
-      <h2>Key Destinations (Repositories)</h2>
-      <div class="transit-stops">
-        {% for repo in context.repo_insights %}
-        <div class="transit-stop">
-          <h3>{{ repo.full_name }}</h3>
-          <p>{{ repo.description or 'No description' }}</p>
-          <div style="margin-top: 10px; display: flex; gap: 5px;">
-            <span style="background: #111; padding: 3px 8px; border-radius: 4px; font-size: 0.7rem;">★ {{ repo.stars }}</span>
-            <span style="background: #111; padding: 3px 8px; border-radius: 4px; font-size: 0.7rem;">⑂ {{ repo.forks }}</span>
-          </div>
-        </div>
-        {% endfor %}
-      </div>
-    </div>
-
-  </div>
-</div>
 {% endblock %}

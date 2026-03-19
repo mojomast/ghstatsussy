@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import secrets
+import json
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
@@ -10,6 +11,7 @@ from ghstats.web.config import WebAppSettings
 from ghstats.web.crypto import TokenCipher
 from ghstats.web.models import Report, ReportSnapshot, User
 from ghstats.web.queue import enqueue_report_job
+from ghstats.render.html import render_report_html
 class HostedReportService:
     def __init__(self, settings: WebAppSettings, session: Session) -> None:
         self.settings = settings
@@ -151,6 +153,8 @@ class HostedReportService:
         return report
 
     def build_share_url(self, report: Report) -> str:
+        if self.settings.preview_mode:
+            return f"/r/{report.slug}"
         return f"{self.settings.app_base_url}/r/{report.slug}"
 
     def build_host_url(self, report: Report) -> str | None:
@@ -162,6 +166,20 @@ class HostedReportService:
     def read_snapshot_html(self, snapshot: ReportSnapshot) -> str:
         # Resolve legacy absolute paths to the current storage dir
         snapshot_dir = self.settings.report_storage_dir / snapshot.report.slug / f"v{snapshot.version}"
+        render_document_file = snapshot_dir / "render_document.json"
+        
+        if render_document_file.exists():
+            context = json.loads(render_document_file.read_text(encoding="utf-8"))
+            
+            # Use presentation_config if available, fallback to report.template_key
+            config = snapshot.report.presentation_config or {}
+            template_key = config.get("themeKey", snapshot.report.template_key)
+            
+            # If the config provides text overrides, we should inject them into context or rendering step
+            # For now, just render using standard html.py but passing template_key dynamically
+            # Later we will pass the whole config to the new canonical renderer
+            return render_report_html(context, template_key=template_key, presentation_config=config)
+            
         return (snapshot_dir / "report.html").read_text(encoding="utf-8")
 
     def _generate_slug(self) -> str:
@@ -194,10 +212,11 @@ def serialize_report(report: Report, settings: WebAppSettings) -> dict[str, obje
         "include_private": report.include_private,
         "status": report.status,
         "generated_at": report.generated_at.isoformat() if report.generated_at else None,
-        "share_url": f"{settings.app_base_url}/r/{report.slug}",
+        "share_url": f"/r/{report.slug}" if settings.preview_mode else f"{settings.app_base_url}/r/{report.slug}",
         "host_url": host_url,
         "store_metadata": report.store_metadata,
         "template_key": report.template_key,
+        "presentation_config": report.presentation_config,
         "latest_job_id": report.latest_job_id,
         "expires_at": report.expires_at.isoformat() if report.expires_at else None,
         "user": {

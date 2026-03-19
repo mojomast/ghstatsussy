@@ -265,6 +265,15 @@
         padding: 8px 4px 0;
       }
 
+      .empty-state {
+        padding: 24px;
+        text-align: center;
+        border: 1px dashed var(--line);
+        border-radius: var(--radius-card);
+        color: var(--muted);
+        margin-top: 16px;
+      }
+
       .accent-1 { border-top: 4px solid var(--accent); }
       .accent-2 { border-top: 4px solid var(--accent-2); }
       .accent-3 { border-top: 4px solid var(--accent-3); }
@@ -289,16 +298,26 @@
 
       {{ theme.extra_css | safe }}
     </style>
+    {% block theme_css %}{% endblock %}
   </head>
   <body>
-    <main class="shell template-{{ context.meta.theme.key }}">
-      {% block hero %}
+    {% set config = presentation_config or {} %}
+    {% set visible = config.get("visibleSections", [
+        "hero", "profile_summary", "key_stats", "timeline_commits", 
+        "timeline_loc", "activity_heatmap", "language_mix", 
+        "language_breakdown", "highlights", "repositories", 
+        "notes_and_warnings", "footer_meta"
+    ]) %}
+    {% set overrides = config.get("textOverrides", {}) %}
+    
+    <main class="shell template-{{ report_template.key }}">
+            {% if "hero" in visible %}
       <section class="hero">
         <div class="hero-copy">
-          <span class="eyebrow">{{ theme.eyebrow }}</span>
-          <h1>{{ theme.hero_title }}</h1>
+          <span class="eyebrow">{{ overrides.get("hero_eyebrow", theme.eyebrow) }}</span>
+          <h1>{{ overrides.get("hero_title", theme.hero_title) }}</h1>
           <p class="subtitle">{{ context.meta.subtitle }}</p>
-          <p class="muted">{{ theme.hero_copy }}</p>
+          <p class="muted">{{ overrides.get("hero_copy", theme.hero_copy) }}</p>
           <div class="meta-row">
             <span class="chip">{{ context.meta.period.start }} - {{ context.meta.period.end }}</span>
             <span class="chip">{{ context.meta.period.days }} days</span>
@@ -313,6 +332,7 @@
             {% endfor %}
           </div>
         </div>
+        {% if "profile_summary" in visible %}
         <div class="hero-side">
           <div class="profile-card">
             {% if context.meta.subject.avatar_url %}
@@ -330,11 +350,11 @@
             <p class="muted" style="margin-top: 8px;">{{ theme.side_copy }}</p>
           </div>
         </div>
+        {% endif %}
       </section>
-      {% endblock %}
-
-      {% block content %}
+      {% endif %}
       <div class="layout">
+        {% if "key_stats" in visible %}
         <section class="panel">
           <div class="section-head">
             <div>
@@ -352,9 +372,11 @@
             {% endfor %}
           </div>
         </section>
+        {% endif %}
 
         <section class="charts-grid">
           <div class="stack">
+            {% if "timeline_commits" in visible %}
             <article class="chart-card">
               <div class="section-head">
                 <div>
@@ -362,8 +384,14 @@
                   <h2>{{ context.chart_datasets.commits_timeline.title }}</h2>
                 </div>
               </div>
+              {% if context.chart_datasets.commits_timeline.series %}
               <canvas id="commitsChart"></canvas>
+              {% else %}
+              <div class="empty-state">No commit data available.</div>
+              {% endif %}
             </article>
+            {% endif %}
+            {% if "timeline_loc" in visible %}
             <article class="chart-card">
               <div class="section-head">
                 <div>
@@ -371,10 +399,16 @@
                   <h2>{{ context.chart_datasets.loc_timeline.title }}</h2>
                 </div>
               </div>
+              {% if context.chart_datasets.loc_timeline.series %}
               <canvas id="locChart"></canvas>
+              {% else %}
+              <div class="empty-state">No lines of code data available.</div>
+              {% endif %}
             </article>
+            {% endif %}
           </div>
           <div class="stack">
+            {% if "activity_heatmap" in visible %}
             <article class="chart-card">
               <div class="section-head">
                 <div>
@@ -383,6 +417,7 @@
                 </div>
                 <div class="muted">{{ context.heatmap.total }} contributions</div>
               </div>
+              {% if context.heatmap.weeks %}
               <div class="calendar-grid">
                 {% for week in context.heatmap.weeks %}
                   {% for day in week.days %}
@@ -390,7 +425,12 @@
                   {% endfor %}
                 {% endfor %}
               </div>
+              {% else %}
+              <div class="empty-state">No activity data available.</div>
+              {% endif %}
             </article>
+            {% endif %}
+            {% if "language_mix" in visible %}
             <article class="chart-card">
               <div class="section-head">
                 <div>
@@ -398,12 +438,18 @@
                   <h2>{{ context.chart_datasets.languages.title }}</h2>
                 </div>
               </div>
+              {% if context.chart_datasets.languages.labels %}
               <canvas id="languageChart"></canvas>
+              {% else %}
+              <div class="empty-state">No language data available.</div>
+              {% endif %}
             </article>
+            {% endif %}
           </div>
         </section>
 
         <section class="bottom-grid">
+          {% if "activity_heatmap" in visible %}
           <article class="panel">
             <div class="section-head">
               <div>
@@ -411,6 +457,7 @@
                 <h2>{{ context.chart_datasets.weekday_hours.title }}</h2>
               </div>
             </div>
+            {% if context.chart_datasets.weekday_hours.matrix %}
             <div class="weekday-heatmap">
               {% for row in context.chart_datasets.weekday_hours.matrix %}
               <div class="heat-row">
@@ -424,7 +471,12 @@
               </div>
               {% endfor %}
             </div>
+            {% else %}
+            <div class="empty-state">No hourly data available.</div>
+            {% endif %}
           </article>
+          {% endif %}
+          {% if "language_breakdown" in visible %}
           <article class="panel">
             <div class="section-head">
               <div>
@@ -432,6 +484,7 @@
                 <h2>{{ theme.language_breakdown_title }}</h2>
               </div>
             </div>
+            {% if context.language_slices %}
             <div class="language-list">
               {% for language in context.language_slices %}
               <div class="language-item">
@@ -440,9 +493,14 @@
               </div>
               {% endfor %}
             </div>
+            {% else %}
+            <div class="empty-state">No language data available.</div>
+            {% endif %}
           </article>
+          {% endif %}
         </section>
 
+        {% if "highlights" in visible %}
         <section class="panel">
           <div class="section-head">
             <div>
@@ -450,6 +508,7 @@
               <h2>{{ theme.highlights_title }}</h2>
             </div>
           </div>
+          {% if context.highlights %}
           <div class="facts-grid">
             {% for item in context.highlights %}
             <article class="fact">
@@ -460,8 +519,13 @@
             </article>
             {% endfor %}
           </div>
+          {% else %}
+          <div class="empty-state">No highlights available for this period.</div>
+          {% endif %}
         </section>
+        {% endif %}
 
+        {% if "repositories" in visible %}
         <section class="panel">
           <div class="section-head">
             <div>
@@ -469,6 +533,7 @@
               <h2>{{ theme.repo_title }}</h2>
             </div>
           </div>
+          {% if context.repo_insights %}
           <div class="repo-grid">
             {% for repo in context.repo_insights %}
             <article class="repo-card">
@@ -492,14 +557,18 @@
             </article>
             {% endfor %}
           </div>
+          {% else %}
+          <div class="empty-state">No repository insights available for this period.</div>
+          {% endif %}
         </section>
+        {% endif %}
 
-        {% if context.warnings %}
+        {% if "notes_and_warnings" in visible and context.warnings %}
         <section class="panel">
           <div class="section-head">
             <div>
               <div class="section-kicker">{{ theme.notes_kicker }}</div>
-              <h2>{{ theme.notes_title }}</h2>
+              <h2>{{ overrides.get("notes_heading", theme.notes_title) }}</h2>
             </div>
           </div>
           <div class="stack">
@@ -513,8 +582,8 @@
         </section>
         {% endif %}
       </div>
-      {% endblock %}
 
+{% if "footer_meta" in visible %}
       <footer class="footer-links">
           <div>Built with {{ context.meta.generator.name }} {{ context.meta.generator.version }}</div>
           <div>
@@ -525,7 +594,7 @@
             <a href="{{ context.meta.links.ussyverse_url }}">{{ context.meta.links.ussyverse_label }}</a>
           </div>
         </footer>
-      </div>
+      {% endif %}
     </main>
 
     <script>

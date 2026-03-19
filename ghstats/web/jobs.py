@@ -73,6 +73,12 @@ def process_next_job(settings: WebAppSettings, session: Session) -> ReportJob | 
         html_path = snapshot_dir / "report.html"
         html_path.write_text(artifacts.html, encoding="utf-8")
 
+        render_document_file = snapshot_dir / "render_document.json"
+        render_document_file.write_text(
+            json.dumps(artifacts.context, indent=2, default=json_default),
+            encoding="utf-8"
+        )
+
         json_path: str | None = None
         if report.store_metadata:
             json_file = snapshot_dir / "report.json"
@@ -80,7 +86,7 @@ def process_next_job(settings: WebAppSettings, session: Session) -> ReportJob | 
                 json.dumps(
                     {
                         "dataset": artifacts.dataset.to_dict(),
-                        "report": artifacts.context,
+                        
                     },
                     indent=2,
                     default=json_default,

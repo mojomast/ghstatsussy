@@ -1,0 +1,230 @@
+{% extends "report_base.html.j2" %}
+{% block theme_css %}
+<style>
+  :root {
+    --ink: #000; --muted: #333;
+  }
+/* RETRO OS - RADICAL WINDOWS 95/98 AESTHETIC */
+@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+
+body {
+    background-color: #008080;
+    background-image: url('data:image/svg+xml;utf8,<svg width="4" height="4" xmlns="http://www.w3.org/2000/svg"><rect width="2" height="2" fill="rgba(255,255,255,0.05)"/></svg>');
+    font-family: 'Pixelated MS Sans Serif', 'Tahoma', 'Verdana', sans-serif;
+    color: #000;
+    margin: 0;
+    padding: 0;
+    /* Cursor replacement for full retro feel */
+    cursor: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='), default;
+}
+
+/* Scrollbar styling for WebKit */
+::-webkit-scrollbar {
+    width: 16px;
+    height: 16px;
+    background: #dfdfdf;
+    border-left: 1px solid #fff;
+    border-top: 1px solid #fff;
+}
+::-webkit-scrollbar-thumb {
+    background: #c0c0c0;
+    border-top: 2px solid #fff;
+    border-left: 2px solid #fff;
+    border-right: 2px solid #000;
+    border-bottom: 2px solid #000;
+}
+::-webkit-scrollbar-button {
+    background: #c0c0c0;
+    border-top: 2px solid #fff;
+    border-left: 2px solid #fff;
+    border-right: 2px solid #000;
+    border-bottom: 2px solid #000;
+    display: block;
+    height: 16px;
+    width: 16px;
+}
+
+.shell {
+    max-width: 1200px;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    margin: 0 auto;
+}
+
+/* Classic Win95 Window Border */
+.panel, .chart-card, .hero {
+    background: #c0c0c0 !important;
+    border-top: 2px solid #ffffff !important;
+    border-left: 2px solid #ffffff !important;
+    border-right: 2px solid #0a0a0a !important;
+    border-bottom: 2px solid #0a0a0a !important;
+    border-radius: 0 !important;
+    padding: 3px;
+    box-shadow: inset 1px 1px #dfdfdf, inset -1px -1px #808080, 4px 4px 0px rgba(0,0,0,0.5) !important;
+    position: relative;
+    margin-bottom: 10px;
+}
+
+/* Content Area inside the window */
+.panel > div, .chart-card > div {
+    border-top: 2px solid #808080;
+    border-left: 2px solid #808080;
+    border-right: 2px solid #ffffff;
+    border-bottom: 2px solid #ffffff;
+    background: #ffffff;
+    padding: 15px;
+    box-shadow: inset 1px 1px #000;
+    overflow-x: auto;
+}
+
+/* True Win95 Title Bars */
+.section-head, .hero .eyebrow {
+    background: linear-gradient(90deg, #000080 0%, #1084d0 100%) !important;
+    color: #ffffff !important;
+    padding: 3px 4px 3px 6px !important;
+    font-weight: bold;
+    font-family: 'Pixelated MS Sans Serif', 'Tahoma', sans-serif;
+    letter-spacing: 0.5px;
+    margin: 0 0 6px 0 !important;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+/* Fake Window Controls in Title Bar (Minimize, Maximize, Close) */
+.section-head::after, .hero .eyebrow::after {
+    content: "_ \u25A1 X"; /* Pseudo buttons */
+    display: inline-flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 50px;
+    height: 16px;
+    background: #c0c0c0;
+    color: #000;
+    font-size: 10px;
+    font-family: monospace;
+    font-weight: bold;
+    border-top: 1px solid #fff;
+    border-left: 1px solid #fff;
+    border-right: 1px solid #000;
+    border-bottom: 1px solid #000;
+    margin-left: auto;
+    padding: 0 4px;
+    cursor: pointer;
+    box-shadow: inset 1px 1px #dfdfdf, inset -1px -1px #808080;
+}
+
+.section-head::after:active, .hero .eyebrow::after:active {
+    border-top: 1px solid #000;
+    border-left: 1px solid #000;
+    border-right: 1px solid #fff;
+    border-bottom: 1px solid #fff;
+    box-shadow: inset 1px 1px #808080;
+}
+
+/* Typography Overrides */
+h1 {
+    font-size: 2.5rem;
+    margin: 10px 0;
+    font-weight: bold;
+    color: #000;
+    text-shadow: 1px 1px 0px #fff;
+    border-bottom: 1px dotted #808080;
+    padding-bottom: 5px;
+}
+
+h2, h3 {
+    color: #000;
+    font-family: 'Pixelated MS Sans Serif', Tahoma, sans-serif;
+}
+
+/* Stats grid looks like an embedded table/grid control */
+.stats-grid {
+    background: #c0c0c0;
+    padding: 8px;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)) !important;
+    gap: 8px;
+}
+
+.hero-stat {
+    background: #ffffff;
+    border-top: 2px solid #808080;
+    border-left: 2px solid #808080;
+    border-right: 2px solid #ffffff;
+    border-bottom: 2px solid #ffffff;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    box-shadow: inset 1px 1px #0a0a0a;
+}
+
+.hero-stat .stat-val {
+    color: #000080;
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+.hero > div { border: none; background: transparent; padding: 0; box-shadow: none; }
+
+/* Inset items like cards and facts */
+.repo-card, .fact {
+    border-top: 2px solid #ffffff;
+    border-left: 2px solid #ffffff;
+    border-right: 2px solid #000000;
+    border-bottom: 2px solid #000000;
+    background: #dfdfdf;
+    border-radius: 0;
+    padding: 10px;
+    margin-bottom: 10px;
+    box-shadow: inset 1px 1px #c0c0c0, inset -1px -1px #808080;
+}
+
+.repo-card:hover {
+    background: #000080;
+    color: #fff;
+}
+.repo-card:hover * {
+    color: #fff !important;
+}
+
+/* Tag chips look like classic buttons */
+.chip {
+    border-top: 2px solid #ffffff;
+    border-left: 2px solid #ffffff;
+    border-right: 2px solid #000000;
+    border-bottom: 2px solid #000000;
+    background: #c0c0c0;
+    border-radius: 0;
+    color: #000 !important;
+    padding: 2px 6px;
+    font-size: 0.85rem;
+    cursor: default;
+    box-shadow: inset 1px 1px #dfdfdf, inset -1px -1px #808080;
+}
+
+.chip:active {
+    border-top: 2px solid #000000;
+    border-left: 2px solid #000000;
+    border-right: 2px solid #ffffff;
+    border-bottom: 2px solid #ffffff;
+    box-shadow: inset 1px 1px #808080;
+    background: #dfdfdf;
+}
+
+/* Links */
+a {
+    color: #0000ff;
+    text-decoration: underline;
+}
+a:visited {
+    color: #800080;
+}
+</style>
+{% endblock %}
