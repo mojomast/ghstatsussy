@@ -154,6 +154,7 @@ class GitHubClient:
             avatar_url=overview.get("avatarUrl"),
         )
         self._viewer_email_candidates = self._build_viewer_email_candidates(overview)
+        self._augment_viewer_email_candidates()
         dataset = ActivityDataset(
             viewer=viewer,
             start_at=start_at,
@@ -198,6 +199,7 @@ class GitHubClient:
         dataset.repo_scan_has_next_page = repo_has_next_page
         if repo_has_next_page:
             self._merge_viewer_repositories(repo_index, dataset, overview["repositories"]["pageInfo"].get("endCursor"))
+        self._enrich_active_repo_languages(repo_index, dataset)
 
         calendar = overview["contributionsCollection"]["contributionCalendar"]
         dataset.contribution_days = self._calendar_days(calendar["weeks"])
@@ -293,6 +295,84 @@ class GitHubClient:
         else:
             dataset.repo_scan_has_next_page = False
 
+    def _enrich_active_repo_languages(
+        self,
+        repo_index: dict[str, RepoActivity],
+        dataset: ActivityDataset,
+    ) -> None:
+        candidates = [
+            repo
+            for repo in repo_index.values()
+            if repo.total_contributions() > 0
+            and not repo.languages
+            and not repo.is_fork
+            and (dataset.include_private or not repo.is_private)
+        ]
+        if not candidates:
+            return
+
+        candidates.sort(
+            key=lambda repo: (
+                repo.total_contributions(),
+                repo.commit_contributions,
+                repo.pull_request_contributions,
+                repo.review_contributions,
+                repo.issue_contributions,
+                repo.pushed_at.timestamp() if repo.pushed_at else 0.0,
+                repo.stargazer_count,
+                repo.fork_count,
+            ),
+            reverse=True,
+        )
+
+        truncated = False
+        if len(candidates) > self.config.max_repo_language_enrichments:
+            candidates = candidates[: self.config.max_repo_language_enrichments]
+            truncated = True
+
+        try:
+            for start in range(0, len(candidates), self.config.repo_details_batch_size):
+                batch = candidates[start : start + self.config.repo_details_batch_size]
+                payload = self.graphql(
+                    queries.REPOSITORY_DETAILS_QUERY,
+                    {"ids": [repo.id for repo in batch]},
+                )
+                for node in payload.get("nodes", []):
+                    if not isinstance(node, dict) or node.get("__typename") != "Repository":
+                        continue
+                    repo = repo_index.get(str(node.get("id") or ""))
+                    if repo is None:
+                        continue
+                    repo.languages = self._languages_from_node(node.get("languages"))
+                    primary_language = node.get("primaryLanguage") or {}
+                    if not repo.primary_language:
+                        repo.primary_language = primary_language.get("name")
+                    if not repo.primary_language_color:
+                        repo.primary_language_color = primary_language.get("color")
+        except GitHubApiError as error:
+            dataset.warnings.append(
+                WarningNotice(
+                    code="repo-language-enrichment-skipped",
+                    message="Some active repository language details could not be enriched.",
+                    details=str(error),
+                    level="info",
+                )
+            )
+            return
+
+        if truncated:
+            dataset.warnings.append(
+                WarningNotice(
+                    code="repo-language-enrichment-truncated",
+                    message="Language enrichment was capped for active contributed repositories.",
+                    details=(
+                        f"Enriched up to {self.config.max_repo_language_enrichments} active repositories "
+                        "that were missing language metadata."
+                    ),
+                    level="info",
+                )
+            )
+
     def _build_viewer_email_candidates(self, overview: dict[str, Any]) -> set[str]:
         login = overview["login"].strip().lower()
         candidates = {login}
@@ -305,6 +385,20 @@ class GitHubClient:
         }
         candidates.update(noreply_aliases)
         return candidates
+
+    def _augment_viewer_email_candidates(self) -> None:
+        if not self.token:
+            return
+        try:
+            payload = self.rest_get("/user/emails")
+        except GitHubApiError:
+            return
+        if not isinstance(payload, list):
+            return
+        for item in payload:
+            if not isinstance(item, dict):
+                continue
+            self._add_email_candidate(self._viewer_email_candidates, item.get("email"))
 
     def _add_email_candidate(self, candidates: set[str], value: str | None) -> None:
         if not value:
@@ -597,6 +691,18 @@ class GitHubClient:
                         f"GitHub reported {dataset.restricted_contributions_count} restricted contributions "
                         "in the selected window."
                     ),
+                )
+            )
+        if dataset.commits and len(dataset.commits) > dataset.total_commit_contributions:
+            dataset.warnings.append(
+                WarningNotice(
+                    code="commit-total-reconciled",
+                    message="Commit totals were reconciled across GitHub attribution and detailed commit scanning.",
+                    details=(
+                        f"GitHub reported {dataset.total_commit_contributions} attributed commits while the detailed "
+                        f"scan found {len(dataset.commits)} matching commits in the selected window."
+                    ),
+                    level="info",
                 )
             )
         if not dataset.commits:

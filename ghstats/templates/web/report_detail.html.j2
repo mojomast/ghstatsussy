@@ -780,28 +780,34 @@
             <div class="note-box" style="margin-top: 14px;">
               Safe path: create <strong>{{ profile_publish_status.expected_repo if profile_publish_status else (report.user.login ~ '/' ~ report.user.login if report.user else 'username/username') }}</strong>, install the GitHub App on that repo only, preview the diff, then confirm publish.
             </div>
+            <div id="profileConnectionSummary" class="preview-panel" style="margin-top: 16px;">
+              <div class="mini-code">connection status</div>
+              <div id="profileConnectionSummaryText" class="muted">Not connected yet.</div>
+            </div>
             <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); margin-top: 16px;">
               <label>
                 <span class="mini-code">github login</span>
-                <input type="text" id="profileGithubLoginInput" value="{{ profile_publish_status.connection.github_login if profile_publish_status and profile_publish_status.connection else (report.user.login if report.user else '') }}" />
+                <input type="text" id="profileGithubLoginInput" value="{{ profile_publish_status.connection.github_login if profile_publish_status and profile_publish_status.connection else (report.user.login if report.user else '') }}" readonly />
               </label>
               <label>
                 <span class="mini-code">profile repo owner</span>
-                <input type="text" id="profileRepoOwnerInput" value="{{ profile_publish_status.connection.profile_repo_owner if profile_publish_status and profile_publish_status.connection else (report.user.login if report.user else '') }}" />
+                <input type="text" id="profileRepoOwnerInput" value="{{ profile_publish_status.connection.profile_repo_owner if profile_publish_status and profile_publish_status.connection else (report.user.login if report.user else '') }}" readonly />
               </label>
               <label>
                 <span class="mini-code">profile repo name</span>
-                <input type="text" id="profileRepoNameInput" value="{{ profile_publish_status.connection.profile_repo_name if profile_publish_status and profile_publish_status.connection else (report.user.login if report.user else '') }}" />
+                <input type="text" id="profileRepoNameInput" value="{{ profile_publish_status.connection.profile_repo_name if profile_publish_status and profile_publish_status.connection else (report.user.login if report.user else '') }}" readonly />
               </label>
               <label>
-                <span class="mini-code">app installation id</span>
-                <input type="number" id="profileInstallationIdInput" value="{{ profile_publish_status.connection.app_installation_id if profile_publish_status and profile_publish_status.connection else '' }}" placeholder="Repo-scoped installation id" />
+                <span class="mini-code">installation id or install URL</span>
+                <input type="text" id="profileInstallationIdInput" value="{{ profile_publish_status.connection.app_installation_id if profile_publish_status and profile_publish_status.connection else '' }}" placeholder="Paste installation id or GitHub install URL" />
               </label>
             </div>
             <div class="button-row" style="margin-top: 16px; align-items: center;">
-              <button type="button" id="connectProfileBtn">Save Repo Connection</button>
+              <button type="button" id="connectProfileBtn">Verify &amp; save connection</button>
               {% if profile_publish_status and profile_publish_status.install_url %}
-              <a href="{{ profile_publish_status.install_url }}" class="button-link secondary" target="_blank">Open GitHub App install</a>
+              <a href="{{ profile_publish_status.install_url }}" class="button-link secondary" target="_blank">Install GitHub App</a>
+              {% else %}
+              <span class="muted">GitHub App publishing is not configured on this host yet.</span>
               {% endif %}
               <span id="profileConnectStatus" class="muted"></span>
             </div>
@@ -816,8 +822,8 @@
               <div class="preview-panel">
                 <div class="toolbar">
                   <div class="mini-code">unified diff</div>
-                  <button type="button" id="previewPublishDiffBtn">Preview diff</button>
-                  <button type="button" id="publishProfileBtn" class="ghost">Publish to profile</button>
+                  <button type="button" id="previewPublishDiffBtn">Fetch README &amp; preview diff</button>
+                  <button type="button" id="publishProfileBtn" class="ghost" disabled>Publish to profile</button>
                 </div>
                 <textarea id="publishDiffOutput" class="markdown-box" spellcheck="false" readonly></textarea>
                 <div id="publishStatus" class="muted">Diff preview required before publishing.</div>
@@ -860,8 +866,24 @@
       const markdownPreview = document.getElementById('markdownPreview');
       const publishDiffOutput = document.getElementById('publishDiffOutput');
 
+      function byId(id) {
+        return document.getElementById(id);
+      }
+
+      const currentReadmeInput = document.getElementById('currentReadmeInput');
+      const profileConnectStatus = document.getElementById('profileConnectStatus');
+      const publishStatus = document.getElementById('publishStatus');
+      const profileConnectionSummaryText = document.getElementById('profileConnectionSummaryText');
+      const connectProfileBtn = byId('connectProfileBtn');
+      const loadCurrentReadmeBtn = byId('loadCurrentReadmeBtn');
+      const previewPublishDiffBtn = byId('previewPublishDiffBtn');
+      const publishProfileBtn = byId('publishProfileBtn');
+      const profileInstallationIdInput = byId('profileInstallationIdInput');
+
       let exportEntries = Array.isArray(initialExports) ? initialExports.slice() : [];
       let lastGeneratedMarkdown = '';
+      let currentProfilePublishStatus = profilePublishStatus;
+      let profileDiffReady = false;
 
       const defaultVisibleSections = [
         'hero', 'profile_summary', 'key_stats', 'timeline_commits', 'timeline_loc',
@@ -869,13 +891,74 @@
         'repositories', 'notes_and_warnings', 'footer_meta'
       ];
 
-      function byId(id) {
-        return document.getElementById(id);
-      }
-
       function setText(id, value) {
         const node = byId(id);
         if (node) node.textContent = value;
+      }
+
+      function formatRelativeishTimestamp(value) {
+        if (!value) return 'never';
+        const date = new Date(value);
+        if (Number.isNaN(date.getTime())) return String(value);
+        return date.toLocaleString();
+      }
+
+      function parseInstallationId(rawValue) {
+        const value = String(rawValue || '').trim();
+        if (!value) throw new Error('Paste a GitHub App installation id or install URL.');
+        const directMatch = value.match(/^\d+$/);
+        if (directMatch) return Number(directMatch[0]);
+        const urlMatch = value.match(/\/installations\/(\d+)(?:\b|\/|\?|#)/i);
+        if (urlMatch) return Number(urlMatch[1]);
+        throw new Error('Could not find an installation id in that value.');
+      }
+
+      function invalidateProfileDiff(reason) {
+        profileDiffReady = false;
+        if (publishProfileBtn) publishProfileBtn.disabled = true;
+        if (reason && publishStatus) publishStatus.textContent = reason;
+      }
+
+      function renderProfilePublishState() {
+        const status = currentProfilePublishStatus || {};
+        const connection = status.connection || null;
+        const connected = Boolean(status.connected && connection);
+        const expectedRepo = status.expected_repo || `${byId('profileRepoOwnerInput')?.value || ''}/${byId('profileRepoNameInput')?.value || ''}`.replace(/^\//, '');
+        const summaryBits = [];
+        if (connected) {
+          summaryBits.push(`Connected to ${connection.profile_repo_owner}/${connection.profile_repo_name}.`);
+          summaryBits.push(`Installation ${connection.app_installation_id}.`);
+          if (connection.last_publish_commit_sha) {
+            summaryBits.push(`Last publish ${connection.last_publish_commit_sha} at ${formatRelativeishTimestamp(connection.last_publish_at)}.`);
+          } else {
+            summaryBits.push('No publish recorded yet.');
+          }
+        } else {
+          summaryBits.push(`Not connected yet. Expected repo: ${expectedRepo || 'username/username'}.`);
+        }
+        if (status.permissions_note) {
+          summaryBits.push(status.permissions_note);
+        }
+        if (profileConnectionSummaryText) profileConnectionSummaryText.textContent = summaryBits.join(' ');
+        if (loadCurrentReadmeBtn) loadCurrentReadmeBtn.disabled = !connected;
+        if (previewPublishDiffBtn) previewPublishDiffBtn.disabled = !connected;
+        if (publishProfileBtn) publishProfileBtn.disabled = !connected || !profileDiffReady;
+        if (!connected && !profileConnectStatus.textContent) {
+          profileConnectStatus.textContent = 'Install the GitHub App on the profile repo, then verify the connection here.';
+        }
+        if (!connected && !publishDiffOutput?.value) {
+          publishStatus.textContent = 'Connect the profile repository before fetching README content or publishing.';
+        }
+      }
+
+      async function refreshProfilePublishStatus() {
+        currentProfilePublishStatus = await apiJson('/api/github/profile-readme/status');
+        const connection = currentProfilePublishStatus && currentProfilePublishStatus.connection;
+        if (connection && profileInstallationIdInput && !profileInstallationIdInput.value.trim()) {
+          profileInstallationIdInput.value = String(connection.app_installation_id || '');
+        }
+        renderProfilePublishState();
+        return currentProfilePublishStatus;
       }
 
       function sortExports(entries) {
@@ -1002,25 +1085,30 @@
 
       async function loadCurrentReadme() {
         const payload = await apiJson('/api/github/profile-readme/current');
-        if (byId('currentReadmeInput')) {
-          byId('currentReadmeInput').value = payload.content || '';
+        if (currentReadmeInput) {
+          currentReadmeInput.value = payload.content || '';
         }
-        setText('publishStatus', payload.exists ? 'Loaded current README from the configured profile repo.' : 'Profile README does not exist yet; publish will create it.');
+        invalidateProfileDiff(payload.exists ? 'Loaded current README from the configured profile repo.' : 'Profile README does not exist yet; publish will create it.');
         return payload;
       }
 
       async function previewProfileDiff() {
+        if (!currentReadmeInput?.value.trim()) {
+          await loadCurrentReadme();
+        }
         const markdownOptions = currentMarkdownOptions();
         markdownOptions.presetKey = 'profile_readme';
         markdownOptions.compact = true;
         const payload = await apiJson(`/api/reports/${reportId}/profile-readme/diff`, {
           method: 'POST',
-          body: JSON.stringify({ current_readme: byId('currentReadmeInput')?.value || '', ...markdownOptions }),
+          body: JSON.stringify({ current_readme: currentReadmeInput?.value || '', ...markdownOptions }),
         });
         if (publishDiffOutput) publishDiffOutput.value = payload.diff || '';
         lastGeneratedMarkdown = payload.markdown_body || lastGeneratedMarkdown;
         if (markdownPreview && payload.preview_html) markdownPreview.innerHTML = payload.preview_html;
-        setText('publishStatus', 'Diff preview ready. Review it before publishing.');
+        profileDiffReady = true;
+        renderProfilePublishState();
+        publishStatus.textContent = 'Diff preview ready. Review it before publishing.';
         return payload;
       }
 
@@ -1029,11 +1117,14 @@
           github_login: byId('profileGithubLoginInput')?.value.trim() || '',
           profile_repo_owner: byId('profileRepoOwnerInput')?.value.trim() || '',
           profile_repo_name: byId('profileRepoNameInput')?.value.trim() || '',
-          app_installation_id: Number(byId('profileInstallationIdInput')?.value || 0),
+          app_installation_id: parseInstallationId(profileInstallationIdInput?.value || ''),
         };
-        setText('profileConnectStatus', 'Saving connection...');
+        profileConnectStatus.textContent = 'Saving connection...';
+        invalidateProfileDiff('Connection changed. Fetch the README and preview the diff again.');
         await apiJson('/api/github/profile-readme/connect', { method: 'POST', body: JSON.stringify(payload) });
-        setText('profileConnectStatus', 'Profile repo connection saved.');
+        await refreshProfilePublishStatus();
+        profileConnectStatus.textContent = 'Profile repo connection verified and saved.';
+        return currentProfilePublishStatus;
       }
 
       async function publishProfileReadme() {
@@ -1043,14 +1134,17 @@
         const payload = await apiJson(`/api/reports/${reportId}/profile-readme/publish`, {
           method: 'POST',
           body: JSON.stringify({
-            current_readme: byId('currentReadmeInput')?.value || '',
+            current_readme: currentReadmeInput?.value || '',
             confirm: true,
             ...markdownOptions,
           }),
         });
         if (publishDiffOutput) publishDiffOutput.value = payload.diff || '';
-        if (byId('currentReadmeInput')) byId('currentReadmeInput').value = payload.markdown_body || '';
-        setText('publishStatus', `Published README${payload.commit_sha ? ` at ${payload.commit_sha}` : ''}.`);
+        if (currentReadmeInput) currentReadmeInput.value = payload.markdown_body || '';
+        profileDiffReady = true;
+        await refreshProfilePublishStatus();
+        publishStatus.textContent = `Published README${payload.commit_sha ? ` at ${payload.commit_sha}` : ''}.`;
+        return payload;
       }
 
       if (refreshForm) {
@@ -1182,49 +1276,46 @@
         });
       }
 
-      const connectProfileBtn = byId('connectProfileBtn');
       if (connectProfileBtn) {
         connectProfileBtn.addEventListener('click', async () => {
           connectProfileBtn.disabled = true;
           try {
             await connectProfileRepo();
           } catch (error) {
-            setText('profileConnectStatus', error.message);
+            profileConnectStatus.textContent = error.message;
           } finally {
             connectProfileBtn.disabled = false;
+            renderProfilePublishState();
           }
         });
       }
 
-      const loadCurrentReadmeBtn = byId('loadCurrentReadmeBtn');
       if (loadCurrentReadmeBtn) {
         loadCurrentReadmeBtn.addEventListener('click', async () => {
           loadCurrentReadmeBtn.disabled = true;
           try {
             await loadCurrentReadme();
           } catch (error) {
-            setText('publishStatus', error.message);
+            publishStatus.textContent = error.message;
           } finally {
-            loadCurrentReadmeBtn.disabled = false;
+            renderProfilePublishState();
           }
         });
       }
 
-      const previewPublishDiffBtn = byId('previewPublishDiffBtn');
       if (previewPublishDiffBtn) {
         previewPublishDiffBtn.addEventListener('click', async () => {
           previewPublishDiffBtn.disabled = true;
           try {
             await previewProfileDiff();
           } catch (error) {
-            setText('publishStatus', error.message);
+            publishStatus.textContent = error.message;
           } finally {
-            previewPublishDiffBtn.disabled = false;
+            renderProfilePublishState();
           }
         });
       }
 
-      const publishProfileBtn = byId('publishProfileBtn');
       if (publishProfileBtn) {
         publishProfileBtn.addEventListener('click', async () => {
           if (!confirm('Publish the generated markdown to README.md on the configured profile repository?')) return;
@@ -1232,11 +1323,30 @@
           try {
             await publishProfileReadme();
           } catch (error) {
-            setText('publishStatus', error.message);
+            publishStatus.textContent = error.message;
           } finally {
-            publishProfileBtn.disabled = false;
+            renderProfilePublishState();
           }
         });
+      }
+
+      ['markdownPresetSelect', 'markdownCompactSelect', 'markdownTitleInput', 'markdownTaglineInput'].forEach((id) => {
+        const node = byId(id);
+        if (!node) return;
+        node.addEventListener('change', () => invalidateProfileDiff('Markdown options changed. Preview the diff again before publishing.'));
+        node.addEventListener('input', () => invalidateProfileDiff('Markdown options changed. Preview the diff again before publishing.'));
+      });
+
+      document.querySelectorAll('.markdown-section-toggle').forEach((node) => {
+        node.addEventListener('change', () => invalidateProfileDiff('Markdown sections changed. Preview the diff again before publishing.'));
+      });
+
+      if (currentReadmeInput) {
+        currentReadmeInput.addEventListener('input', () => invalidateProfileDiff('Current README changed. Preview the diff again before publishing.'));
+      }
+
+      if (profileInstallationIdInput) {
+        profileInstallationIdInput.addEventListener('input', () => invalidateProfileDiff('Connection changed. Verify the connection again before publishing.'));
       }
 
       renderExports();
@@ -1244,9 +1354,13 @@
         refreshMarkdownPreview().catch((error) => {
           if (markdownPreview) markdownPreview.innerHTML = `<div class="danger-box">${error.message}</div>`;
         });
-        if (profilePublishStatus && profilePublishStatus.connection && byId('currentReadmeInput')) {
-          byId('currentReadmeInput').value = '';
+        if (currentProfilePublishStatus && currentProfilePublishStatus.connection && currentReadmeInput) {
+          currentReadmeInput.value = '';
         }
+        renderProfilePublishState();
+        refreshProfilePublishStatus().catch(() => {
+          renderProfilePublishState();
+        });
       }
     </script>
   </body>

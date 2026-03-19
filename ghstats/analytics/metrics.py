@@ -128,10 +128,12 @@ def build_stats_cards(
     commit_counts = [int(item["count"]) for item in commit_series]
     added_total = sum(int(item["additions"]) for item in line_series)
     deleted_total = sum(int(item["deletions"]) for item in line_series)
-    avg_commits = round(dataset.total_commit_contributions / max(len(commit_counts), 1), 2) if commit_counts else 0.0
+    detailed_commit_total = len(dataset.commits)
+    commit_total = max(dataset.total_commit_contributions, detailed_commit_total)
+    avg_commits = round(commit_total / max(len(commit_counts), 1), 2) if commit_counts else 0.0
 
     return [
-        stat_card("commits", "Total commits", dataset.total_commit_contributions, "commits", "teal"),
+        stat_card("commits", "Total commits", commit_total, "commits", "teal"),
         stat_card("avg-commits", "Avg commits/day", avg_commits, None, "amber"),
         stat_card("loc-added", "Lines added", added_total, "lines", "green"),
         stat_card("loc-deleted", "Lines deleted", deleted_total, "lines", "red"),
