@@ -35,6 +35,7 @@ class WebAppSettings:
     ghstats_subdomain_base: str
     reserved_report_usernames: tuple[str, ...]
     process_jobs_inline: bool
+    stale_job_timeout_seconds: int
     preview_mode: bool
     preview_user_login: str
     preview_user_name: str
@@ -109,6 +110,7 @@ def load_web_settings() -> WebAppSettings:
             if value.strip()
         ),
         process_jobs_inline=_truthy(os.getenv("PROCESS_JOBS_INLINE", "1")),
+        stale_job_timeout_seconds=max(60, int(os.getenv("STALE_JOB_TIMEOUT_SECONDS", "1800"))),
         preview_mode=_truthy(os.getenv("PREVIEW_MODE", "0")),
         preview_user_login=os.getenv("PREVIEW_USER_LOGIN", "preview-user").strip() or "preview-user",
         preview_user_name=os.getenv("PREVIEW_USER_NAME", "Preview User").strip() or "Preview User",

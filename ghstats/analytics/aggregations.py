@@ -47,12 +47,31 @@ def active_repositories(
     require_languages: bool = False,
     exclude_forks: bool = False,
 ) -> list[RepoActivity]:
-    repos = [repo for repo in dataset.repos if repo.total_contributions() > 0]
+    detailed_commit_counts = Counter(commit.repo_name_with_owner for commit in dataset.commits)
+    repos = [
+        repo
+        for repo in dataset.repos
+        if _repo_has_window_activity(repo, dataset, detailed_commit_counts)
+    ]
     if exclude_forks:
         repos = [repo for repo in repos if not repo.is_fork]
     if require_languages:
         repos = [repo for repo in repos if repo.languages]
     return repos
+
+
+def _repo_has_window_activity(
+    repo: RepoActivity,
+    dataset: ActivityDataset,
+    detailed_commit_counts: Counter[str],
+) -> bool:
+    if repo.total_contributions() > 0:
+        return True
+    if detailed_commit_counts.get(repo.name_with_owner, 0) > 0:
+        return True
+    if repo.owner_login != dataset.viewer.login or repo.is_fork or repo.pushed_at is None:
+        return False
+    return dataset.start_at <= repo.pushed_at <= dataset.end_at
 
 
 def language_breakdown(dataset: ActivityDataset) -> list[dict[str, int | float | str | None]]:
@@ -137,6 +156,8 @@ def build_repo_highlights(repo: object) -> list[str]:
     review_count = getattr(repo, "review_contributions", 0)
     if review_count:
         highlights.append(f"{review_count} reviews submitted")
+    if not highlights and getattr(repo, "pushed_at", None) is not None:
+        highlights.append("Pushed in selected window")
     if getattr(repo, "is_private", False):
         highlights.append("Private repository")
     if getattr(repo, "is_fork", False):

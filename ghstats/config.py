@@ -53,6 +53,7 @@ class RuntimeConfig:
     max_branch_pages_per_repo: int = 2
     max_commit_pages_per_repo: int = 50
     max_commit_details: int = 5000
+    max_pull_request_commits: int = 5000
     repo_details_batch_size: int = 50
     max_repo_language_enrichments: int = 200
     search_page_size: int = 100

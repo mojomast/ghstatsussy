@@ -19,6 +19,7 @@ def utcnow() -> datetime:
 
 
 def process_next_job(settings: WebAppSettings, session: Session) -> ReportJob | None:
+    recover_stale_jobs(settings, session)
     job = (
         session.query(ReportJob)
         .filter(ReportJob.status == "queued")
@@ -35,6 +36,44 @@ def process_next_job(settings: WebAppSettings, session: Session) -> ReportJob | 
         job.finished_at = utcnow()
         session.commit()
         return job
+
+
+def recover_stale_jobs(settings: WebAppSettings, session: Session) -> int:
+    cutoff = utcnow() - timedelta(seconds=settings.stale_job_timeout_seconds)
+    stale_jobs = (
+        session.query(ReportJob)
+        .filter(ReportJob.status == "running", ReportJob.started_at.is_not(None), ReportJob.started_at < cutoff)
+        .all()
+    )
+    recovered = 0
+    for job in stale_jobs:
+        report = session.get(Report, job.report_id)
+        if report is None:
+            job.status = "failed"
+            job.error_message = "Recovered stale job for missing report."
+            job.finished_at = utcnow()
+            recovered += 1
+            continue
+
+        if job.job_type.startswith("export:"):
+            export_record = session.get(ReportExport, job.export_id) if job.export_id else None
+            if export_record is not None and export_record.status == "running":
+                export_record.status = "queued"
+                export_record.error_message = None
+                export_record.completed_at = None
+        else:
+            report.status = "queued"
+            report.error_message = None
+
+        job.status = "queued"
+        job.started_at = None
+        job.finished_at = None
+        job.error_message = None
+        recovered += 1
+
+    if recovered:
+        session.commit()
+    return recovered
 
     user = session.get(User, report.user_id)
     if user is None:

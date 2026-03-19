@@ -215,6 +215,7 @@ Replace the host with your production URL when you deploy it.
 - **Broader Commit Coverage**: Detailed commit scans now walk repository branches, match both author and committer identities, and recognize GitHub noreply aliases so agent-assisted and harness-assisted commits are less likely to disappear from short windows.
 - **Broader Repository Coverage**: Viewer repository discovery now paginates beyond the first GraphQL page so newer repositories are less likely to be omitted from long-window reports.
 - **Smarter Retry Behavior**: The GitHub client now backs off on `403`/`429` rate-limit responses in addition to transient `5xx` errors.
+- **Queue Recovery**: The worker now automatically re-queues stale `running` jobs after restarts or interrupted deploys so later reports do not remain stuck in `queued` forever behind abandoned work.
 
 ### Coverage caveats
 
@@ -299,6 +300,16 @@ To gracefully deploy `ghstatsussy` in a containerized environment (which encapsu
    docker compose up -d --build
    ```
    This will spin up two containers (`web` and `worker`) that share a mounted `./web_artifacts` volume for the SQLite database and generated HTML files. The web app exposes port `8001` to `127.0.0.1`, ready to be reverse-proxied by Nginx or Caddy.
+
+   Optional queue tuning:
+
+   ```env
+   PROCESS_JOBS_INLINE=0
+   STALE_JOB_TIMEOUT_SECONDS=1800
+   ```
+
+   - keep `PROCESS_JOBS_INLINE=0` in production when the dedicated `worker` service is running
+   - if a deploy or container restart interrupts a long-running job, the worker will re-queue stale `running` jobs after `STALE_JOB_TIMEOUT_SECONDS`
 
 4. **Migrating from Systemd**
    If you are moving an existing bare-metal systemd deployment to Docker:

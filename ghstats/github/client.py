@@ -555,10 +555,81 @@ class GitHubClient:
             commits.extend(self._fetch_repo_commits(repo, dataset.viewer.login, dataset.start_at, dataset.end_at))
             if len(commits) >= self.config.max_commit_details:
                 break
+        if len(commits) < self.config.max_commit_details:
+            commits.extend(self._fetch_pull_request_commits(dataset, selected_repos))
         deduped: dict[str, CommitActivity] = {}
         for commit in commits:
             deduped[commit.sha] = commit
         dataset.commits = sorted(deduped.values(), key=lambda item: item.committed_at)
+
+    def _fetch_pull_request_commits(
+        self,
+        dataset: ActivityDataset,
+        selected_repos: list[RepoActivity],
+    ) -> list[CommitActivity]:
+        repo_lookup = {repo.name_with_owner: repo for repo in selected_repos}
+        items: list[CommitActivity] = []
+        seen_shas: set[str] = set()
+        for pull_request in dataset.pull_requests:
+            repo = repo_lookup.get(pull_request.repo_name_with_owner)
+            if repo is None:
+                continue
+            owner = repo.owner_login
+            repo_name = repo.name
+            page = 1
+            while len(items) < self.config.max_pull_request_commits:
+                payload = self.rest_get(
+                    f"/repos/{owner}/{repo_name}/pulls/{pull_request.number}/commits",
+                    params={"per_page": 100, "page": page},
+                )
+                if not payload:
+                    break
+                for summary in payload:
+                    if len(items) >= self.config.max_pull_request_commits:
+                        return items
+                    sha = str(summary.get("sha") or "")
+                    if not sha or sha in seen_shas:
+                        continue
+                    commit_meta = summary.get("commit") or {}
+                    committer_meta = commit_meta.get("committer") or {}
+                    author_meta = commit_meta.get("author") or {}
+                    committed_at = parse_github_datetime(committer_meta.get("date"))
+                    authored_at = parse_github_datetime(author_meta.get("date"))
+                    effective_at = committed_at or authored_at
+                    if effective_at is None:
+                        continue
+                    if effective_at < dataset.start_at or effective_at > dataset.end_at:
+                        continue
+                    if not self._is_viewer_pull_request_commit(summary, dataset.viewer.login):
+                        continue
+                    detail = self.rest_get(f"/repos/{owner}/{repo_name}/commits/{sha}")
+                    stats = detail.get("stats") or {}
+                    author = detail.get("author") or summary.get("author") or {}
+                    committer = detail.get("committer") or summary.get("committer") or {}
+                    seen_shas.add(sha)
+                    items.append(
+                        CommitActivity(
+                            repo_name_with_owner=repo.name_with_owner,
+                            sha=sha,
+                            message=(commit_meta.get("message") or "").splitlines()[0],
+                            committed_at=effective_at,
+                            url=summary.get("html_url") or detail.get("html_url") or repo.url,
+                            authored_at=authored_at,
+                            author_login=author.get("login"),
+                            committer_login=committer.get("login"),
+                            additions=stats.get("additions", 0),
+                            deletions=stats.get("deletions", 0),
+                        )
+                    )
+                if len(payload) < 100:
+                    break
+                page += 1
+        return items
+
+    def _is_viewer_pull_request_commit(self, summary: dict[str, Any], login: str) -> bool:
+        if self._is_viewer_commit(summary, login):
+            return True
+        return summary.get("author") is None and summary.get("committer") is None
 
     def _fetch_repo_commits(
         self,

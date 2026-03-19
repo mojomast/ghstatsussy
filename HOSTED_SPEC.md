@@ -135,6 +135,7 @@ The hosted layer adds:
 - keeps refresh simple for now; queue-based workers can come later
 - standalone HTML portability currently comes from freezing charts and stripping remote font/runtime dependencies
 - PDF and PNG require Playwright Chromium runtime availability on the host or worker
+- production worker loops should recover stale `running` jobs after interrupted deploys or restarts so queued jobs are not blocked behind abandoned work
 
 ## Data Coverage Notes
 
