@@ -13,6 +13,7 @@ It is built CLI-first, but the internal architecture keeps data collection, anal
 - Analytics for commits, LOC churn, PRs, issues, language mix, repo insights, streaks, and fun facts
 - Optional raw JSON export
 - Sample-data mode for local previewing without a token
+- Hosted FastAPI app with GitHub OAuth, share links, and instant presentation controls
 - Generated reports include links back to the project repo and the ussyverse at `https://ussy.host`
 
 ## Install
@@ -93,6 +94,16 @@ Available templates:
 - `signalroom` - Signal Room
 - `gallery` - Gallery Wall
 - `tapearchive` - Tape Archive
+- `cyberpunk` - Cyberpunk Neon
+- `glassmorphism` - Frosted Glass
+- `brutalism` - Neo-Brutalism
+- `retro_os` - Classic OS Window
+- `holo` - Holographic Foil
+- `synthwave` - Synthwave Horizon
+- `paper` - Ink on Paper
+- `monochrome` - Strict Monochrome
+- `matrix` - Digital Rain
+- `liquid` - Liquid Morph
 
 ## Notes
 
@@ -105,6 +116,11 @@ Available templates:
 `ghstatsussy` now includes a FastAPI hosted-app scaffold so users can sign in with GitHub OAuth, generate a report on the server, and get a shareable report URL.
 
 Hosted app pieces live in `ghstats/web/` and reuse the same fetch/analytics/render core as the CLI.
+
+Live hosted demo:
+
+- app: `https://ghstats.ussyco.de`
+- public gallery: `https://ghstats.ussyco.de/gallery`
 
 ### Hosted app environment
 
@@ -151,6 +167,7 @@ Replace the host with your production URL when you deploy it.
 - stores the GitHub token server-side only
 - queues report generation jobs instead of doing long work in the browser
 - lets the user generate reports for windows like `30d`, `12w`, and `6m`
+- lets report owners hot-swap themes, visible sections, and selected copy without rerunning the data job
 - persists HTML artifacts by default and stores JSON metadata only when the user opts in
 - serves public or unlisted report links at `/r/{slug}`
 - supports per-user subdomain-style URLs like `username.ghstats.ussyco.de`
@@ -189,7 +206,9 @@ Added dynamic pattern recognition to user activity, surfacing highlights such as
 
 Added a **Public Gallery** route (`/gallery`) allowing visitors to browse reports generated with `public` visibility.
 
-Users can choose from 10 incredibly unique, structurally diverse report themes. The templating engine overrides layout structures at the block level (`hero` and `content`), enabling totally different HTML/CSS DOM trees for each theme:
+Hosted reports now support persisted `presentation_config` edits so owners can switch themes, toggle sections, and adjust selected copy instantly from the report detail page.
+
+Users can choose from 20 report themes spanning the original structural set plus 10 radical CSS overhauls:
 - `orbital`: Telemetry-heavy, dark-ops mission control terminal HUD.
 - `gallery`: Asymmetric, color-blocked poster/art exhibit.
 - `ledger`: Editorial, classic multi-column newspaper layout.
@@ -200,6 +219,16 @@ Users can choose from 10 incredibly unique, structurally diverse report themes. 
 - `signalroom`: Glowing green phosphorescent hacker terminal with scanlines.
 - `tapearchive`: Industrial, modular tape reel and index card interface.
 - `default`: Polished, frosted-glass modern dashboard.
+- `cyberpunk`: Neon CRT glitch aesthetic with angular terminal panels.
+- `glassmorphism`: Frosted translucent cards over blurred color fields.
+- `brutalism`: Loud, flat, poster-like blocks with oversized typography.
+- `retro_os`: Windows-95-style interface chrome and beveled widgets.
+- `holo`: Holographic glow surfaces with scanlines and iridescent effects.
+- `synthwave`: Outrun sunset grid with neon cyan and magenta accents.
+- `paper`: Notebook paper, sticky notes, and hand-drawn print vibes.
+- `monochrome`: Harsh black-and-white editorial layout with geometric contrast.
+- `matrix`: Terminal-green digital rain with hacker-console framing.
+- `liquid`: Organic morphing blobs and glossy fluid gradients.
 
 ### Frontend Preview Docker Stack
 
@@ -286,7 +315,8 @@ Deployment templates are included in `examples/`:
 - `ghstats/service.py` - orchestration layer reusable by a future web app
 - `ghstats/analytics/` - aggregation and metric calculation
 - `ghstats/render/` - HTML rendering
-- `ghstats/templates/report.html.j2` - report template
+- `ghstats/templates/report_base.html.j2` - shared report shell
+- `ghstats/templates/report_*.html.j2` - theme templates and overrides
 - `ghstats/web/` - FastAPI hosted app, OAuth, persistence, share links
 - `SPEC.md` - implementation spec and future direction
 - `HOSTED_SPEC.md` - hosted app architecture and roadmap
